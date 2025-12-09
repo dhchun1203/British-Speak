@@ -65,8 +65,6 @@ export default function GalleryGrid({ selectedCategory }: GalleryGridProps) {
           return matchedCategories.includes(img.category);
         });
 
-  const { t } = useI18n();
-
   if (loading) {
     return (
       <div className="text-center py-12">
