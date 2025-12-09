@@ -62,7 +62,7 @@ export default function NoticePage() {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     setPage(1);
-    fetchNotices();
+    // useEffect가 page와 search 변경을 감지하여 자동으로 fetchNotices를 호출함
   };
 
   return (
