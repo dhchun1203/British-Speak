@@ -5,12 +5,14 @@ import ImageModal from "./ImageModal";
 import { GalleryItem } from "@/types/gallery";
 import Image from "next/image";
 import { supabase } from "@/lib/supabase/client";
+import { useI18n } from "@/lib/i18n/context";
 
 interface GalleryGridProps {
   selectedCategory: string;
 }
 
 export default function GalleryGrid({ selectedCategory }: GalleryGridProps) {
+  const { t } = useI18n();
   const [images, setImages] = useState<GalleryItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -29,14 +31,14 @@ export default function GalleryGrid({ selectedCategory }: GalleryGridProps) {
           .order('created_at', { ascending: false });
         
         if (supabaseError) {
-          throw new Error(supabaseError.message || "갤러리 이미지를 불러오는데 실패했습니다");
+          throw new Error(supabaseError.message || t.gallery.error);
         }
         
         setImages(data || []);
         setError(null);
       } catch (err) {
         console.error("Error fetching gallery:", err);
-        setError(err instanceof Error ? err.message : "알 수 없는 오류가 발생했습니다");
+        setError(err instanceof Error ? err.message : t.common.error);
         // 에러가 발생해도 빈 배열로 설정하여 UI가 깨지지 않도록
         setImages([]);
       } finally {
@@ -45,18 +47,31 @@ export default function GalleryGrid({ selectedCategory }: GalleryGridProps) {
     }
 
     fetchImages();
-  }, []);
-
+  }, [t]);
+  
   const filteredImages =
-    selectedCategory === "전체"
+    selectedCategory === t.gallery.all
       ? images
-      : images.filter((img) => img.category === selectedCategory);
+      : images.filter((img) => {
+          // 카테고리 매칭 (다국어 지원)
+          const categoryMap: Record<string, string[]> = {
+            [t.gallery.all]: ['전체', 'All'],
+            [t.gallery.category1]: ['수업', 'Class'],
+            [t.gallery.category2]: ['이벤트', 'Event'],
+            [t.gallery.category3]: ['체험활동', 'Activity'],
+            [t.gallery.category4]: ['기타', 'Other'],
+          };
+          const matchedCategories = categoryMap[selectedCategory] || [selectedCategory];
+          return matchedCategories.includes(img.category);
+        });
+
+  const { t } = useI18n();
 
   if (loading) {
     return (
       <div className="text-center py-12">
         <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
-        <p className="mt-4 text-gray-600">이미지를 불러오는 중...</p>
+        <p className="mt-4 text-gray-600">{t.gallery.loading}</p>
       </div>
     );
   }
@@ -64,7 +79,7 @@ export default function GalleryGrid({ selectedCategory }: GalleryGridProps) {
   if (error) {
     return (
       <div className="text-center py-12">
-        <p className="text-red-600 mb-2">오류가 발생했습니다</p>
+        <p className="text-red-600 mb-2">{t.common.error}</p>
         <p className="text-gray-500 text-sm">{error}</p>
         <p className="text-gray-400 text-xs mt-4">
           Supabase 설정이 필요할 수 있습니다. docs/SUPABASE_SETUP.md를 확인하세요.
@@ -110,9 +125,9 @@ export default function GalleryGrid({ selectedCategory }: GalleryGridProps) {
       {filteredImages.length === 0 && !loading && (
         <div className="text-center py-12">
           <p className="text-gray-500 text-lg">
-            {selectedCategory === "전체"
-              ? "갤러리에 이미지가 없습니다"
-              : `${selectedCategory} 카테고리에 이미지가 없습니다`}
+            {selectedCategory === t.gallery.all
+              ? t.gallery.noImages
+              : `${selectedCategory} ${t.gallery.noImagesCategory}`}
           </p>
         </div>
       )}

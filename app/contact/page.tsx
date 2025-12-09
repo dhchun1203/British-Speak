@@ -2,8 +2,10 @@
 
 import { useState } from "react";
 import { supabase } from "@/lib/supabase/client";
+import { useI18n } from "@/lib/i18n/context";
 
 export default function ContactPage() {
+  const { t } = useI18n();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -43,22 +45,22 @@ export default function ContactPage() {
         throw new Error(supabaseError.message || "문의사항 전송에 실패했습니다.");
       }
 
-      setSubmitStatus({
-        type: "success",
-        message: "문의사항이 성공적으로 전송되었습니다. 빠른 시일 내에 답변드리겠습니다.",
-      });
-      setFormData({
-        name: "",
-        email: "",
-        phone: "",
-        subject: "",
-        message: "",
-      });
-    } catch (error: any) {
-      setSubmitStatus({
-        type: "error",
-        message: error.message || "문의사항 전송에 실패했습니다. 다시 시도해주세요.",
-      });
+              setSubmitStatus({
+                type: "success",
+                message: t.contact.success,
+              });
+              setFormData({
+                name: "",
+                email: "",
+                phone: "",
+                subject: "",
+                message: "",
+              });
+            } catch (error: any) {
+              setSubmitStatus({
+                type: "error",
+                message: error.message || t.contact.error,
+              });
     } finally {
       setIsSubmitting(false);
     }
@@ -71,10 +73,10 @@ export default function ContactPage() {
           {/* 페이지 헤더 */}
           <div className="text-center mb-8 sm:mb-12">
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-800 mb-4">
-              문의하기
+              {t.contact.title}
             </h1>
             <p className="text-gray-600 text-sm sm:text-base">
-              궁금한 사항이 있으시면 언제든지 문의해주세요.
+              {t.contact.subtitle}
             </p>
           </div>
 
@@ -82,7 +84,7 @@ export default function ContactPage() {
             {/* 문의 폼 */}
             <div className="bg-white rounded-lg shadow-md p-6 sm:p-8">
               <h2 className="text-xl sm:text-2xl font-bold mb-6 text-gray-800">
-                문의 폼
+                {t.contact.form}
               </h2>
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
@@ -90,7 +92,7 @@ export default function ContactPage() {
                     htmlFor="name"
                     className="block text-sm font-medium text-gray-700 mb-2"
                   >
-                    이름 <span className="text-red-500">*</span>
+                    {t.contact.name} <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
@@ -100,7 +102,7 @@ export default function ContactPage() {
                       setFormData({ ...formData, name: e.target.value })
                     }
                     className="w-full px-4 py-2 border border-gray-300 rounded-md text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500"
-                    placeholder="이름을 입력하세요"
+                    placeholder={t.contact.namePlaceholder}
                     required
                   />
                 </div>
@@ -110,7 +112,7 @@ export default function ContactPage() {
                     htmlFor="email"
                     className="block text-sm font-medium text-gray-700 mb-2"
                   >
-                    이메일 <span className="text-red-500">*</span>
+                    {t.contact.email} <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="email"
@@ -120,7 +122,7 @@ export default function ContactPage() {
                       setFormData({ ...formData, email: e.target.value })
                     }
                     className="w-full px-4 py-2 border border-gray-300 rounded-md text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500"
-                    placeholder="이메일을 입력하세요"
+                    placeholder={t.contact.emailPlaceholder}
                     required
                   />
                 </div>
@@ -130,7 +132,7 @@ export default function ContactPage() {
                     htmlFor="phone"
                     className="block text-sm font-medium text-gray-700 mb-2"
                   >
-                    전화번호
+                    {t.contact.phone}
                   </label>
                   <input
                     type="tel"
@@ -140,7 +142,7 @@ export default function ContactPage() {
                       setFormData({ ...formData, phone: e.target.value })
                     }
                     className="w-full px-4 py-2 border border-gray-300 rounded-md text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500"
-                    placeholder="전화번호를 입력하세요 (선택사항)"
+                    placeholder={t.contact.phonePlaceholder}
                   />
                 </div>
 
@@ -149,7 +151,7 @@ export default function ContactPage() {
                     htmlFor="subject"
                     className="block text-sm font-medium text-gray-700 mb-2"
                   >
-                    문의 제목 <span className="text-red-500">*</span>
+                    {t.contact.subject} <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
@@ -159,7 +161,7 @@ export default function ContactPage() {
                       setFormData({ ...formData, subject: e.target.value })
                     }
                     className="w-full px-4 py-2 border border-gray-300 rounded-md text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500"
-                    placeholder="문의 제목을 입력하세요"
+                    placeholder={t.contact.subjectPlaceholder}
                     required
                   />
                 </div>
@@ -169,7 +171,7 @@ export default function ContactPage() {
                     htmlFor="message"
                     className="block text-sm font-medium text-gray-700 mb-2"
                   >
-                    문의 내용 <span className="text-red-500">*</span>
+                    {t.contact.message} <span className="text-red-500">*</span>
                   </label>
                   <textarea
                     id="message"
@@ -179,7 +181,7 @@ export default function ContactPage() {
                     }
                     rows={6}
                     className="w-full px-4 py-2 border border-gray-300 rounded-md text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500 resize-none"
-                    placeholder="문의 내용을 입력하세요"
+                    placeholder={t.contact.messagePlaceholder}
                     required
                   />
                 </div>
@@ -201,7 +203,7 @@ export default function ContactPage() {
                   disabled={isSubmitting}
                   className="w-full bg-primary-600 text-white py-3 rounded-md font-semibold hover:bg-primary-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
                 >
-                  {isSubmitting ? "전송 중..." : "문의하기"}
+                  {isSubmitting ? t.contact.submitting : t.contact.submit}
                 </button>
               </form>
             </div>
@@ -210,7 +212,7 @@ export default function ContactPage() {
             <div className="space-y-6">
               <div className="bg-white rounded-lg shadow-md p-6 sm:p-8">
                 <h2 className="text-xl sm:text-2xl font-bold mb-6 text-gray-800">
-                  연락처 정보
+                  {t.contact.contactInfo}
                 </h2>
                 <div className="space-y-6">
                   <div>
@@ -228,13 +230,13 @@ export default function ContactPage() {
                           d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
                         />
                       </svg>
-                      전화 문의
+                      {t.contact.phoneInquiry}
                     </h3>
                     <p className="text-sm sm:text-base text-gray-700">
-                      02-1234-5678
+                      {t.contact.phoneNumber}
                     </p>
                     <p className="text-xs sm:text-sm text-gray-500 mt-1">
-                      평일 09:00 - 18:00
+                      {t.contact.phoneHours}
                     </p>
                   </div>
 
@@ -253,13 +255,13 @@ export default function ContactPage() {
                           d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
                         />
                       </svg>
-                      이메일 문의
+                      {t.contact.emailInquiry}
                     </h3>
                     <p className="text-sm sm:text-base text-gray-700 break-all">
-                      info@britishspeak.ac.kr
+                      {t.contact.emailAddress}
                     </p>
                     <p className="text-xs sm:text-sm text-gray-500 mt-1">
-                      24시간 접수 가능
+                      {t.contact.emailHours}
                     </p>
                   </div>
 
@@ -284,14 +286,13 @@ export default function ContactPage() {
                           d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
                         />
                       </svg>
-                      방문 상담
+                      {t.contact.visit}
                     </h3>
                     <p className="text-sm sm:text-base text-gray-700 mb-2">
-                      학원을 직접 방문하시면 더 자세한 상담을 받으실 수
-                      있습니다.
+                      {t.contact.visitText}
                     </p>
                     <p className="text-xs sm:text-sm text-gray-500">
-                      방문 전 전화 예약을 부탁드립니다.
+                      {t.contact.visitNote}
                     </p>
                   </div>
                 </div>
@@ -300,31 +301,31 @@ export default function ContactPage() {
               {/* 운영 시간 */}
               <div className="bg-white rounded-lg shadow-md p-6 sm:p-8">
                 <h2 className="text-xl sm:text-2xl font-bold mb-6 text-gray-800">
-                  운영 시간
+                  {t.contact.hours}
                 </h2>
                 <div className="space-y-3">
                   <div className="flex justify-between items-center">
                     <span className="text-sm sm:text-base text-gray-700">
-                      월요일 - 금요일
+                      {t.contact.weekday}
                     </span>
                     <span className="text-sm sm:text-base font-semibold text-gray-800">
-                      09:00 - 18:00
+                      {t.contact.weekdayHours}
                     </span>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-sm sm:text-base text-gray-700">
-                      토요일
+                      {t.contact.saturday}
                     </span>
                     <span className="text-sm sm:text-base font-semibold text-gray-800">
-                      09:00 - 13:00
+                      {t.contact.saturdayHours}
                     </span>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-sm sm:text-base text-gray-700">
-                      일요일
+                      {t.contact.sunday}
                     </span>
                     <span className="text-sm sm:text-base font-semibold text-red-600">
-                      휴무
+                      {t.contact.closed}
                     </span>
                   </div>
                 </div>

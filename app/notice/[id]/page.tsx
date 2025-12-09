@@ -5,11 +5,13 @@ import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { Notice } from "@/types/notice";
 import { supabase } from "@/lib/supabase/client";
+import { useI18n } from "@/lib/i18n/context";
 
 export default function NoticeDetailPage() {
   const params = useParams();
   const router = useRouter();
   const id = params.id as string;
+  const { t } = useI18n();
 
   const [notice, setNotice] = useState<Notice | null>(null);
   const [loading, setLoading] = useState(true);
@@ -34,9 +36,9 @@ export default function NoticeDetailPage() {
       
       if (supabaseError) {
         if (supabaseError.code === 'PGRST116') {
-          throw new Error("공지사항을 찾을 수 없습니다");
+          throw new Error(t.notice.notFound);
         }
-        throw new Error(supabaseError.message || "공지사항을 불러오는데 실패했습니다");
+        throw new Error(supabaseError.message || t.notice.loadingDetail);
       }
       
       // 조회수 증가
@@ -63,7 +65,7 @@ export default function NoticeDetailPage() {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
-          <p className="mt-4 text-gray-600">공지사항을 불러오는 중...</p>
+          <p className="mt-4 text-gray-600">{t.notice.loadingDetail}</p>
         </div>
       </div>
     );
@@ -73,12 +75,12 @@ export default function NoticeDetailPage() {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <p className="text-red-600 mb-4 text-lg">{error || "공지사항을 찾을 수 없습니다"}</p>
+          <p className="text-red-600 mb-4 text-lg">{error || t.notice.notFound}</p>
           <Link
             href="/notice"
             className="text-primary-600 hover:text-primary-700 underline"
           >
-            공지사항 목록으로 돌아가기
+            {t.notice.backToList}
           </Link>
         </div>
       </div>
@@ -105,7 +107,7 @@ export default function NoticeDetailPage() {
             >
               <path d="M15 19l-7-7 7-7" />
             </svg>
-            목록으로
+            {t.notice.list}
           </Link>
 
           {/* 공지사항 내용 */}
@@ -115,7 +117,7 @@ export default function NoticeDetailPage() {
               <div className="flex items-center gap-2 mb-4">
                 {notice.is_pinned && (
                   <span className="px-3 py-1 bg-red-100 text-red-600 text-sm font-semibold rounded">
-                    중요
+                    {t.notice.important}
                   </span>
                 )}
                 <h1 className="text-2xl sm:text-3xl font-bold text-gray-800">
@@ -123,16 +125,16 @@ export default function NoticeDetailPage() {
                 </h1>
               </div>
               <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600">
-                <span>작성자: {notice.author}</span>
+                <span>{t.notice.author}: {notice.author}</span>
                 <span>
-                  작성일: {new Date(notice.created_at).toLocaleString("ko-KR")}
+                  {t.notice.createdAt}: {new Date(notice.created_at).toLocaleString(t.language === 'ko' ? "ko-KR" : "en-US")}
                 </span>
                 {notice.updated_at !== notice.created_at && (
                   <span>
-                    수정일: {new Date(notice.updated_at).toLocaleString("ko-KR")}
+                    {t.notice.updatedAt}: {new Date(notice.updated_at).toLocaleString(t.language === 'ko' ? "ko-KR" : "en-US")}
                   </span>
                 )}
-                <span>조회수: {notice.views || 0}</span>
+                <span>{t.notice.views}: {notice.views || 0}</span>
               </div>
             </header>
 
@@ -153,7 +155,7 @@ export default function NoticeDetailPage() {
             {/* 첨부파일 */}
             {notice.attachments && notice.attachments.length > 0 && (
               <div className="mt-8 pt-6 border-t border-gray-200">
-                <h3 className="text-lg font-semibold mb-4 text-gray-800">첨부파일</h3>
+                <h3 className="text-lg font-semibold mb-4 text-gray-800">{t.notice.attachments}</h3>
                 <ul className="space-y-2">
                   {notice.attachments.map((attachment, index) => (
                     <li key={index}>
@@ -194,7 +196,7 @@ export default function NoticeDetailPage() {
               href="/notice"
               className="px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
             >
-              목록으로 돌아가기
+              {t.notice.backToDetail}
             </Link>
           </div>
         </div>

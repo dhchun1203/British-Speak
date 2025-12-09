@@ -1,6 +1,6 @@
 "use client";
 
-const categories = ["전체", "수업", "이벤트", "체험활동", "기타"];
+import { useI18n } from "@/lib/i18n/context";
 
 interface CategoryFilterProps {
   selectedCategory: string;
@@ -11,6 +11,16 @@ export default function CategoryFilter({
   selectedCategory,
   onCategoryChange,
 }: CategoryFilterProps) {
+  const { t } = useI18n();
+  
+  const categories = [
+    t.gallery.all,
+    t.gallery.category1,
+    t.gallery.category2,
+    t.gallery.category3,
+    t.gallery.category4,
+  ];
+
   return (
     <div className="flex flex-wrap gap-2 sm:gap-3 justify-center mb-8 sm:mb-12">
       {categories.map((category) => (

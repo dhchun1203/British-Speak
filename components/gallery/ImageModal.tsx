@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import Image from "next/image";
 import { GalleryItem } from "@/types/gallery";
+import { useI18n } from "@/lib/i18n/context";
 
 interface ImageModalProps {
   image: GalleryItem;
@@ -10,6 +11,7 @@ interface ImageModalProps {
 }
 
 export default function ImageModal({ image, onClose }: ImageModalProps) {
+  const { t } = useI18n();
   useEffect(() => {
     // 모달이 열릴 때 body 스크롤 방지
     document.body.style.overflow = "hidden";
@@ -42,7 +44,7 @@ export default function ImageModal({ image, onClose }: ImageModalProps) {
         <button
           onClick={onClose}
           className="absolute top-4 right-4 z-10 bg-white rounded-full p-2 hover:bg-gray-100 transition-colors"
-          aria-label="닫기"
+          aria-label={t.common.close}
         >
           <svg
             className="w-6 h-6 text-gray-800"
@@ -82,9 +84,9 @@ export default function ImageModal({ image, onClose }: ImageModalProps) {
               {image.title}
             </h2>
             <div className="flex flex-wrap gap-4 text-sm text-gray-600">
-              <span>카테고리: {image.category}</span>
+              <span>{t.gallery.category}: {image.category}</span>
               <span>
-                업로드일: {new Date(image.created_at).toLocaleDateString("ko-KR")}
+                {t.gallery.uploadDate}: {new Date(image.created_at).toLocaleDateString(t.language === 'ko' ? "ko-KR" : "en-US")}
               </span>
             </div>
           </div>

@@ -1,23 +1,29 @@
+"use client";
+
+import { useI18n } from "@/lib/i18n/context";
+
 export default function Programs() {
+  const { t } = useI18n();
+
   const programs = [
     {
-      title: "기초 영어",
-      description: "알파벳부터 시작하는 초보자를 위한 기초 과정",
+      title: t.home.program1,
+      description: t.home.program1Desc,
       icon: "📚",
     },
     {
-      title: "회화 중심",
-      description: "실생활에서 바로 쓸 수 있는 실용 영어 회화",
+      title: t.home.program2,
+      description: t.home.program2Desc,
       icon: "💬",
     },
     {
-      title: "영어 발음",
-      description: "정확한 발음과 억양을 익히는 전문 과정",
+      title: t.home.program3,
+      description: t.home.program3Desc,
       icon: "🎤",
     },
     {
-      title: "영어 시험 준비",
-      description: "각종 영어 시험 대비 전문 반",
+      title: t.home.program4,
+      description: t.home.program4Desc,
       icon: "📝",
     },
   ];
@@ -26,7 +32,7 @@ export default function Programs() {
     <section className="py-12 sm:py-16 md:py-24 bg-gray-50">
       <div className="container mx-auto px-4">
         <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-8 sm:mb-12 text-gray-800">
-          주요 프로그램
+          {t.home.programs}
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
           {programs.map((program, index) => (
