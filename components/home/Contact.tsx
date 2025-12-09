@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useI18n } from "@/lib/i18n/context";
 
 export default function Contact() {
@@ -40,12 +41,14 @@ export default function Contact() {
               <p className="text-sm sm:text-base text-gray-700 mb-4 leading-relaxed whitespace-pre-line">
                 {t.home.visitText}
               </p>
-              <a
-                href="#location"
-                className="inline-block bg-primary-600 text-white px-5 sm:px-6 py-2.5 sm:py-3 rounded-lg font-semibold hover:bg-primary-700 transition-colors text-sm sm:text-base"
-              >
-                {t.home.viewLocation}
-              </a>
+              <div className="flex justify-center">
+                <Link
+                  href="/contact"
+                  className="inline-block bg-primary-600 text-white px-5 sm:px-6 py-2.5 sm:py-3 rounded-lg font-semibold hover:bg-primary-700 transition-colors text-sm sm:text-base text-center"
+                >
+                  {t.home.contact}
+                </Link>
+              </div>
             </div>
           </div>
         </div>

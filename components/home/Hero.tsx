@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useI18n } from "@/lib/i18n/context";
 
 export default function Hero() {
@@ -22,12 +23,12 @@ export default function Hero() {
             >
               {t.home.about}
             </a>
-            <a
-              href="#contact"
+            <Link
+              href="/contact"
               className="bg-transparent border-2 border-white text-white px-6 sm:px-8 py-2.5 sm:py-3 rounded-lg font-semibold hover:bg-white hover:text-primary-600 transition-colors text-sm sm:text-base"
             >
               {t.home.contact}
-            </a>
+            </Link>
           </div>
         </div>
       </div>

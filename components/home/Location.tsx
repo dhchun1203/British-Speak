@@ -30,16 +30,18 @@ export default function Location() {
         window.kakao.maps.load(() => {
           const container = document.getElementById("map");
           if (container) {
+            // 경기 화성시 동탄대로 636-14 상가동 A-206호 좌표
+            // 정확한 좌표는 카카오맵에서 주소 검색 후 우클릭 → 좌표 복사로 확인 가능
             const options = {
-              center: new window.kakao.maps.LatLng(37.5665, 126.9780), // 서울시청 좌표 (실제 주소로 변경 필요)
+              center: new window.kakao.maps.LatLng(37.2035, 127.0708), // 동탄대로 636-14 대략 좌표
               level: 3,
             };
             const map = new window.kakao.maps.Map(container, options);
 
             // 마커 생성
             const markerPosition = new window.kakao.maps.LatLng(
-              37.5665,
-              126.9780
+              37.2035,
+              127.0708
             );
             const marker = new window.kakao.maps.Marker({
               position: markerPosition,
@@ -82,16 +84,7 @@ export default function Location() {
               </ul>
             </div>
             <div className="h-64 md:h-96 rounded-lg overflow-hidden shadow-lg bg-gray-200 flex items-center justify-center">
-              {process.env.NEXT_PUBLIC_KAKAO_MAP_API_KEY ? (
-                <div id="map" className="w-full h-full"></div>
-              ) : (
-                <div className="text-center text-gray-500 p-4">
-                  <p className="mb-2">{t.home.mapPlaceholder}</p>
-                  <p className="text-sm">{t.home.mapPlaceholder2}</p>
-                  <p className="text-sm font-mono">{t.home.mapPlaceholder3}</p>
-                  <p className="text-sm">{t.home.mapPlaceholder4}</p>
-                </div>
-              )}
+              <div id="map" className="w-full h-full"></div>
             </div>
           </div>
         </div>
