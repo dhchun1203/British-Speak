@@ -11,7 +11,7 @@ interface ImageModalProps {
 }
 
 export default function ImageModal({ image, onClose }: ImageModalProps) {
-  const { t } = useI18n();
+  const { t, language } = useI18n();
   useEffect(() => {
     // 모달이 열릴 때 body 스크롤 방지
     document.body.style.overflow = "hidden";
@@ -86,7 +86,7 @@ export default function ImageModal({ image, onClose }: ImageModalProps) {
             <div className="flex flex-wrap gap-4 text-sm text-gray-600">
               <span>{t.gallery.category}: {image.category}</span>
               <span>
-                {t.gallery.uploadDate}: {new Date(image.created_at).toLocaleDateString(t.language === 'ko' ? "ko-KR" : "en-US")}
+                {t.gallery.uploadDate}: {new Date(image.created_at).toLocaleDateString(language === 'ko' ? "ko-KR" : "en-US")}
               </span>
             </div>
           </div>

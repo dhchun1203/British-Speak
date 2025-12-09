@@ -7,7 +7,7 @@ import { supabase } from "@/lib/supabase/client";
 import { useI18n } from "@/lib/i18n/context";
 
 export default function NoticePage() {
-  const { t } = useI18n();
+  const { t, language } = useI18n();
   const [notices, setNotices] = useState<Notice[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -18,46 +18,46 @@ export default function NoticePage() {
   const pageSize = 10;
 
   useEffect(() => {
-    fetchNotices();
-  }, [page, search]);
+    async function fetchNotices() {
+      try {
+        setLoading(true);
+        const offset = (page - 1) * pageSize;
 
-  async function fetchNotices() {
-    try {
-      setLoading(true);
-      const offset = (page - 1) * pageSize;
+        // 클라이언트 사이드에서 Supabase 직접 호출
+        let query = supabase
+          .from('notices')
+          .select('*', { count: 'exact' });
 
-      // 클라이언트 사이드에서 Supabase 직접 호출
-      let query = supabase
-        .from('notices')
-        .select('*', { count: 'exact' });
+        // 검색어가 있으면 제목에서 검색
+        if (search) {
+          query = query.ilike('title', `%${search}%`);
+        }
 
-      // 검색어가 있으면 제목에서 검색
-      if (search) {
-        query = query.ilike('title', `%${search}%`);
+        // 상단 고정 공지 먼저, 그 다음 최신순
+        const { data, error: supabaseError, count } = await query
+          .order('is_pinned', { ascending: false })
+          .order('created_at', { ascending: false })
+          .range(offset, offset + pageSize - 1);
+
+        if (supabaseError) {
+          throw new Error(supabaseError.message || t.notice.loading);
+        }
+
+        setNotices(data || []);
+        setTotal(count || 0);
+        setTotalPages(count ? Math.ceil(count / pageSize) : 0);
+        setError(null);
+      } catch (err) {
+        console.error("Error fetching notices:", err);
+        setError(err instanceof Error ? err.message : t.common.error);
+        setNotices([]);
+      } finally {
+        setLoading(false);
       }
-
-      // 상단 고정 공지 먼저, 그 다음 최신순
-      const { data, error: supabaseError, count } = await query
-        .order('is_pinned', { ascending: false })
-        .order('created_at', { ascending: false })
-        .range(offset, offset + pageSize - 1);
-
-      if (supabaseError) {
-        throw new Error(supabaseError.message || t.notice.loading);
-      }
-
-      setNotices(data || []);
-      setTotal(count || 0);
-      setTotalPages(count ? Math.ceil(count / pageSize) : 0);
-      setError(null);
-    } catch (err) {
-      console.error("Error fetching notices:", err);
-      setError(err instanceof Error ? err.message : t.common.error);
-      setNotices([]);
-    } finally {
-      setLoading(false);
     }
-  }
+
+    fetchNotices();
+  }, [page, search, t]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -141,7 +141,7 @@ export default function NoticePage() {
                               <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500 mt-2">
                                 <span>{t.notice.author}: {notice.author}</span>
                                 <span>
-                                  {new Date(notice.created_at).toLocaleDateString(t.language === 'ko' ? "ko-KR" : "en-US")}
+                                  {new Date(notice.created_at).toLocaleDateString(language === 'ko' ? "ko-KR" : "en-US")}
                                 </span>
                                 <span>{t.notice.views}: {notice.views || 0}</span>
                               </div>

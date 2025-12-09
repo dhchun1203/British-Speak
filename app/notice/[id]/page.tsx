@@ -11,54 +11,57 @@ export default function NoticeDetailPage() {
   const params = useParams();
   const router = useRouter();
   const id = params.id as string;
-  const { t } = useI18n();
+  const { t, language } = useI18n();
 
   const [notice, setNotice] = useState<Notice | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    async function fetchNotice() {
+      if (!id) return;
+      
+      try {
+        setLoading(true);
+        
+        // 클라이언트 사이드에서 Supabase 직접 호출
+        const { data, error: supabaseError } = await supabase
+          .from('notices')
+          .select('*')
+          .eq('id', id)
+          .single();
+        
+        if (supabaseError) {
+          if (supabaseError.code === 'PGRST116') {
+            throw new Error(t.notice.notFound);
+          }
+          throw new Error(supabaseError.message || t.notice.loadingDetail);
+        }
+        
+        // 조회수 증가
+        if (data) {
+          await supabase
+            .from('notices')
+            .update({ views: (data.views || 0) + 1 })
+            .eq('id', id);
+          
+          setNotice({ ...data, views: (data.views || 0) + 1 });
+        }
+        
+        setError(null);
+      } catch (err) {
+        console.error("Error fetching notice:", err);
+        setError(err instanceof Error ? err.message : t.notice.notFound);
+        setNotice(null);
+      } finally {
+        setLoading(false);
+      }
+    }
+
     if (id) {
       fetchNotice();
     }
-  }, [id]);
-
-  async function fetchNotice() {
-    try {
-      setLoading(true);
-      
-      // 클라이언트 사이드에서 Supabase 직접 호출
-      const { data, error: supabaseError } = await supabase
-        .from('notices')
-        .select('*')
-        .eq('id', id)
-        .single();
-      
-      if (supabaseError) {
-        if (supabaseError.code === 'PGRST116') {
-          throw new Error(t.notice.notFound);
-        }
-        throw new Error(supabaseError.message || t.notice.loadingDetail);
-      }
-      
-      // 조회수 증가
-      if (data) {
-        await supabase
-          .from('notices')
-          .update({ views: (data.views || 0) + 1 })
-          .eq('id', id);
-        
-        setNotice({ ...data, views: (data.views || 0) + 1 });
-      }
-      
-      setError(null);
-    } catch (err) {
-      console.error("Error fetching notice:", err);
-      setError(err instanceof Error ? err.message : "알 수 없는 오류가 발생했습니다");
-    } finally {
-      setLoading(false);
-    }
-  }
+  }, [id, t]);
 
   if (loading) {
     return (
@@ -127,11 +130,11 @@ export default function NoticeDetailPage() {
               <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600">
                 <span>{t.notice.author}: {notice.author}</span>
                 <span>
-                  {t.notice.createdAt}: {new Date(notice.created_at).toLocaleString(t.language === 'ko' ? "ko-KR" : "en-US")}
+                  {t.notice.createdAt}: {new Date(notice.created_at).toLocaleString(language === 'ko' ? "ko-KR" : "en-US")}
                 </span>
                 {notice.updated_at !== notice.created_at && (
                   <span>
-                    {t.notice.updatedAt}: {new Date(notice.updated_at).toLocaleString(t.language === 'ko' ? "ko-KR" : "en-US")}
+                    {t.notice.updatedAt}: {new Date(notice.updated_at).toLocaleString(language === 'ko' ? "ko-KR" : "en-US")}
                   </span>
                 )}
                 <span>{t.notice.views}: {notice.views || 0}</span>
