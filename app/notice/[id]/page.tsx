@@ -1,0 +1,190 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import { useParams, useRouter } from "next/navigation";
+import Link from "next/link";
+import { Notice } from "@/types/notice";
+
+export default function NoticeDetailPage() {
+  const params = useParams();
+  const router = useRouter();
+  const id = params.id as string;
+
+  const [notice, setNotice] = useState<Notice | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (id) {
+      fetchNotice();
+    }
+  }, [id]);
+
+  async function fetchNotice() {
+    try {
+      setLoading(true);
+      const response = await fetch(`/api/notices/${id}`);
+      
+      if (!response.ok) {
+        if (response.status === 404) {
+          throw new Error("공지사항을 찾을 수 없습니다");
+        }
+        throw new Error("공지사항을 불러오는데 실패했습니다");
+      }
+      
+      const data: Notice = await response.json();
+      setNotice(data);
+      setError(null);
+    } catch (err) {
+      console.error("Error fetching notice:", err);
+      setError(err instanceof Error ? err.message : "알 수 없는 오류가 발생했습니다");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
+          <p className="mt-4 text-gray-600">공지사항을 불러오는 중...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error || !notice) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-red-600 mb-4 text-lg">{error || "공지사항을 찾을 수 없습니다"}</p>
+          <Link
+            href="/notice"
+            className="text-primary-600 hover:text-primary-700 underline"
+          >
+            공지사항 목록으로 돌아가기
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <div className="container mx-auto px-4 py-8 sm:py-12">
+        <div className="max-w-4xl mx-auto">
+          {/* 뒤로가기 버튼 */}
+          <Link
+            href="/notice"
+            className="inline-flex items-center text-primary-600 hover:text-primary-700 mb-6"
+          >
+            <svg
+              className="w-5 h-5 mr-2"
+              fill="none"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path d="M15 19l-7-7 7-7" />
+            </svg>
+            목록으로
+          </Link>
+
+          {/* 공지사항 내용 */}
+          <article className="bg-white rounded-lg shadow-md p-6 sm:p-8">
+            {/* 헤더 */}
+            <header className="border-b border-gray-200 pb-4 mb-6">
+              <div className="flex items-center gap-2 mb-4">
+                {notice.is_pinned && (
+                  <span className="px-3 py-1 bg-red-100 text-red-600 text-sm font-semibold rounded">
+                    중요
+                  </span>
+                )}
+                <h1 className="text-2xl sm:text-3xl font-bold text-gray-800">
+                  {notice.title}
+                </h1>
+              </div>
+              <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600">
+                <span>작성자: {notice.author}</span>
+                <span>
+                  작성일: {new Date(notice.created_at).toLocaleString("ko-KR")}
+                </span>
+                {notice.updated_at !== notice.created_at && (
+                  <span>
+                    수정일: {new Date(notice.updated_at).toLocaleString("ko-KR")}
+                  </span>
+                )}
+                <span>조회수: {notice.views || 0}</span>
+              </div>
+            </header>
+
+            {/* 본문 */}
+            <div className="prose max-w-none">
+              <div
+                className="text-gray-700 leading-relaxed whitespace-pre-wrap"
+                dangerouslySetInnerHTML={{ 
+                  __html: notice.content
+                    // 마크다운 이미지 형식 ![alt](url)을 img 태그로 변환
+                    .replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1" class="max-w-full h-auto rounded-lg my-4" />')
+                    // 줄바꿈 처리
+                    .replace(/\n/g, '<br />')
+                }}
+              />
+            </div>
+
+            {/* 첨부파일 */}
+            {notice.attachments && notice.attachments.length > 0 && (
+              <div className="mt-8 pt-6 border-t border-gray-200">
+                <h3 className="text-lg font-semibold mb-4 text-gray-800">첨부파일</h3>
+                <ul className="space-y-2">
+                  {notice.attachments.map((attachment, index) => (
+                    <li key={index}>
+                      <a
+                        href={attachment.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-primary-600 hover:text-primary-700 underline flex items-center gap-2"
+                      >
+                        <svg
+                          className="w-5 h-5"
+                          fill="none"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                        {attachment.name}
+                        {attachment.size && (
+                          <span className="text-gray-500 text-sm">
+                            ({(attachment.size / 1024).toFixed(2)} KB)
+                          </span>
+                        )}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </article>
+
+          {/* 하단 네비게이션 */}
+          <div className="mt-8 flex justify-center">
+            <Link
+              href="/notice"
+              className="px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
+            >
+              목록으로 돌아가기
+            </Link>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+

@@ -1,0 +1,153 @@
+"use client";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { supabase } from "@/lib/supabase/client";
+import Link from "next/link";
+
+export default function AdminLoginPage() {
+  const router = useRouter();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+
+    try {
+      const { data, error: signInError } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (signInError) {
+        throw signInError;
+      }
+
+      if (data.user) {
+        // 사용자 정보 디버깅
+        console.log("User data:", data.user);
+        console.log("User metadata:", data.user.user_metadata);
+        console.log("Raw app meta data:", data.user.app_metadata);
+        
+        // 관리자 권한 확인
+        // user_metadata 또는 app_metadata에서 role 확인
+        const userRole = data.user.user_metadata?.role || data.user.app_metadata?.role;
+        const emailContainsAdmin = email.toLowerCase().includes('admin');
+        
+        // 개발 단계: 특정 이메일 허용 (임시)
+        const allowedEmails = ['dhchun1203@gmail.com']; // 개발용 - 나중에 제거
+        const isAllowedEmail = allowedEmails.includes(email.toLowerCase());
+        
+        console.log("User data:", data.user);
+        console.log("User metadata:", data.user.user_metadata);
+        console.log("User role:", userRole);
+        console.log("Email contains admin:", emailContainsAdmin);
+        console.log("Is allowed email:", isAllowedEmail);
+        
+        if (userRole === 'admin' || emailContainsAdmin || isAllowedEmail) {
+          // 관리자 대시보드로 이동
+          console.log("Redirecting to dashboard...");
+          
+          // 세션이 완전히 저장될 때까지 약간의 지연
+          await new Promise(resolve => setTimeout(resolve, 200));
+          
+          // router.push 대신 window.location을 사용하여 확실한 리다이렉트
+          window.location.href = "/admin/dashboard";
+        } else {
+          // 일반 사용자는 로그아웃
+          await supabase.auth.signOut();
+          setError(
+            "관리자 권한이 없습니다. " +
+            "Supabase에서 raw_user_meta_data에 role: 'admin'을 추가하세요. " +
+            "docs/QUICK_FIX_ADMIN_ROLE.md 참고"
+          );
+        }
+      }
+    } catch (err: any) {
+      console.error("Login error:", err);
+      setError(err.message || "로그인에 실패했습니다.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full space-y-8">
+        <div>
+          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+            관리자 로그인
+          </h2>
+          <p className="mt-2 text-center text-sm text-gray-600">
+            영국 스피킹 아카데미 관리자 페이지
+          </p>
+        </div>
+        <form className="mt-8 space-y-6" onSubmit={handleLogin}>
+          {error && (
+            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+              {error}
+            </div>
+          )}
+          <div className="rounded-md shadow-sm -space-y-px">
+            <div>
+              <label htmlFor="email" className="sr-only">
+                이메일
+              </label>
+              <input
+                id="email"
+                name="email"
+                type="email"
+                autoComplete="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-primary-500 focus:border-primary-500 focus:z-10 sm:text-sm"
+                placeholder="이메일 주소"
+              />
+            </div>
+            <div>
+              <label htmlFor="password" className="sr-only">
+                비밀번호
+              </label>
+              <input
+                id="password"
+                name="password"
+                type="password"
+                autoComplete="current-password"
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-primary-500 focus:border-primary-500 focus:z-10 sm:text-sm"
+                placeholder="비밀번호"
+              />
+            </div>
+          </div>
+
+          <div>
+            <button
+              type="submit"
+              disabled={loading}
+              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {loading ? "로그인 중..." : "로그인"}
+            </button>
+          </div>
+
+          <div className="text-center">
+            <Link
+              href="/"
+              className="text-sm text-primary-600 hover:text-primary-700"
+            >
+              홈으로 돌아가기
+            </Link>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}
+

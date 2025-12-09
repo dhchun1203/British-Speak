@@ -1,0 +1,437 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { supabase } from "@/lib/supabase/client";
+import Link from "next/link";
+import Image from "next/image";
+import { GalleryItem } from "@/types/gallery";
+
+export default function AdminGalleryPage() {
+  const router = useRouter();
+  const [loading, setLoading] = useState(true);
+  const [authenticated, setAuthenticated] = useState(false);
+  const [images, setImages] = useState<GalleryItem[]>([]);
+  const [uploading, setUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState<{ [key: string]: number }>({});
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editForm, setEditForm] = useState({ title: "", category: "" });
+
+  const categories = ["수업", "이벤트", "체험활동", "기타"];
+
+  useEffect(() => {
+    checkAuth();
+  }, []);
+
+  useEffect(() => {
+    if (authenticated) {
+      fetchImages();
+    }
+  }, [authenticated]);
+
+  async function checkAuth() {
+    try {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (!user) {
+        router.push("/admin/login");
+        return;
+      }
+
+      const userRole = user.user_metadata?.role || user.app_metadata?.role;
+      const emailContainsAdmin = user.email?.toLowerCase().includes('admin');
+      
+      const allowedEmails = ['dhchun1203@gmail.com'];
+      const isAllowedEmail = allowedEmails.includes(user.email?.toLowerCase() || '');
+      
+      const isAdmin = userRole === 'admin' || emailContainsAdmin || isAllowedEmail;
+
+      if (!isAdmin) {
+        await supabase.auth.signOut();
+        router.push("/admin/login");
+        return;
+      }
+
+      setAuthenticated(true);
+    } catch (error) {
+      console.error("Auth check error:", error);
+      router.push("/admin/login");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function fetchImages() {
+    try {
+      const response = await fetch("/api/gallery");
+      if (!response.ok) throw new Error("Failed to fetch images");
+      const data = await response.json();
+      setImages(data);
+    } catch (error) {
+      console.error("Error fetching images:", error);
+    }
+  }
+
+  async function handleFileSelect(e: React.ChangeEvent<HTMLInputElement>) {
+    const files = Array.from(e.target.files || []);
+    const imageFiles = files.filter(file => file.type.startsWith('image/'));
+    
+    if (imageFiles.length === 0) {
+      alert('이미지 파일만 업로드할 수 있습니다.');
+      return;
+    }
+
+    setSelectedFiles(prev => [...prev, ...imageFiles]);
+  }
+
+  async function handleUpload() {
+    if (selectedFiles.length === 0) {
+      alert('업로드할 이미지를 선택해주세요.');
+      return;
+    }
+
+    setUploading(true);
+    const uploadResults: { success: number; failed: number } = { success: 0, failed: 0 };
+
+    for (let i = 0; i < selectedFiles.length; i++) {
+      const file = selectedFiles[i];
+      const fileId = `${Date.now()}-${i}`;
+      
+      try {
+        setUploadProgress(prev => ({ ...prev, [fileId]: 0 }));
+
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('title', file.name.replace(/\.[^/.]+$/, "")); // 파일명에서 확장자 제거
+        formData.append('category', '기타'); // 기본 카테고리
+
+        const response = await fetch("/api/gallery", {
+          method: "POST",
+          body: formData,
+        });
+
+        if (!response.ok) {
+          const error = await response.json();
+          throw new Error(error.error || "Upload failed");
+        }
+
+        setUploadProgress(prev => ({ ...prev, [fileId]: 100 }));
+        uploadResults.success++;
+        
+        // 업로드 성공 후 목록 새로고침
+        await fetchImages();
+      } catch (error) {
+        console.error(`Error uploading ${file.name}:`, error);
+        uploadResults.failed++;
+      }
+    }
+
+    setUploading(false);
+    setSelectedFiles([]);
+    setUploadProgress({});
+    
+    if (uploadResults.failed === 0) {
+      alert(`${uploadResults.success}개의 이미지가 성공적으로 업로드되었습니다.`);
+    } else {
+      alert(`${uploadResults.success}개 성공, ${uploadResults.failed}개 실패했습니다.`);
+    }
+  }
+
+  async function handleDelete(id: string) {
+    if (!confirm('이 이미지를 삭제하시겠습니까?')) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/gallery/${id}`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to delete image");
+      }
+
+      await fetchImages();
+      alert('이미지가 삭제되었습니다.');
+    } catch (error) {
+      console.error("Error deleting image:", error);
+      alert('이미지 삭제에 실패했습니다.');
+    }
+  }
+
+  async function handleUpdate(id: string) {
+    try {
+      const response = await fetch(`/api/gallery/${id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(editForm),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to update image");
+      }
+
+      setEditingId(null);
+      setEditForm({ title: "", category: "" });
+      await fetchImages();
+      alert('이미지 정보가 수정되었습니다.');
+    } catch (error) {
+      console.error("Error updating image:", error);
+      alert('이미지 정보 수정에 실패했습니다.');
+    }
+  }
+
+  async function handleOrderChange(id: string, newOrder: number) {
+    try {
+      const response = await fetch(`/api/gallery/${id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ order: newOrder }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to update order");
+      }
+
+      await fetchImages();
+    } catch (error) {
+      console.error("Error updating order:", error);
+      alert('순서 변경에 실패했습니다.');
+    }
+  }
+
+  function startEdit(image: GalleryItem) {
+    setEditingId(image.id);
+    setEditForm({
+      title: image.title,
+      category: image.category,
+    });
+  }
+
+  function cancelEdit() {
+    setEditingId(null);
+    setEditForm({ title: "", category: "" });
+  }
+
+  function removeSelectedFile(index: number) {
+    setSelectedFiles(prev => prev.filter((_, i) => i !== index));
+  }
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
+          <p className="mt-4 text-gray-600">로딩 중...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!authenticated) {
+    return null;
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <div className="bg-white shadow">
+        <div className="container mx-auto px-4 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <Link
+                href="/admin/dashboard"
+                className="text-primary-600 hover:text-primary-700"
+              >
+                ← 대시보드
+              </Link>
+              <h1 className="text-2xl font-bold text-gray-800">갤러리 관리</h1>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="container mx-auto px-4 py-8">
+        {/* 업로드 섹션 */}
+        <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+          <h2 className="text-xl font-semibold text-gray-800 mb-4">이미지 업로드</h2>
+          
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                이미지 선택 (다중 선택 가능)
+              </label>
+              <input
+                type="file"
+                accept="image/*"
+                multiple
+                onChange={handleFileSelect}
+                className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-primary-50 file:text-primary-700 hover:file:bg-primary-100"
+                disabled={uploading}
+              />
+            </div>
+
+            {selectedFiles.length > 0 && (
+              <div className="mt-4">
+                <p className="text-sm font-medium text-gray-700 mb-2">
+                  선택된 파일 ({selectedFiles.length}개)
+                </p>
+                <div className="space-y-2">
+                  {selectedFiles.map((file, index) => (
+                    <div
+                      key={index}
+                      className="flex items-center justify-between p-2 bg-gray-50 rounded"
+                    >
+                      <span className="text-sm text-gray-700">{file.name}</span>
+                      <button
+                        onClick={() => removeSelectedFile(index)}
+                        className="text-red-600 hover:text-red-700 text-sm"
+                        disabled={uploading}
+                      >
+                        제거
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <button
+              onClick={handleUpload}
+              disabled={uploading || selectedFiles.length === 0}
+              className="w-full px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {uploading ? "업로드 중..." : "업로드"}
+            </button>
+          </div>
+        </div>
+
+        {/* 이미지 목록 */}
+        <div className="bg-white rounded-lg shadow-md p-6">
+          <h2 className="text-xl font-semibold text-gray-800 mb-4">
+            이미지 목록 ({images.length}개)
+          </h2>
+
+          {images.length === 0 ? (
+            <p className="text-gray-500 text-center py-8">업로드된 이미지가 없습니다.</p>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {images.map((image) => (
+                <div
+                  key={image.id}
+                  className="border border-gray-200 rounded-lg overflow-hidden"
+                >
+                  <div className="relative aspect-square bg-gray-100">
+                    {image.image_url && image.image_url.startsWith('http') ? (
+                      <Image
+                        src={image.image_url}
+                        alt={image.title}
+                        fill
+                        className="object-cover"
+                        sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center">
+                        <span className="text-gray-400 text-sm">이미지 없음</span>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="p-4">
+                    {editingId === image.id ? (
+                      <div className="space-y-3">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">
+                            제목
+                          </label>
+                          <input
+                            type="text"
+                            value={editForm.title}
+                            onChange={(e) =>
+                              setEditForm({ ...editForm, title: e.target.value })
+                            }
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-1">
+                            카테고리
+                          </label>
+                          <select
+                            value={editForm.category}
+                            onChange={(e) =>
+                              setEditForm({ ...editForm, category: e.target.value })
+                            }
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
+                          >
+                            {categories.map((cat) => (
+                              <option key={cat} value={cat}>
+                                {cat}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => handleUpdate(image.id)}
+                            className="flex-1 px-3 py-2 bg-primary-600 text-white rounded-md text-sm hover:bg-primary-700"
+                          >
+                            저장
+                          </button>
+                          <button
+                            onClick={cancelEdit}
+                            className="flex-1 px-3 py-2 bg-gray-200 text-gray-700 rounded-md text-sm hover:bg-gray-300"
+                          >
+                            취소
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <>
+                        <h3 className="font-semibold text-gray-800 mb-1">{image.title}</h3>
+                        <p className="text-sm text-gray-600 mb-2">
+                          카테고리: {image.category}
+                        </p>
+                        <div className="flex items-center gap-2 mb-3">
+                          <label className="text-sm text-gray-700">순서:</label>
+                          <input
+                            type="number"
+                            value={image.order || 0}
+                            onChange={(e) =>
+                              handleOrderChange(image.id, parseInt(e.target.value) || 0)
+                            }
+                            className="w-20 px-2 py-1 border border-gray-300 rounded text-sm"
+                          />
+                        </div>
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => startEdit(image)}
+                            className="flex-1 px-3 py-2 bg-blue-600 text-white rounded-md text-sm hover:bg-blue-700"
+                          >
+                            수정
+                          </button>
+                          <button
+                            onClick={() => handleDelete(image.id)}
+                            className="flex-1 px-3 py-2 bg-red-600 text-white rounded-md text-sm hover:bg-red-700"
+                          >
+                            삭제
+                          </button>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
