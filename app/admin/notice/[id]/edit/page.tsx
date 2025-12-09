@@ -131,6 +131,64 @@ export default function EditNoticePage() {
     }
   }
 
+  async function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // 파일 타입 확인
+    if (!file.type.startsWith('image/')) {
+      alert('이미지 파일만 업로드할 수 있습니다.');
+      return;
+    }
+
+    setUploadingImage(true);
+
+    try {
+      const uploadFormData = new FormData();
+      uploadFormData.append('file', file);
+
+      const response = await fetch("/api/notices/upload-image", {
+        method: "POST",
+        body: uploadFormData,
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || "Failed to upload image");
+      }
+
+      const data = await response.json();
+      
+      // 마크다운 형식으로 이미지 삽입
+      const imageMarkdown = `\n![${file.name}](${data.url})\n`;
+      const textarea = document.getElementById('content') as HTMLTextAreaElement;
+      const cursorPosition = textarea?.selectionStart || formData.content.length;
+      const newContent = 
+        formData.content.slice(0, cursorPosition) + 
+        imageMarkdown + 
+        formData.content.slice(cursorPosition);
+      
+      setFormData({ ...formData, content: newContent });
+      
+      // 커서 위치 업데이트
+      setTimeout(() => {
+        if (textarea) {
+          const newPosition = cursorPosition + imageMarkdown.length;
+          textarea.setSelectionRange(newPosition, newPosition);
+          textarea.focus();
+        }
+      }, 0);
+      alert('이미지가 업로드되었습니다.');
+    } catch (error: any) {
+      console.error("Error uploading image:", error);
+      alert(error.message || '이미지 업로드에 실패했습니다.');
+    } finally {
+      setUploadingImage(false);
+      // input 초기화
+      e.target.value = '';
+    }
+  }
+
   if (loading || !notice) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
