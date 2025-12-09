@@ -104,7 +104,7 @@ export async function DELETE(
       throw error;
     }
 
-    return NextResponse.json({ success: true });
+    return NextResponse.json({ message: 'Notice deleted successfully' });
   } catch (error: any) {
     console.error('Error deleting notice:', error);
     return NextResponse.json(
@@ -113,7 +113,3 @@ export async function DELETE(
     );
   }
 }
-
-
-
-
