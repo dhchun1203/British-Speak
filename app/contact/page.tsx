@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { supabase } from "@/lib/supabase/client";
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -22,18 +23,24 @@ export default function ContactPage() {
     setSubmitStatus({ type: null, message: "" });
 
     try {
-      const response = await fetch("/api/inquiries", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
+      // 클라이언트 사이드에서 Supabase 직접 호출
+      const { data, error: supabaseError } = await supabase
+        .from('inquiries')
+        .insert([
+          {
+            name: formData.name,
+            email: formData.email,
+            phone: formData.phone || null,
+            subject: formData.subject,
+            message: formData.message,
+            status: 'pending',
+          },
+        ])
+        .select()
+        .single();
 
-      const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error(result.error || "문의사항 전송에 실패했습니다.");
+      if (supabaseError) {
+        throw new Error(supabaseError.message || "문의사항 전송에 실패했습니다.");
       }
 
       setSubmitStatus({

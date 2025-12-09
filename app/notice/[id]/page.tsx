@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { Notice } from "@/types/notice";
+import { supabase } from "@/lib/supabase/client";
 
 export default function NoticeDetailPage() {
   const params = useParams();
@@ -23,17 +24,31 @@ export default function NoticeDetailPage() {
   async function fetchNotice() {
     try {
       setLoading(true);
-      const response = await fetch(`/api/notices/${id}`);
       
-      if (!response.ok) {
-        if (response.status === 404) {
+      // 클라이언트 사이드에서 Supabase 직접 호출
+      const { data, error: supabaseError } = await supabase
+        .from('notices')
+        .select('*')
+        .eq('id', id)
+        .single();
+      
+      if (supabaseError) {
+        if (supabaseError.code === 'PGRST116') {
           throw new Error("공지사항을 찾을 수 없습니다");
         }
-        throw new Error("공지사항을 불러오는데 실패했습니다");
+        throw new Error(supabaseError.message || "공지사항을 불러오는데 실패했습니다");
       }
       
-      const data: Notice = await response.json();
-      setNotice(data);
+      // 조회수 증가
+      if (data) {
+        await supabase
+          .from('notices')
+          .update({ views: (data.views || 0) + 1 })
+          .eq('id', id);
+        
+        setNotice({ ...data, views: (data.views || 0) + 1 });
+      }
+      
       setError(null);
     } catch (err) {
       console.error("Error fetching notice:", err);

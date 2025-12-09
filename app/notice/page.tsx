@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Notice, NoticeListResponse } from "@/types/notice";
+import { Notice } from "@/types/notice";
+import { supabase } from "@/lib/supabase/client";
 
 export default function NoticePage() {
   const [notices, setNotices] = useState<Notice[]>([]);
@@ -12,6 +13,7 @@ export default function NoticePage() {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [total, setTotal] = useState(0);
+  const pageSize = 10;
 
   useEffect(() => {
     fetchNotices();
@@ -20,24 +22,31 @@ export default function NoticePage() {
   async function fetchNotices() {
     try {
       setLoading(true);
-      const params = new URLSearchParams({
-        page: page.toString(),
-        pageSize: "10",
-      });
+      const offset = (page - 1) * pageSize;
+
+      // 클라이언트 사이드에서 Supabase 직접 호출
+      let query = supabase
+        .from('notices')
+        .select('*', { count: 'exact' });
+
+      // 검색어가 있으면 제목에서 검색
       if (search) {
-        params.append("search", search);
+        query = query.ilike('title', `%${search}%`);
       }
 
-      const response = await fetch(`/api/notices?${params.toString()}`);
-      
-      if (!response.ok) {
-        throw new Error("공지사항을 불러오는데 실패했습니다");
+      // 상단 고정 공지 먼저, 그 다음 최신순
+      const { data, error: supabaseError, count } = await query
+        .order('is_pinned', { ascending: false })
+        .order('created_at', { ascending: false })
+        .range(offset, offset + pageSize - 1);
+
+      if (supabaseError) {
+        throw new Error(supabaseError.message || "공지사항을 불러오는데 실패했습니다");
       }
-      
-      const data: NoticeListResponse = await response.json();
-      setNotices(data.notices);
-      setTotalPages(data.totalPages);
-      setTotal(data.total);
+
+      setNotices(data || []);
+      setTotal(count || 0);
+      setTotalPages(count ? Math.ceil(count / pageSize) : 0);
       setError(null);
     } catch (err) {
       console.error("Error fetching notices:", err);

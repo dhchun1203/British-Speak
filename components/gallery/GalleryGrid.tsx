@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import ImageModal from "./ImageModal";
 import { GalleryItem } from "@/types/gallery";
 import Image from "next/image";
+import { supabase } from "@/lib/supabase/client";
 
 interface GalleryGridProps {
   selectedCategory: string;
@@ -19,14 +20,19 @@ export default function GalleryGrid({ selectedCategory }: GalleryGridProps) {
     async function fetchImages() {
       try {
         setLoading(true);
-        const response = await fetch("/api/gallery");
         
-        if (!response.ok) {
-          throw new Error("갤러리 이미지를 불러오는데 실패했습니다");
+        // 클라이언트 사이드에서 Supabase 직접 호출
+        const { data, error: supabaseError } = await supabase
+          .from('gallery')
+          .select('*')
+          .order('order', { ascending: false })
+          .order('created_at', { ascending: false });
+        
+        if (supabaseError) {
+          throw new Error(supabaseError.message || "갤러리 이미지를 불러오는데 실패했습니다");
         }
         
-        const data = await response.json();
-        setImages(data);
+        setImages(data || []);
         setError(null);
       } catch (err) {
         console.error("Error fetching gallery:", err);
