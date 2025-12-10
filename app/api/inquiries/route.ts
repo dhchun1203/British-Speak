@@ -104,6 +104,27 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // 푸시 알림 전송 (비동기로 실행, 실패해도 문의사항 저장은 성공 처리)
+    try {
+      const baseUrl = process.env.NEXT_PUBLIC_APP_URL || process.env.VERCEL_URL || 'http://localhost:3000';
+      const pushUrl = `${baseUrl}/api/push/send`;
+      
+      await fetch(pushUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          title: '새 문의사항이 등록되었습니다',
+          body: `${name}님이 문의하셨습니다: ${subject}`,
+          inquiryId: data.id,
+        }),
+      });
+    } catch (pushError) {
+      // 푸시 알림 실패는 로그만 남기고 사용자에게는 에러를 보여주지 않음
+      console.error("Failed to send push notification:", pushError);
+    }
+
     return NextResponse.json(
       {
         message: "문의사항이 성공적으로 전송되었습니다.",

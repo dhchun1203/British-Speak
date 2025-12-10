@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { supabase } from "@/lib/supabase/client";
 import { useI18n } from "@/lib/i18n/context";
 
 export default function ContactPage() {
@@ -25,42 +24,43 @@ export default function ContactPage() {
     setSubmitStatus({ type: null, message: "" });
 
     try {
-      // 클라이언트 사이드에서 Supabase 직접 호출
-      const { data, error: supabaseError } = await supabase
-        .from('inquiries')
-        .insert([
-          {
-            name: formData.name,
-            email: formData.email,
-            phone: formData.phone || null,
-            subject: formData.subject,
-            message: formData.message,
-            status: 'pending',
-          },
-        ])
-        .select()
-        .single();
+      // API 라우트를 통해 문의사항 저장 (푸시 알림 전송 포함)
+      const response = await fetch('/api/inquiries', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone || null,
+          subject: formData.subject,
+          message: formData.message,
+        }),
+      });
 
-      if (supabaseError) {
-        throw new Error(supabaseError.message || "문의사항 전송에 실패했습니다.");
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || "문의사항 전송에 실패했습니다.");
       }
 
-              setSubmitStatus({
-                type: "success",
-                message: t.contact.success,
-              });
-              setFormData({
-                name: "",
-                email: "",
-                phone: "",
-                subject: "",
-                message: "",
-              });
-            } catch (error: any) {
-              setSubmitStatus({
-                type: "error",
-                message: error.message || t.contact.error,
-              });
+      setSubmitStatus({
+        type: "success",
+        message: t.contact.success,
+      });
+      setFormData({
+        name: "",
+        email: "",
+        phone: "",
+        subject: "",
+        message: "",
+      });
+    } catch (error: any) {
+      setSubmitStatus({
+        type: "error",
+        message: error.message || t.contact.error,
+      });
     } finally {
       setIsSubmitting(false);
     }
