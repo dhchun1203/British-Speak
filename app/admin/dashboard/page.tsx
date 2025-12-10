@@ -5,15 +5,12 @@ import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase/client";
 import Link from "next/link";
 import { useI18n } from "@/lib/i18n/context";
-import { registerServiceWorker, subscribeToPushNotifications, requestNotificationPermission } from "@/lib/push";
 
 export default function AdminDashboard() {
   const router = useRouter();
   const { t } = useI18n();
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const [pushEnabled, setPushEnabled] = useState(false);
-  const [pushLoading, setPushLoading] = useState(false);
 
   useEffect(() => {
     // Supabase의 onAuthStateChange를 사용하여 세션 상태를 실시간으로 감지
@@ -112,70 +109,6 @@ export default function AdminDashboard() {
     router.push("/admin/login");
   };
 
-  // 푸시 알림 구독 처리
-  const handleEnablePush = async () => {
-    setPushLoading(true);
-    try {
-      // 브라우저 알림 권한 요청
-      const permission = await requestNotificationPermission();
-      
-      if (permission !== 'granted') {
-        alert('알림 권한이 허용되지 않았습니다. 브라우저 설정에서 알림을 허용해주세요.');
-        setPushLoading(false);
-        return;
-      }
-
-      // Service Worker 등록
-      const registration = await registerServiceWorker();
-      if (!registration) {
-        alert('Service Worker 등록에 실패했습니다.');
-        setPushLoading(false);
-        return;
-      }
-
-      // VAPID 공개키 가져오기
-      const vapidPublicKey = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
-      if (!vapidPublicKey) {
-        alert('푸시 알림 설정이 완료되지 않았습니다. 관리자에게 문의하세요.');
-        setPushLoading(false);
-        return;
-      }
-
-      // 푸시 알림 구독
-      const subscription = await subscribeToPushNotifications(registration, vapidPublicKey);
-      if (!subscription) {
-        alert('푸시 알림 구독에 실패했습니다.');
-        setPushLoading(false);
-        return;
-      }
-
-      // 구독 정보를 서버에 저장
-      const response = await fetch('/api/push/subscribe', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          subscription,
-          userId: user?.id,
-        }),
-      });
-
-      if (response.ok) {
-        setPushEnabled(true);
-        alert('푸시 알림이 활성화되었습니다!');
-      } else {
-        const data = await response.json();
-        alert(`푸시 알림 활성화 실패: ${data.error || '알 수 없는 오류'}`);
-      }
-    } catch (error: any) {
-      console.error('Failed to enable push notifications:', error);
-      alert(`푸시 알림 활성화 실패: ${error.message}`);
-    } finally {
-      setPushLoading(false);
-    }
-  };
-
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -207,29 +140,6 @@ export default function AdminDashboard() {
       </div>
 
       <div className="container mx-auto px-4 py-8">
-        {/* 푸시 알림 설정 */}
-        <div className="bg-white p-6 rounded-lg shadow-md mb-6">
-          <h2 className="text-lg font-semibold text-gray-800 mb-4">푸시 알림 설정</h2>
-          <p className="text-sm text-gray-600 mb-4">
-            새 문의사항이 등록되면 푸시 알림을 받을 수 있습니다.
-          </p>
-          <button
-            onClick={handleEnablePush}
-            disabled={pushEnabled || pushLoading}
-            className={`px-4 py-2 rounded-md font-medium ${
-              pushEnabled
-                ? 'bg-green-100 text-green-800 cursor-not-allowed'
-                : 'bg-primary-600 text-white hover:bg-primary-700'
-            } ${pushLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
-          >
-            {pushLoading
-              ? '설정 중...'
-              : pushEnabled
-              ? '✓ 푸시 알림 활성화됨'
-              : '푸시 알림 활성화'}
-          </button>
-        </div>
-
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {/* 갤러리 관리 카드 */}
           <Link

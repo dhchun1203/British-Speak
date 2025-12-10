@@ -151,7 +151,7 @@ npm run dev
 │   │   ├── gallery/         # 갤러리 API
 │   │   ├── notices/        # 공지사항 API
 │   │   │   └── upload-image/ # 이미지 업로드 API
-│   │   └── inquiries/      # 문의사항 API
+│   │   ├── inquiries/      # 문의사항 API
 │   ├── contact/             # 문의하기 페이지
 │   ├── gallery/             # 갤러리 페이지
 │   ├── notice/              # 공지사항 페이지
@@ -247,6 +247,8 @@ npm run dev
   - 스크롤 최상단 버튼
   - 반응형 웹 디자인 개선
   - 관리자 페이지 반응형 적용
+  - 모바일 메뉴 아이콘 애니메이션 (햄버거 ↔ X)
+  - 모바일 메뉴 펼침 애니메이션
 
 ### 남은 작업
 
@@ -277,7 +279,7 @@ npm run dev
    - `NEXT_PUBLIC_SUPABASE_URL`
    - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
    - `SUPABASE_SERVICE_ROLE_KEY`
-   - `NEXT_PUBLIC_KAKAO_MAP_API_KEY`
+   - `NEXT_PUBLIC_KAKAO_MAP_API_KEY` (선택사항)
 5. "Deploy" 클릭하여 자동 배포
 
 > **참고**: 자세한 배포 가이드는 `docs/VERCEL_DEPLOY.md`를 참고하세요.
@@ -304,8 +306,9 @@ npm run dev
 ### 사용자 경험
 - 직관적인 네비게이션
 - 빠른 페이지 로딩
-- 부드러운 애니메이션
+- 부드러운 애니메이션 (모바일 메뉴, 전환 효과)
 - 접근성 고려
+- 모바일 최적화된 UI/UX
 
 ## 라이선스
 
