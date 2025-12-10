@@ -5,9 +5,11 @@ import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase/client";
 import Link from "next/link";
 import { Notice, NoticeListResponse } from "@/types/notice";
+import { useI18n } from "@/lib/i18n/context";
 
 export default function AdminNoticePage() {
   const router = useRouter();
+  const { t } = useI18n();
   const [loading, setLoading] = useState(true);
   const [authenticated, setAuthenticated] = useState(false);
   const [notices, setNotices] = useState<Notice[]>([]);
@@ -83,7 +85,7 @@ export default function AdminNoticePage() {
   }
 
   async function handleDelete(id: string, title: string) {
-    if (!confirm(`"${title}" 공지사항을 삭제하시겠습니까?`)) {
+    if (!confirm(t.admin.notice.deleteConfirm.replace('{title}', title))) {
       return;
     }
 
@@ -97,10 +99,10 @@ export default function AdminNoticePage() {
       }
 
       await fetchNotices();
-      alert('공지사항이 삭제되었습니다.');
+      alert(t.admin.notice.deleteSuccess);
     } catch (error) {
       console.error("Error deleting notice:", error);
-      alert('공지사항 삭제에 실패했습니다.');
+      alert(t.admin.notice.deleteFailed);
     }
   }
 
@@ -121,7 +123,7 @@ export default function AdminNoticePage() {
       await fetchNotices();
     } catch (error) {
       console.error("Error updating notice:", error);
-      alert('고정 상태 변경에 실패했습니다.');
+      alert(t.admin.notice.pinChangeFailed);
     }
   }
 
@@ -132,7 +134,7 @@ export default function AdminNoticePage() {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
-          <p className="mt-4 text-gray-600">로딩 중...</p>
+          <p className="mt-4 text-gray-600">{t.common.loading}</p>
         </div>
       </div>
     );
@@ -152,15 +154,15 @@ export default function AdminNoticePage() {
                 href="/admin/dashboard"
                 className="text-primary-600 hover:text-primary-700"
               >
-                ← 대시보드
+                {t.admin.notice.backToDashboard}
               </Link>
-              <h1 className="text-2xl font-bold text-gray-800">공지사항 관리</h1>
+              <h1 className="text-2xl font-bold text-gray-800">{t.admin.notice.title}</h1>
             </div>
             <Link
               href="/admin/notice/new"
               className="px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700"
             >
-              + 새 공지사항
+              {t.admin.notice.newNotice}
             </Link>
           </div>
         </div>
@@ -172,7 +174,7 @@ export default function AdminNoticePage() {
           <div className="flex gap-4">
             <input
               type="text"
-              placeholder="제목으로 검색..."
+              placeholder={t.admin.notice.searchPlaceholder}
               value={search}
               onChange={(e) => {
                 setSearch(e.target.value);
@@ -187,7 +189,7 @@ export default function AdminNoticePage() {
         <div className="bg-white rounded-lg shadow-md overflow-hidden w-full">
           {notices.length === 0 ? (
             <div className="p-8 text-center text-gray-500">
-              {search ? "검색 결과가 없습니다." : "등록된 공지사항이 없습니다."}
+              {search ? t.admin.notice.noResults : t.admin.notice.noNotices}
             </div>
           ) : (
             <>
@@ -196,22 +198,22 @@ export default function AdminNoticePage() {
                 <thead className="bg-gray-50">
                   <tr>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      고정
+                      {t.admin.notice.table.pin}
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      제목
+                      {t.admin.notice.table.title}
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      작성자
+                      {t.admin.notice.table.author}
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      조회수
+                      {t.admin.notice.table.views}
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      작성일
+                      {t.admin.notice.table.createdAt}
                     </th>
                     <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      관리
+                      {t.admin.notice.table.actions}
                     </th>
                   </tr>
                 </thead>
@@ -226,7 +228,7 @@ export default function AdminNoticePage() {
                               ? "text-yellow-500"
                               : "text-gray-300 hover:text-yellow-400"
                           }`}
-                          title={notice.is_pinned ? "고정 해제" : "고정"}
+                          title={notice.is_pinned ? t.admin.notice.table.unpin : t.admin.notice.table.pin}
                         >
                           📌
                         </button>
@@ -242,7 +244,7 @@ export default function AdminNoticePage() {
                           </Link>
                           {notice.is_pinned && (
                             <span className="ml-2 px-2 py-1 text-xs bg-yellow-100 text-yellow-800 rounded">
-                              고정
+                              {t.admin.notice.table.pinned}
                             </span>
                           )}
                         </div>
@@ -262,13 +264,13 @@ export default function AdminNoticePage() {
                             href={`/admin/notice/${notice.id}/edit`}
                             className="text-blue-600 hover:text-blue-900"
                           >
-                            수정
+                            {t.admin.notice.table.edit}
                           </Link>
                           <button
                             onClick={() => handleDelete(notice.id, notice.title)}
                             className="text-red-600 hover:text-red-900"
                           >
-                            삭제
+                            {t.admin.notice.table.delete}
                           </button>
                         </div>
                       </td>
@@ -282,8 +284,10 @@ export default function AdminNoticePage() {
               {totalPages > 1 && (
                 <div className="bg-gray-50 px-6 py-4 flex items-center justify-between">
                   <div className="text-sm text-gray-700">
-                    총 {total}개 중 {((page - 1) * pageSize) + 1}-
-                    {Math.min(page * pageSize, total)}개 표시
+                    {t.admin.notice.pagination.showing
+                      .replace('{total}', total.toString())
+                      .replace('{start}', (((page - 1) * pageSize) + 1).toString())
+                      .replace('{end}', Math.min(page * pageSize, total).toString())}
                   </div>
                   <div className="flex gap-2">
                     <button
@@ -291,7 +295,7 @@ export default function AdminNoticePage() {
                       disabled={page === 1}
                       className="px-4 py-2 border border-gray-300 rounded-md text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
                     >
-                      이전
+                      {t.admin.notice.pagination.previous}
                     </button>
                     <span className="px-4 py-2 text-sm text-gray-700">
                       {page} / {totalPages}
@@ -301,7 +305,7 @@ export default function AdminNoticePage() {
                       disabled={page === totalPages}
                       className="px-4 py-2 border border-gray-300 rounded-md text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
                     >
-                      다음
+                      {t.admin.notice.pagination.next}
                     </button>
                   </div>
                 </div>

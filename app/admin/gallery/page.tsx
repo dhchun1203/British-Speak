@@ -6,9 +6,11 @@ import { supabase } from "@/lib/supabase/client";
 import Link from "next/link";
 import Image from "next/image";
 import { GalleryItem } from "@/types/gallery";
+import { useI18n } from "@/lib/i18n/context";
 
 export default function AdminGalleryPage() {
   const router = useRouter();
+  const { t } = useI18n();
   const [loading, setLoading] = useState(true);
   const [authenticated, setAuthenticated] = useState(false);
   const [images, setImages] = useState<GalleryItem[]>([]);
@@ -18,7 +20,7 @@ export default function AdminGalleryPage() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editForm, setEditForm] = useState({ title: "", category: "" });
 
-  const categories = ["수업", "이벤트", "체험활동", "기타"];
+  const categories = [t.gallery.category1, t.gallery.category2, t.gallery.category3, t.gallery.category4];
 
   useEffect(() => {
     checkAuth();
@@ -80,7 +82,7 @@ export default function AdminGalleryPage() {
     const imageFiles = files.filter(file => file.type.startsWith('image/'));
     
     if (imageFiles.length === 0) {
-      alert('이미지 파일만 업로드할 수 있습니다.');
+      alert(t.admin.gallery.validation.imageOnly);
       return;
     }
 
@@ -89,7 +91,7 @@ export default function AdminGalleryPage() {
 
   async function handleUpload() {
     if (selectedFiles.length === 0) {
-      alert('업로드할 이미지를 선택해주세요.');
+      alert(t.admin.gallery.validation.selectFiles);
       return;
     }
 
@@ -106,7 +108,7 @@ export default function AdminGalleryPage() {
         const formData = new FormData();
         formData.append('file', file);
         formData.append('title', file.name.replace(/\.[^/.]+$/, "")); // 파일명에서 확장자 제거
-        formData.append('category', '기타'); // 기본 카테고리
+        formData.append('category', t.gallery.category4); // 기본 카테고리
 
         const response = await fetch("/api/gallery", {
           method: "POST",
@@ -134,14 +136,16 @@ export default function AdminGalleryPage() {
     setUploadProgress({});
     
     if (uploadResults.failed === 0) {
-      alert(`${uploadResults.success}개의 이미지가 성공적으로 업로드되었습니다.`);
+      alert(t.admin.gallery.success.upload.replace('{count}', uploadResults.success.toString()));
     } else {
-      alert(`${uploadResults.success}개 성공, ${uploadResults.failed}개 실패했습니다.`);
+      alert(t.admin.gallery.success.uploadPartial
+        .replace('{success}', uploadResults.success.toString())
+        .replace('{failed}', uploadResults.failed.toString()));
     }
   }
 
   async function handleDelete(id: string) {
-    if (!confirm('이 이미지를 삭제하시겠습니까?')) {
+    if (!confirm(t.admin.gallery.failed.deleteConfirm)) {
       return;
     }
 
@@ -155,10 +159,10 @@ export default function AdminGalleryPage() {
       }
 
       await fetchImages();
-      alert('이미지가 삭제되었습니다.');
+      alert(t.admin.gallery.success.delete);
     } catch (error) {
       console.error("Error deleting image:", error);
-      alert('이미지 삭제에 실패했습니다.');
+      alert(t.admin.gallery.failed.delete);
     }
   }
 
@@ -179,10 +183,10 @@ export default function AdminGalleryPage() {
       setEditingId(null);
       setEditForm({ title: "", category: "" });
       await fetchImages();
-      alert('이미지 정보가 수정되었습니다.');
+      alert(t.admin.gallery.success.update);
     } catch (error) {
       console.error("Error updating image:", error);
-      alert('이미지 정보 수정에 실패했습니다.');
+      alert(t.admin.gallery.failed.update);
     }
   }
 
@@ -203,7 +207,7 @@ export default function AdminGalleryPage() {
       await fetchImages();
     } catch (error) {
       console.error("Error updating order:", error);
-      alert('순서 변경에 실패했습니다.');
+      alert(t.admin.gallery.failed.orderChange);
     }
   }
 
@@ -229,7 +233,7 @@ export default function AdminGalleryPage() {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
-          <p className="mt-4 text-gray-600">로딩 중...</p>
+          <p className="mt-4 text-gray-600">{t.common.loading}</p>
         </div>
       </div>
     );
@@ -249,9 +253,9 @@ export default function AdminGalleryPage() {
                 href="/admin/dashboard"
                 className="text-primary-600 hover:text-primary-700"
               >
-                ← 대시보드
+                {t.admin.gallery.backToDashboard}
               </Link>
-              <h1 className="text-2xl font-bold text-gray-800">갤러리 관리</h1>
+              <h1 className="text-2xl font-bold text-gray-800">{t.admin.gallery.title}</h1>
             </div>
           </div>
         </div>
@@ -260,12 +264,12 @@ export default function AdminGalleryPage() {
       <div className="container mx-auto px-4 py-8">
         {/* 업로드 섹션 */}
         <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-          <h2 className="text-xl font-semibold text-gray-800 mb-4">이미지 업로드</h2>
+          <h2 className="text-xl font-semibold text-gray-800 mb-4">{t.admin.gallery.upload.title}</h2>
           
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                이미지 선택 (다중 선택 가능)
+                {t.admin.gallery.upload.selectLabel}
               </label>
               <input
                 type="file"
@@ -280,7 +284,7 @@ export default function AdminGalleryPage() {
             {selectedFiles.length > 0 && (
               <div className="mt-4">
                 <p className="text-sm font-medium text-gray-700 mb-2">
-                  선택된 파일 ({selectedFiles.length}개)
+                  {t.admin.gallery.upload.selectedFiles.replace('{count}', selectedFiles.length.toString())}
                 </p>
                 <div className="space-y-2">
                   {selectedFiles.map((file, index) => (
@@ -294,7 +298,7 @@ export default function AdminGalleryPage() {
                         className="text-red-600 hover:text-red-700 text-sm"
                         disabled={uploading}
                       >
-                        제거
+                        {t.admin.gallery.upload.remove}
                       </button>
                     </div>
                   ))}
@@ -307,7 +311,7 @@ export default function AdminGalleryPage() {
               disabled={uploading || selectedFiles.length === 0}
               className="w-full px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {uploading ? "업로드 중..." : "업로드"}
+              {uploading ? t.admin.gallery.upload.uploading : t.admin.gallery.upload.uploadButton}
             </button>
           </div>
         </div>
@@ -315,11 +319,11 @@ export default function AdminGalleryPage() {
         {/* 이미지 목록 */}
         <div className="bg-white rounded-lg shadow-md p-6">
           <h2 className="text-xl font-semibold text-gray-800 mb-4">
-            이미지 목록 ({images.length}개)
+            {t.admin.gallery.list.title.replace('{count}', images.length.toString())}
           </h2>
 
           {images.length === 0 ? (
-            <p className="text-gray-500 text-center py-8">업로드된 이미지가 없습니다.</p>
+            <p className="text-gray-500 text-center py-8">{t.admin.gallery.list.noImages}</p>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {images.map((image) => (
@@ -338,7 +342,7 @@ export default function AdminGalleryPage() {
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center">
-                        <span className="text-gray-400 text-sm">이미지 없음</span>
+                        <span className="text-gray-400 text-sm">{t.admin.gallery.list.noImage}</span>
                       </div>
                     )}
                   </div>
@@ -348,7 +352,7 @@ export default function AdminGalleryPage() {
                       <div className="space-y-3">
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-1">
-                            제목
+                            {t.admin.gallery.list.edit.title}
                           </label>
                           <input
                             type="text"
@@ -361,7 +365,7 @@ export default function AdminGalleryPage() {
                         </div>
                         <div>
                           <label className="block text-sm font-medium text-gray-700 mb-1">
-                            카테고리
+                            {t.admin.gallery.list.edit.category}
                           </label>
                           <select
                             value={editForm.category}
@@ -382,13 +386,13 @@ export default function AdminGalleryPage() {
                             onClick={() => handleUpdate(image.id)}
                             className="flex-1 px-3 py-2 bg-primary-600 text-white rounded-md text-sm hover:bg-primary-700"
                           >
-                            저장
+                            {t.admin.gallery.list.edit.save}
                           </button>
                           <button
                             onClick={cancelEdit}
                             className="flex-1 px-3 py-2 bg-gray-200 text-gray-700 rounded-md text-sm hover:bg-gray-300"
                           >
-                            취소
+                            {t.admin.gallery.list.edit.cancel}
                           </button>
                         </div>
                       </div>
@@ -396,10 +400,10 @@ export default function AdminGalleryPage() {
                       <>
                         <h3 className="font-semibold text-gray-800 mb-1">{image.title}</h3>
                         <p className="text-sm text-gray-600 mb-2">
-                          카테고리: {image.category}
+                          {t.admin.gallery.list.category}: {image.category}
                         </p>
                         <div className="flex items-center gap-2 mb-3">
-                          <label className="text-sm text-gray-700">순서:</label>
+                          <label className="text-sm text-gray-700">{t.admin.gallery.list.order}:</label>
                           <input
                             type="number"
                             value={image.order || 0}
@@ -414,13 +418,13 @@ export default function AdminGalleryPage() {
                             onClick={() => startEdit(image)}
                             className="flex-1 px-3 py-2 bg-blue-600 text-white rounded-md text-sm hover:bg-blue-700"
                           >
-                            수정
+                            {t.admin.gallery.list.actions.edit}
                           </button>
                           <button
                             onClick={() => handleDelete(image.id)}
                             className="flex-1 px-3 py-2 bg-red-600 text-white rounded-md text-sm hover:bg-red-700"
                           >
-                            삭제
+                            {t.admin.gallery.list.actions.delete}
                           </button>
                         </div>
                       </>

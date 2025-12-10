@@ -5,11 +5,13 @@ import { useRouter, useParams } from "next/navigation";
 import { supabase } from "@/lib/supabase/client";
 import Link from "next/link";
 import { Notice } from "@/types/notice";
+import { useI18n } from "@/lib/i18n/context";
 
 export default function EditNoticePage() {
   const router = useRouter();
   const params = useParams();
   const id = params.id as string;
+  const { t } = useI18n();
 
   const [loading, setLoading] = useState(true);
   const [authenticated, setAuthenticated] = useState(false);
@@ -20,7 +22,7 @@ export default function EditNoticePage() {
   const [formData, setFormData] = useState({
     title: "",
     content: "",
-    author: "관리자",
+    author: t.admin.title,
     is_pinned: false,
   });
 
@@ -74,7 +76,7 @@ export default function EditNoticePage() {
       
       if (!response.ok) {
         if (response.status === 404) {
-          alert('공지사항을 찾을 수 없습니다.');
+          alert(t.admin.noticeEdit.notFound);
           router.push("/admin/notice");
           return;
         }
@@ -91,7 +93,7 @@ export default function EditNoticePage() {
       });
     } catch (error) {
       console.error("Error fetching notice:", error);
-      alert('공지사항을 불러오는데 실패했습니다.');
+      alert(t.admin.noticeEdit.fetchFailed);
       router.push("/admin/notice");
     }
   }
@@ -100,7 +102,7 @@ export default function EditNoticePage() {
     e.preventDefault();
     
     if (!formData.title.trim() || !formData.content.trim()) {
-      alert('제목과 내용을 입력해주세요.');
+      alert(t.admin.noticeEdit.validation.required);
       return;
     }
 
@@ -121,11 +123,11 @@ export default function EditNoticePage() {
       }
 
       const data = await response.json();
-      alert('공지사항이 수정되었습니다.');
+      alert(t.admin.noticeEdit.success);
       router.push("/admin/notice");
     } catch (error: any) {
       console.error("Error updating notice:", error);
-      alert(error.message || '공지사항 수정에 실패했습니다.');
+      alert(error.message || t.admin.noticeEdit.failed);
     } finally {
       setSaving(false);
     }
@@ -137,7 +139,7 @@ export default function EditNoticePage() {
 
     // 파일 타입 확인
     if (!file.type.startsWith('image/')) {
-      alert('이미지 파일만 업로드할 수 있습니다.');
+      alert(t.admin.noticeEdit.imageOnly);
       return;
     }
 
@@ -178,10 +180,10 @@ export default function EditNoticePage() {
           textarea.focus();
         }
       }, 0);
-      alert('이미지가 업로드되었습니다.');
+      alert(t.admin.noticeEdit.imageUploadSuccess);
     } catch (error: any) {
       console.error("Error uploading image:", error);
-      alert(error.message || '이미지 업로드에 실패했습니다.');
+      alert(error.message || t.admin.noticeEdit.imageUploadFailed);
     } finally {
       setUploadingImage(false);
       // input 초기화
@@ -194,7 +196,7 @@ export default function EditNoticePage() {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
-          <p className="mt-4 text-gray-600">로딩 중...</p>
+          <p className="mt-4 text-gray-600">{t.common.loading}</p>
         </div>
       </div>
     );
@@ -214,9 +216,9 @@ export default function EditNoticePage() {
                 href="/admin/notice"
                 className="text-primary-600 hover:text-primary-700"
               >
-                ← 목록으로
+                {t.admin.noticeEdit.backToList}
               </Link>
-              <h1 className="text-2xl font-bold text-gray-800">공지사항 수정</h1>
+              <h1 className="text-2xl font-bold text-gray-800">{t.admin.noticeEdit.title}</h1>
             </div>
           </div>
         </div>
@@ -228,7 +230,7 @@ export default function EditNoticePage() {
             {/* 제목 */}
             <div>
               <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-2">
-                제목 <span className="text-red-500">*</span>
+                {t.admin.noticeEdit.form.title} <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
@@ -236,7 +238,7 @@ export default function EditNoticePage() {
                 value={formData.title}
                 onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                 className="w-full px-4 py-2 border border-gray-300 rounded-md text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500"
-                placeholder="공지사항 제목을 입력하세요"
+                placeholder={t.admin.noticeEdit.form.titlePlaceholder}
                 required
               />
             </div>
@@ -244,7 +246,7 @@ export default function EditNoticePage() {
             {/* 작성자 */}
             <div>
               <label htmlFor="author" className="block text-sm font-medium text-gray-700 mb-2">
-                작성자
+                {t.admin.noticeEdit.form.author}
               </label>
               <input
                 type="text"
@@ -252,7 +254,7 @@ export default function EditNoticePage() {
                 value={formData.author}
                 onChange={(e) => setFormData({ ...formData, author: e.target.value })}
                 className="w-full px-4 py-2 border border-gray-300 rounded-md text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500"
-                placeholder="작성자 이름"
+                placeholder={t.admin.noticeEdit.form.authorPlaceholder}
               />
             </div>
 
@@ -260,7 +262,7 @@ export default function EditNoticePage() {
             <div>
               <div className="flex items-center justify-between mb-2">
                 <label htmlFor="content" className="block text-sm font-medium text-gray-700">
-                  내용 <span className="text-red-500">*</span>
+                  {t.admin.noticeEdit.form.content} <span className="text-red-500">*</span>
                 </label>
                 <div className="flex items-center gap-2">
                   <input
@@ -277,7 +279,7 @@ export default function EditNoticePage() {
                       uploadingImage ? 'opacity-50 cursor-not-allowed' : ''
                     }`}
                   >
-                    {uploadingImage ? '업로드 중...' : '📷 이미지 삽입'}
+                    {uploadingImage ? t.admin.noticeEdit.form.uploading : t.admin.noticeEdit.form.imageInsert}
                   </label>
                 </div>
               </div>
@@ -287,11 +289,11 @@ export default function EditNoticePage() {
                 onChange={(e) => setFormData({ ...formData, content: e.target.value })}
                 rows={15}
                 className="w-full px-4 py-2 border border-gray-300 rounded-md text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500"
-                placeholder="공지사항 내용을 입력하세요&#10;&#10;이미지를 삽입하려면 '이미지 삽입' 버튼을 클릭하세요."
+                placeholder={t.admin.noticeEdit.form.contentPlaceholder}
                 required
               />
               <p className="mt-1 text-xs text-gray-500">
-                💡 이미지 삽입 버튼을 클릭하면 마크다운 형식으로 이미지가 자동 삽입됩니다.
+                {t.admin.noticeEdit.form.imageTip}
               </p>
             </div>
 
@@ -305,7 +307,7 @@ export default function EditNoticePage() {
                 className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
               />
               <label htmlFor="is_pinned" className="ml-2 block text-sm text-gray-700">
-                중요 공지로 상단 고정
+                {t.admin.noticeEdit.form.pin}
               </label>
             </div>
 
@@ -313,13 +315,13 @@ export default function EditNoticePage() {
             <div className="bg-gray-50 p-4 rounded-md">
               <div className="grid grid-cols-2 gap-4 text-sm">
                 <div>
-                  <span className="text-gray-600">작성일:</span>{" "}
+                  <span className="text-gray-600">{t.admin.noticeEdit.form.info.createdAt}</span>{" "}
                   <span className="text-gray-900">
                     {new Date(notice.created_at).toLocaleString('ko-KR')}
                   </span>
                 </div>
                 <div>
-                  <span className="text-gray-600">조회수:</span>{" "}
+                  <span className="text-gray-600">{t.admin.noticeEdit.form.info.views}</span>{" "}
                   <span className="text-gray-900">{notice.views || 0}</span>
                 </div>
               </div>
@@ -331,14 +333,14 @@ export default function EditNoticePage() {
                 href="/admin/notice"
                 className="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
               >
-                취소
+                {t.admin.noticeEdit.form.cancel}
               </Link>
               <button
                 type="submit"
                 disabled={saving}
                 className="px-6 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {saving ? "저장 중..." : "저장"}
+                {saving ? t.admin.noticeEdit.form.saving : t.admin.noticeEdit.form.save}
               </button>
             </div>
           </form>

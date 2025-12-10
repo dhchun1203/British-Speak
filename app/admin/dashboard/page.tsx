@@ -4,9 +4,11 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase/client";
 import Link from "next/link";
+import { useI18n } from "@/lib/i18n/context";
 
 export default function AdminDashboard() {
   const router = useRouter();
+  const { t } = useI18n();
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
@@ -112,7 +114,7 @@ export default function AdminDashboard() {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
-          <p className="mt-4 text-gray-600">로딩 중...</p>
+          <p className="mt-4 text-gray-600">{t.admin.dashboard.loading}</p>
         </div>
       </div>
     );
@@ -123,14 +125,14 @@ export default function AdminDashboard() {
       <div className="bg-white shadow">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
-            <h1 className="text-2xl font-bold text-gray-800">관리자 대시보드</h1>
+            <h1 className="text-2xl font-bold text-gray-800">{t.admin.dashboard.title}</h1>
             <div className="flex items-center gap-4">
               <span className="text-sm text-gray-600">{user?.email}</span>
               <button
                 onClick={handleLogout}
                 className="px-4 py-2 text-sm text-gray-700 hover:text-gray-900"
               >
-                로그아웃
+                {t.admin.dashboard.logout}
               </button>
             </div>
           </div>
@@ -159,8 +161,8 @@ export default function AdminDashboard() {
                 </svg>
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-gray-800">갤러리 관리</h3>
-                <p className="text-sm text-gray-600">이미지 업로드 및 관리</p>
+                <h3 className="text-lg font-semibold text-gray-800">{t.admin.dashboard.gallery.title}</h3>
+                <p className="text-sm text-gray-600">{t.admin.dashboard.gallery.description}</p>
               </div>
             </div>
           </Link>
@@ -185,8 +187,8 @@ export default function AdminDashboard() {
                 </svg>
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-gray-800">공지사항 관리</h3>
-                <p className="text-sm text-gray-600">공지사항 작성 및 관리</p>
+                <h3 className="text-lg font-semibold text-gray-800">{t.admin.dashboard.notice.title}</h3>
+                <p className="text-sm text-gray-600">{t.admin.dashboard.notice.description}</p>
               </div>
             </div>
           </Link>
@@ -208,8 +210,8 @@ export default function AdminDashboard() {
                 </svg>
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-gray-800">통계</h3>
-                <p className="text-sm text-gray-600">향후 구현 예정</p>
+                <h3 className="text-lg font-semibold text-gray-800">{t.admin.dashboard.stats.title}</h3>
+                <p className="text-sm text-gray-600">{t.admin.dashboard.stats.description}</p>
               </div>
             </div>
           </div>

@@ -4,9 +4,11 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase/client";
 import Link from "next/link";
+import { useI18n } from "@/lib/i18n/context";
 
 export default function AdminLoginPage() {
   const router = useRouter();
+  const { t } = useI18n();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -61,7 +63,7 @@ export default function AdminLoginPage() {
           // 일반 사용자는 로그아웃
           await supabase.auth.signOut();
           setError(
-            "관리자 권한이 없습니다. " +
+            t.admin.login.noPermission + " " +
             "Supabase에서 raw_user_meta_data에 role: 'admin'을 추가하세요. " +
             "docs/QUICK_FIX_ADMIN_ROLE.md 참고"
           );
@@ -69,7 +71,7 @@ export default function AdminLoginPage() {
       }
     } catch (err: any) {
       console.error("Login error:", err);
-      setError(err.message || "로그인에 실패했습니다.");
+      setError(err.message || t.admin.login.loginFailed);
     } finally {
       setLoading(false);
     }
@@ -80,10 +82,10 @@ export default function AdminLoginPage() {
       <div className="max-w-md w-full space-y-8">
         <div>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            관리자 로그인
+            {t.admin.login.title}
           </h2>
           <p className="mt-2 text-center text-sm text-gray-600">
-            영국 스피킹 아카데미 관리자 페이지
+            {t.admin.login.subtitle}
           </p>
         </div>
         <form className="mt-8 space-y-6" onSubmit={handleLogin}>
@@ -95,7 +97,7 @@ export default function AdminLoginPage() {
           <div className="rounded-md shadow-sm -space-y-px">
             <div>
               <label htmlFor="email" className="sr-only">
-                이메일
+                {t.admin.login.email}
               </label>
               <input
                 id="email"
@@ -106,12 +108,12 @@ export default function AdminLoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-primary-500 focus:border-primary-500 focus:z-10 sm:text-sm"
-                placeholder="이메일 주소"
+                placeholder={t.admin.login.emailPlaceholder}
               />
             </div>
             <div>
               <label htmlFor="password" className="sr-only">
-                비밀번호
+                {t.admin.login.password}
               </label>
               <input
                 id="password"
@@ -122,7 +124,7 @@ export default function AdminLoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-primary-500 focus:border-primary-500 focus:z-10 sm:text-sm"
-                placeholder="비밀번호"
+                placeholder={t.admin.login.passwordPlaceholder}
               />
             </div>
           </div>
@@ -133,7 +135,7 @@ export default function AdminLoginPage() {
               disabled={loading}
               className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {loading ? "로그인 중..." : "로그인"}
+              {loading ? t.admin.login.loggingIn : t.admin.login.loginButton}
             </button>
           </div>
 
@@ -142,7 +144,7 @@ export default function AdminLoginPage() {
               href="/"
               className="text-sm text-primary-600 hover:text-primary-700"
             >
-              홈으로 돌아가기
+              {t.admin.login.backToHome}
             </Link>
           </div>
         </form>

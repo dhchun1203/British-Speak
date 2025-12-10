@@ -4,9 +4,11 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase/client";
 import Link from "next/link";
+import { useI18n } from "@/lib/i18n/context";
 
 export default function NewNoticePage() {
   const router = useRouter();
+  const { t } = useI18n();
   const [loading, setLoading] = useState(true);
   const [authenticated, setAuthenticated] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -15,7 +17,7 @@ export default function NewNoticePage() {
   const [formData, setFormData] = useState({
     title: "",
     content: "",
-    author: "관리자",
+    author: t.admin.title,
     is_pinned: false,
   });
 
@@ -61,7 +63,7 @@ export default function NewNoticePage() {
     e.preventDefault();
     
     if (!formData.title.trim() || !formData.content.trim()) {
-      alert('제목과 내용을 입력해주세요.');
+      alert(t.admin.noticeNew.validation.required);
       return;
     }
 
@@ -82,11 +84,11 @@ export default function NewNoticePage() {
       }
 
       const data = await response.json();
-      alert('공지사항이 작성되었습니다.');
+      alert(t.admin.noticeNew.success);
       router.push("/admin/notice");
     } catch (error: any) {
       console.error("Error creating notice:", error);
-      alert(error.message || '공지사항 작성에 실패했습니다.');
+      alert(error.message || t.admin.noticeNew.failed);
     } finally {
       setSaving(false);
     }
@@ -98,7 +100,7 @@ export default function NewNoticePage() {
 
     // 파일 타입 확인
     if (!file.type.startsWith('image/')) {
-      alert('이미지 파일만 업로드할 수 있습니다.');
+      alert(t.admin.noticeNew.imageOnly);
       return;
     }
 
@@ -139,10 +141,10 @@ export default function NewNoticePage() {
           textarea.focus();
         }
       }, 0);
-      alert('이미지가 업로드되었습니다.');
+      alert(t.admin.noticeNew.imageUploadSuccess);
     } catch (error: any) {
       console.error("Error uploading image:", error);
-      alert(error.message || '이미지 업로드에 실패했습니다.');
+      alert(error.message || t.admin.noticeNew.imageUploadFailed);
     } finally {
       setUploadingImage(false);
       // input 초기화
@@ -155,7 +157,7 @@ export default function NewNoticePage() {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
-          <p className="mt-4 text-gray-600">로딩 중...</p>
+          <p className="mt-4 text-gray-600">{t.common.loading}</p>
         </div>
       </div>
     );
@@ -175,9 +177,9 @@ export default function NewNoticePage() {
                 href="/admin/notice"
                 className="text-primary-600 hover:text-primary-700"
               >
-                ← 목록으로
+                {t.admin.noticeNew.backToList}
               </Link>
-              <h1 className="text-2xl font-bold text-gray-800">새 공지사항 작성</h1>
+              <h1 className="text-2xl font-bold text-gray-800">{t.admin.noticeNew.title}</h1>
             </div>
           </div>
         </div>
@@ -189,7 +191,7 @@ export default function NewNoticePage() {
             {/* 제목 */}
             <div>
               <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-2">
-                제목 <span className="text-red-500">*</span>
+                {t.admin.noticeNew.form.title} <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
@@ -197,7 +199,7 @@ export default function NewNoticePage() {
                 value={formData.title}
                 onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                 className="w-full px-4 py-2 border border-gray-300 rounded-md text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500"
-                placeholder="공지사항 제목을 입력하세요"
+                placeholder={t.admin.noticeNew.form.titlePlaceholder}
                 required
               />
             </div>
@@ -205,7 +207,7 @@ export default function NewNoticePage() {
             {/* 작성자 */}
             <div>
               <label htmlFor="author" className="block text-sm font-medium text-gray-700 mb-2">
-                작성자
+                {t.admin.noticeNew.form.author}
               </label>
               <input
                 type="text"
@@ -213,7 +215,7 @@ export default function NewNoticePage() {
                 value={formData.author}
                 onChange={(e) => setFormData({ ...formData, author: e.target.value })}
                 className="w-full px-4 py-2 border border-gray-300 rounded-md text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500"
-                placeholder="작성자 이름"
+                placeholder={t.admin.noticeNew.form.authorPlaceholder}
               />
             </div>
 
@@ -221,7 +223,7 @@ export default function NewNoticePage() {
             <div>
               <div className="flex items-center justify-between mb-2">
                 <label htmlFor="content" className="block text-sm font-medium text-gray-700">
-                  내용 <span className="text-red-500">*</span>
+                  {t.admin.noticeNew.form.content} <span className="text-red-500">*</span>
                 </label>
                 <div className="flex items-center gap-2">
                   <input
@@ -238,7 +240,7 @@ export default function NewNoticePage() {
                       uploadingImage ? 'opacity-50 cursor-not-allowed' : ''
                     }`}
                   >
-                    {uploadingImage ? '업로드 중...' : '📷 이미지 삽입'}
+                    {uploadingImage ? t.admin.noticeNew.form.uploading : t.admin.noticeNew.form.imageInsert}
                   </label>
                 </div>
               </div>
@@ -248,11 +250,11 @@ export default function NewNoticePage() {
                 onChange={(e) => setFormData({ ...formData, content: e.target.value })}
                 rows={15}
                 className="w-full px-4 py-2 border border-gray-300 rounded-md text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500"
-                placeholder="공지사항 내용을 입력하세요&#10;&#10;이미지를 삽입하려면 '이미지 삽입' 버튼을 클릭하세요."
+                placeholder={t.admin.noticeNew.form.contentPlaceholder}
                 required
               />
               <p className="mt-1 text-xs text-gray-500">
-                💡 이미지 삽입 버튼을 클릭하면 마크다운 형식으로 이미지가 자동 삽입됩니다.
+                {t.admin.noticeNew.form.imageTip}
               </p>
             </div>
 
@@ -266,7 +268,7 @@ export default function NewNoticePage() {
                 className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
               />
               <label htmlFor="is_pinned" className="ml-2 block text-sm text-gray-700">
-                중요 공지로 상단 고정
+                {t.admin.noticeNew.form.pin}
               </label>
             </div>
 
@@ -276,14 +278,14 @@ export default function NewNoticePage() {
                 href="/admin/notice"
                 className="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
               >
-                취소
+                {t.admin.noticeNew.form.cancel}
               </Link>
               <button
                 type="submit"
                 disabled={saving}
                 className="px-6 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {saving ? "저장 중..." : "저장"}
+                {saving ? t.admin.noticeNew.form.saving : t.admin.noticeNew.form.save}
               </button>
             </div>
           </form>
