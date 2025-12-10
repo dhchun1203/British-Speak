@@ -1,6 +1,61 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerClient } from "@/lib/supabase/server";
 
+// GET: 문의사항 목록 조회 (관리자용)
+export async function GET(request: NextRequest) {
+  try {
+    const supabase = createServerClient();
+    const searchParams = request.nextUrl.searchParams;
+    
+    const page = parseInt(searchParams.get('page') || '1');
+    const pageSize = parseInt(searchParams.get('pageSize') || '20');
+    const status = searchParams.get('status') || '';
+    const search = searchParams.get('search') || '';
+    const offset = (page - 1) * pageSize;
+
+    // 검색 쿼리 빌더
+    let query = supabase
+      .from('inquiries')
+      .select('*', { count: 'exact' });
+
+    // 상태 필터
+    if (status) {
+      query = query.eq('status', status);
+    }
+
+    // 검색어가 있으면 제목, 이름, 이메일에서 검색
+    if (search) {
+      query = query.or(`subject.ilike.%${search}%,name.ilike.%${search}%,email.ilike.%${search}%`);
+    }
+
+    // 최신순 정렬
+    const { data, error, count } = await query
+      .order('created_at', { ascending: false })
+      .range(offset, offset + pageSize - 1);
+
+    if (error) {
+      console.error('Supabase error:', error);
+      throw error;
+    }
+
+    const totalPages = count ? Math.ceil(count / pageSize) : 0;
+
+    return NextResponse.json({
+      inquiries: data || [],
+      total: count || 0,
+      page,
+      pageSize,
+      totalPages,
+    });
+  } catch (error: any) {
+    console.error('Error fetching inquiries:', error);
+    return NextResponse.json(
+      { error: 'Failed to fetch inquiries' },
+      { status: 500 }
+    );
+  }
+}
+
 export async function POST(request: NextRequest) {
   try {
     const supabase = createServerClient();
