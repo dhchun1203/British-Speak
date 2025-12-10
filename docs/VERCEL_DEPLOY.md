@@ -58,6 +58,23 @@
      - **Environment**: Production, Preview, Development 모두 선택
      - ⚠️ **주의**: 이 키는 서버 사이드에서만 사용되며, 클라이언트에 노출되면 안 됩니다.
 
+   - **Name**: `NEXT_PUBLIC_VAPID_PUBLIC_KEY` (푸시 알림용)
+     - **Value**: VAPID 공개키 (VAPID 키 생성 방법은 `docs/PUSH_NOTIFICATION_SETUP.md` 참고)
+     - **Environment**: Production, Preview, Development 모두 선택
+
+   - **Name**: `VAPID_PRIVATE_KEY` (푸시 알림용)
+     - **Value**: VAPID 비공개키
+     - **Environment**: Production, Preview, Development 모두 선택
+     - ⚠️ **주의**: 이 키는 서버 사이드에서만 사용되며, 클라이언트에 노출되면 안 됩니다.
+
+   - **Name**: `VAPID_EMAIL` (푸시 알림용)
+     - **Value**: `mailto:admin@britishspeak.ac.kr` (또는 관리자 이메일)
+     - **Environment**: Production, Preview, Development 모두 선택
+
+   - **Name**: `NEXT_PUBLIC_KAKAO_MAP_API_KEY` (카카오맵 사용 시)
+     - **Value**: 카카오맵 API 키
+     - **Environment**: Production, Preview, Development 모두 선택
+
 #### 환경 변수 확인 방법
 
 **Supabase에서 확인:**

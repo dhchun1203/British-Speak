@@ -56,6 +56,34 @@ NEXT_PUBLIC_APP_URL=https://your-domain.com
 - `VAPID_PRIVATE_KEY`는 서버에서만 사용되므로 접두사 없이 설정합니다.
 - `VAPID_EMAIL`은 `mailto:` 형식으로 설정합니다.
 
+### 2-1. Vercel 배포 시 환경 변수 설정 (필수!)
+
+로컬 개발 환경에서만 설정하는 것이 아니라, **Vercel에도 반드시 설정해야 합니다**.
+
+1. **Vercel 대시보드 접속**
+   - https://vercel.com 접속
+   - 프로젝트 선택
+
+2. **환경 변수 추가**
+   - **Settings** → **Environment Variables** 메뉴 클릭
+   - 다음 환경 변수들을 추가합니다:
+
+   | 변수 이름 | 값 | Environment |
+   |----------|-----|-------------|
+   | `NEXT_PUBLIC_VAPID_PUBLIC_KEY` | 생성한 VAPID 공개키 | Production, Preview, Development 모두 선택 |
+   | `VAPID_PRIVATE_KEY` | 생성한 VAPID 비공개키 | Production, Preview, Development 모두 선택 |
+   | `VAPID_EMAIL` | `mailto:admin@britishspeak.ac.kr` | Production, Preview, Development 모두 선택 |
+
+3. **환경 변수 추가 후 재배포**
+   - 환경 변수 추가 후에는 **반드시 재배포**해야 합니다
+   - Vercel 대시보드에서 **Deployments** 탭 → 최신 배포의 **"..."** 메뉴 → **Redeploy** 클릭
+   - 또는 GitHub에 새로운 커밋을 푸시하면 자동 재배포됩니다
+
+**⚠️ 주의사항:**
+- `VAPID_PRIVATE_KEY`는 서버 사이드에서만 사용되므로 절대 클라이언트에 노출되면 안 됩니다
+- `.env.local`과 Vercel 환경 변수가 동일한 값이어야 합니다
+- 환경 변수 추가 후 빌드/배포를 다시 해야 적용됩니다
+
 ## 3. Supabase 테이블 생성
 
 Supabase SQL Editor에서 다음 SQL을 실행합니다:
