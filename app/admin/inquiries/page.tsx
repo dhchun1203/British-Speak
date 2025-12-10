@@ -152,8 +152,11 @@ export default function AdminInquiriesPage() {
       case 'pending':
         return 'bg-yellow-100 text-yellow-800';
       case 'in_progress':
+      case 'read': // 기존 스키마 호환성
         return 'bg-blue-100 text-blue-800';
       case 'completed':
+      case 'replied': // 기존 스키마 호환성
+      case 'closed': // 기존 스키마 호환성
         return 'bg-green-100 text-green-800';
       default:
         return 'bg-gray-100 text-gray-800';
@@ -165,8 +168,11 @@ export default function AdminInquiriesPage() {
       case 'pending':
         return t.admin.inquiries.statusPending;
       case 'in_progress':
+      case 'read': // 기존 스키마 호환성
         return t.admin.inquiries.statusInProgress;
       case 'completed':
+      case 'replied': // 기존 스키마 호환성
+      case 'closed': // 기존 스키마 호환성
         return t.admin.inquiries.statusCompleted;
       default:
         return status;
@@ -192,15 +198,15 @@ export default function AdminInquiriesPage() {
     <div className="min-h-screen bg-gray-50">
       <div className="bg-white shadow">
         <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4">
               <Link
                 href="/admin/dashboard"
-                className="text-primary-600 hover:text-primary-700"
+                className="text-sm sm:text-base text-primary-600 hover:text-primary-700"
               >
                 {t.admin.inquiries.backToDashboard}
               </Link>
-              <h1 className="text-2xl font-bold text-gray-800">{t.admin.inquiries.title}</h1>
+              <h1 className="text-xl sm:text-2xl font-bold text-gray-800">{t.admin.inquiries.title}</h1>
             </div>
           </div>
         </div>
@@ -245,28 +251,28 @@ export default function AdminInquiriesPage() {
           ) : (
             <>
               <div className="overflow-x-auto">
-                <table className="w-full divide-y divide-gray-200">
+                <table className="w-full divide-y divide-gray-200 min-w-[800px]">
                   <thead className="bg-gray-50">
                     <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         {t.admin.inquiries.table.name}
                       </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">
                         {t.admin.inquiries.table.email}
                       </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden lg:table-cell">
                         {t.admin.inquiries.table.phone}
                       </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         {t.admin.inquiries.table.subject}
                       </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         {t.admin.inquiries.table.status}
                       </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden sm:table-cell">
                         {t.admin.inquiries.table.createdAt}
                       </th>
-                      <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th className="px-3 sm:px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                         {t.admin.inquiries.table.actions}
                       </th>
                     </tr>
@@ -274,21 +280,24 @@ export default function AdminInquiriesPage() {
                   <tbody className="bg-white divide-y divide-gray-200">
                     {inquiries.map((inquiry) => (
                       <tr key={inquiry.id} className="hover:bg-gray-50">
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                          {inquiry.name}
+                        <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-xs sm:text-sm text-gray-900">
+                          <div className="flex flex-col">
+                            <span className="font-medium">{inquiry.name}</span>
+                            <span className="text-xs text-gray-500 md:hidden">{inquiry.email}</span>
+                          </div>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-xs sm:text-sm text-gray-900 hidden md:table-cell">
                           {inquiry.email}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-xs sm:text-sm text-gray-900 hidden lg:table-cell">
                           {inquiry.phone || '-'}
                         </td>
-                        <td className="px-6 py-4 text-sm text-gray-900">
+                        <td className="px-3 sm:px-6 py-4 text-xs sm:text-sm text-gray-900">
                           <div className="max-w-xs truncate" title={inquiry.subject}>
                             {inquiry.subject}
                           </div>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
+                        <td className="px-3 sm:px-6 py-4 whitespace-nowrap">
                           <select
                             value={inquiry.status}
                             onChange={(e) => handleStatusUpdate(inquiry.id, e.target.value)}
@@ -299,11 +308,11 @@ export default function AdminInquiriesPage() {
                             <option value="completed">{t.admin.inquiries.statusCompleted}</option>
                           </select>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-xs sm:text-sm text-gray-500 hidden sm:table-cell">
                           {new Date(inquiry.created_at).toLocaleDateString('ko-KR')}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                          <div className="flex justify-end gap-2">
+                        <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-right text-xs sm:text-sm font-medium">
+                          <div className="flex justify-end gap-1 sm:gap-2">
                             <button
                               onClick={() => {
                                 const modal = document.getElementById(`modal-${inquiry.id}`) as HTMLDialogElement;
@@ -340,8 +349,8 @@ export default function AdminInquiriesPage() {
                 <dialog
                   key={inquiry.id}
                   id={`modal-${inquiry.id}`}
-                  className="fixed inset-0 z-50 w-full max-w-2xl mx-auto my-auto bg-white rounded-lg shadow-xl p-6 backdrop:bg-black backdrop:opacity-50"
-                  style={{ top: '50%', transform: 'translateY(-50%)' }}
+                  className="fixed inset-0 z-50 w-full max-w-2xl mx-auto my-auto bg-white rounded-lg shadow-xl p-4 sm:p-6 backdrop:bg-black backdrop:opacity-50"
+                  style={{ top: '50%', transform: 'translateY(-50%)', maxHeight: '90vh' }}
                 >
                   <div className="space-y-4">
                     <div className="flex justify-between items-center mb-4">
@@ -417,8 +426,8 @@ export default function AdminInquiriesPage() {
 
               {/* 페이지네이션 */}
               {totalPages > 1 && (
-                <div className="bg-gray-50 px-6 py-4 flex items-center justify-between">
-                  <div className="text-sm text-gray-700">
+                <div className="bg-gray-50 px-3 sm:px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+                  <div className="text-xs sm:text-sm text-gray-700 text-center sm:text-left">
                     {t.admin.inquiries.pagination.showing
                       .replace('{total}', total.toString())
                       .replace('{start}', (((page - 1) * pageSize) + 1).toString())
@@ -428,17 +437,17 @@ export default function AdminInquiriesPage() {
                     <button
                       onClick={() => setPage((p) => Math.max(1, p - 1))}
                       disabled={page === 1}
-                      className="px-4 py-2 border border-gray-300 rounded-md text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+                      className="px-3 sm:px-4 py-2 border border-gray-300 rounded-md text-xs sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
                     >
                       {t.admin.inquiries.pagination.previous}
                     </button>
-                    <span className="px-4 py-2 text-sm text-gray-700">
+                    <span className="px-3 sm:px-4 py-2 text-xs sm:text-sm text-gray-700">
                       {page} / {totalPages}
                     </span>
                     <button
                       onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                       disabled={page === totalPages}
-                      className="px-4 py-2 border border-gray-300 rounded-md text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+                      className="px-3 sm:px-4 py-2 border border-gray-300 rounded-md text-xs sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
                     >
                       {t.admin.inquiries.pagination.next}
                     </button>

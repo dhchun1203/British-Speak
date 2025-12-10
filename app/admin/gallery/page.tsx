@@ -249,15 +249,15 @@ export default function AdminGalleryPage() {
     <div className="min-h-screen bg-gray-50">
       <div className="bg-white shadow">
         <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4">
               <Link
                 href="/admin/dashboard"
-                className="text-primary-600 hover:text-primary-700"
+                className="text-sm sm:text-base text-primary-600 hover:text-primary-700"
               >
                 {t.admin.gallery.backToDashboard}
               </Link>
-              <h1 className="text-2xl font-bold text-gray-800">{t.admin.gallery.title}</h1>
+              <h1 className="text-xl sm:text-2xl font-bold text-gray-800">{t.admin.gallery.title}</h1>
             </div>
           </div>
         </div>
@@ -345,7 +345,7 @@ export default function AdminGalleryPage() {
           {images.length === 0 ? (
             <p className="text-gray-500 text-center py-8">{t.admin.gallery.list.noImages}</p>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
               {images.map((image) => (
                 <div
                   key={image.id}

@@ -210,15 +210,15 @@ export default function EditNoticePage() {
     <div className="min-h-screen bg-gray-50">
       <div className="bg-white shadow">
         <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4">
               <Link
                 href="/admin/notice"
-                className="text-primary-600 hover:text-primary-700"
+                className="text-sm sm:text-base text-primary-600 hover:text-primary-700"
               >
                 {t.admin.noticeEdit.backToList}
               </Link>
-              <h1 className="text-2xl font-bold text-gray-800">{t.admin.noticeEdit.title}</h1>
+              <h1 className="text-xl sm:text-2xl font-bold text-gray-800">{t.admin.noticeEdit.title}</h1>
             </div>
           </div>
         </div>
@@ -328,17 +328,17 @@ export default function EditNoticePage() {
             </div>
 
             {/* 버튼 */}
-            <div className="flex gap-4 justify-end">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-end">
               <Link
                 href="/admin/notice"
-                className="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+                className="px-4 sm:px-6 py-2 text-center border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 text-sm sm:text-base"
               >
                 {t.admin.noticeEdit.form.cancel}
               </Link>
               <button
                 type="submit"
                 disabled={saving}
-                className="px-6 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-4 sm:px-6 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
               >
                 {saving ? t.admin.noticeEdit.form.saving : t.admin.noticeEdit.form.save}
               </button>

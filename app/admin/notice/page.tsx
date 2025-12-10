@@ -148,19 +148,19 @@ export default function AdminNoticePage() {
     <div className="min-h-screen bg-gray-50">
       <div className="bg-white shadow">
         <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4">
               <Link
                 href="/admin/dashboard"
-                className="text-primary-600 hover:text-primary-700"
+                className="text-sm sm:text-base text-primary-600 hover:text-primary-700"
               >
                 {t.admin.notice.backToDashboard}
               </Link>
-              <h1 className="text-2xl font-bold text-gray-800">{t.admin.notice.title}</h1>
+              <h1 className="text-xl sm:text-2xl font-bold text-gray-800">{t.admin.notice.title}</h1>
             </div>
             <Link
               href="/admin/notice/new"
-              className="px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700"
+              className="px-3 sm:px-4 py-2 text-sm sm:text-base bg-primary-600 text-white rounded-md hover:bg-primary-700 w-full sm:w-auto text-center"
             >
               {t.admin.notice.newNotice}
             </Link>
@@ -194,25 +194,25 @@ export default function AdminNoticePage() {
           ) : (
             <>
               <div className="overflow-x-auto">
-                <table className="w-full divide-y divide-gray-200">
+                <table className="w-full divide-y divide-gray-200 min-w-[640px]">
                 <thead className="bg-gray-50">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       {t.admin.notice.table.pin}
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       {t.admin.notice.table.title}
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">
                       {t.admin.notice.table.author}
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden sm:table-cell">
                       {t.admin.notice.table.views}
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden lg:table-cell">
                       {t.admin.notice.table.createdAt}
                     </th>
-                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-3 sm:px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                       {t.admin.notice.table.actions}
                     </th>
                   </tr>
@@ -220,7 +220,7 @@ export default function AdminNoticePage() {
                 <tbody className="bg-white divide-y divide-gray-200">
                   {notices.map((notice) => (
                     <tr key={notice.id} className="hover:bg-gray-50">
-                      <td className="px-6 py-4 whitespace-nowrap">
+                      <td className="px-3 sm:px-6 py-4 whitespace-nowrap">
                         <button
                           onClick={() => handleTogglePin(notice.id, notice.is_pinned)}
                           className={`text-lg ${
@@ -233,33 +233,38 @@ export default function AdminNoticePage() {
                           📌
                         </button>
                       </td>
-                      <td className="px-6 py-4">
-                        <div className="flex items-center">
+                      <td className="px-3 sm:px-6 py-4">
+                        <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
                           <Link
                             href={`/notice/${notice.id}`}
                             target="_blank"
-                            className="text-sm font-medium text-gray-900 hover:text-primary-600"
+                            className="text-xs sm:text-sm font-medium text-gray-900 hover:text-primary-600 break-words"
                           >
                             {notice.title}
                           </Link>
                           {notice.is_pinned && (
-                            <span className="ml-2 px-2 py-1 text-xs bg-yellow-100 text-yellow-800 rounded">
+                            <span className="px-2 py-1 text-xs bg-yellow-100 text-yellow-800 rounded w-fit">
                               {t.admin.notice.table.pinned}
                             </span>
                           )}
+                          <div className="flex gap-2 md:hidden text-xs text-gray-500">
+                            <span>{notice.author}</span>
+                            <span>•</span>
+                            <span>{notice.views || 0} {t.admin.notice.table.views}</span>
+                          </div>
                         </div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-xs sm:text-sm text-gray-500 hidden md:table-cell">
                         {notice.author}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-xs sm:text-sm text-gray-500 hidden sm:table-cell">
                         {notice.views || 0}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-xs sm:text-sm text-gray-500 hidden lg:table-cell">
                         {new Date(notice.created_at).toLocaleDateString('ko-KR')}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <div className="flex justify-end gap-2">
+                      <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-right text-xs sm:text-sm font-medium">
+                        <div className="flex justify-end gap-1 sm:gap-2">
                           <Link
                             href={`/admin/notice/${notice.id}/edit`}
                             className="text-blue-600 hover:text-blue-900"
@@ -282,8 +287,8 @@ export default function AdminNoticePage() {
 
               {/* 페이지네이션 */}
               {totalPages > 1 && (
-                <div className="bg-gray-50 px-6 py-4 flex items-center justify-between">
-                  <div className="text-sm text-gray-700">
+                <div className="bg-gray-50 px-3 sm:px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+                  <div className="text-xs sm:text-sm text-gray-700 text-center sm:text-left">
                     {t.admin.notice.pagination.showing
                       .replace('{total}', total.toString())
                       .replace('{start}', (((page - 1) * pageSize) + 1).toString())
@@ -293,17 +298,17 @@ export default function AdminNoticePage() {
                     <button
                       onClick={() => setPage((p) => Math.max(1, p - 1))}
                       disabled={page === 1}
-                      className="px-4 py-2 border border-gray-300 rounded-md text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+                      className="px-3 sm:px-4 py-2 border border-gray-300 rounded-md text-xs sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
                     >
                       {t.admin.notice.pagination.previous}
                     </button>
-                    <span className="px-4 py-2 text-sm text-gray-700">
+                    <span className="px-3 sm:px-4 py-2 text-xs sm:text-sm text-gray-700">
                       {page} / {totalPages}
                     </span>
                     <button
                       onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                       disabled={page === totalPages}
-                      className="px-4 py-2 border border-gray-300 rounded-md text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+                      className="px-3 sm:px-4 py-2 border border-gray-300 rounded-md text-xs sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
                     >
                       {t.admin.notice.pagination.next}
                     </button>
