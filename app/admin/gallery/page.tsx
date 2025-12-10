@@ -17,6 +17,7 @@ export default function AdminGalleryPage() {
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState<{ [key: string]: number }>({});
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const [uploadCategory, setUploadCategory] = useState<string>(t.gallery.category4);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editForm, setEditForm] = useState({ title: "", category: "" });
 
@@ -108,7 +109,7 @@ export default function AdminGalleryPage() {
         const formData = new FormData();
         formData.append('file', file);
         formData.append('title', file.name.replace(/\.[^/.]+$/, "")); // 파일명에서 확장자 제거
-        formData.append('category', t.gallery.category4); // 기본 카테고리
+        formData.append('category', uploadCategory); // 선택된 카테고리
 
         const response = await fetch("/api/gallery", {
           method: "POST",
@@ -134,6 +135,7 @@ export default function AdminGalleryPage() {
     setUploading(false);
     setSelectedFiles([]);
     setUploadProgress({});
+    setUploadCategory(t.gallery.category4); // 기본값으로 리셋
     
     if (uploadResults.failed === 0) {
       alert(t.admin.gallery.success.upload.replace('{count}', uploadResults.success.toString()));
@@ -281,6 +283,24 @@ export default function AdminGalleryPage() {
               />
             </div>
 
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                {t.admin.gallery.list.edit.category}
+              </label>
+              <select
+                value={uploadCategory}
+                onChange={(e) => setUploadCategory(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-900"
+                disabled={uploading}
+              >
+                {categories.map((cat) => (
+                  <option key={cat} value={cat}>
+                    {cat}
+                  </option>
+                ))}
+              </select>
+            </div>
+
             {selectedFiles.length > 0 && (
               <div className="mt-4">
                 <p className="text-sm font-medium text-gray-700 mb-2">
@@ -360,7 +380,7 @@ export default function AdminGalleryPage() {
                             onChange={(e) =>
                               setEditForm({ ...editForm, title: e.target.value })
                             }
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-900"
                           />
                         </div>
                         <div>
@@ -372,7 +392,7 @@ export default function AdminGalleryPage() {
                             onChange={(e) =>
                               setEditForm({ ...editForm, category: e.target.value })
                             }
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-900"
                           >
                             {categories.map((cat) => (
                               <option key={cat} value={cat}>
@@ -410,7 +430,7 @@ export default function AdminGalleryPage() {
                             onChange={(e) =>
                               handleOrderChange(image.id, parseInt(e.target.value) || 0)
                             }
-                            className="w-20 px-2 py-1 border border-gray-300 rounded text-sm"
+                            className="w-20 px-2 py-1 border border-gray-300 rounded text-sm text-gray-900"
                           />
                         </div>
                         <div className="flex gap-2">
