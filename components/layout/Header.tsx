@@ -22,7 +22,7 @@ export default function Header() {
             className="text-lg sm:text-xl md:text-2xl font-bold text-primary-600"
           >
             <span className="hidden sm:inline">{t.home.title}</span>
-            <span className="sm:hidden">{language === 'ko' ? '영국 스피킹' : 'British Speak'}</span>
+            <span className="sm:hidden">{language === 'ko' ? '브리티시 스픽' : 'British Speak'}</span>
           </Link>
 
           {/* Desktop Menu */}

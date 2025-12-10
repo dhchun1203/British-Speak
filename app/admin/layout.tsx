@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "관리자 | 영국 스피킹 아카데미",
+  title: "관리자 | 브리티시 스픽",
   description: "관리자 페이지",
 };
 

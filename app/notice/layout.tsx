@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "공지사항 | 영국 스피킹 아카데미",
+  title: "공지사항 | 브리티시 스픽",
   description: "학원 공지사항을 확인하세요",
 };
 

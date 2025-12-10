@@ -9,8 +9,8 @@ import { I18nProvider } from "@/components/providers/I18nProvider";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "영국 스피킹 아카데미",
-  description: "영국 스피킹 아카데미 공식 웹사이트",
+  title: "브리티시 스픽",
+  description: "브리티시 스픽 공식 웹사이트",
 };
 
 export default function RootLayout({
