@@ -81,12 +81,14 @@ export default function Header() {
             
             {/* Mobile Menu Button */}
             <button
-              className="text-gray-700"
+              className="text-gray-700 relative w-6 h-6"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               aria-label="메뉴 열기"
             >
               <svg
-                className="w-6 h-6"
+                className={`w-6 h-6 absolute inset-0 transition-all duration-300 ${
+                  isMenuOpen ? "opacity-0 rotate-90" : "opacity-100 rotate-0"
+                }`}
                 fill="none"
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -94,19 +96,34 @@ export default function Header() {
                 viewBox="0 0 24 24"
                 stroke="currentColor"
               >
-                {isMenuOpen ? (
-                  <path d="M6 18L18 6M6 6l12 12" />
-                ) : (
-                  <path d="M4 6h16M4 12h16M4 18h16" />
-                )}
+                <path d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+              <svg
+                className={`w-6 h-6 absolute inset-0 transition-all duration-300 ${
+                  isMenuOpen ? "opacity-100 rotate-0" : "opacity-0 -rotate-90"
+                }`}
+                fill="none"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
           </div>
         </div>
 
         {/* Mobile Menu */}
-        {isMenuOpen && (
-          <div className="md:hidden mt-4 pb-4 space-y-2">
+        <div
+          className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${
+            isMenuOpen
+              ? "max-h-96 opacity-100 mt-4 pb-4"
+              : "max-h-0 opacity-0 mt-0 pb-0"
+          }`}
+        >
+          <div className="space-y-2">
             <Link
               href="/"
               className="block py-2 text-gray-700 hover:text-primary-600 transition-colors"
@@ -136,7 +153,7 @@ export default function Header() {
               {t.nav.contact}
             </Link>
           </div>
-        )}
+        </div>
       </nav>
     </header>
   );
