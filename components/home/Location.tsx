@@ -31,17 +31,26 @@ export default function Location() {
           const container = document.getElementById("map");
           if (container) {
             // 경기 화성시 동탄대로 636-14 상가동 A-206호 좌표
+            // const options = {
+            //   center: new window.kakao.maps.LatLng(37.2035, 127.0708), // 동탄대로 636-14 대략 좌표
+            //   level: 3,
+            // };
+            // 서울특별시 강남구 역삼로3길 17-6 좌표
             // 정확한 좌표는 카카오맵에서 주소 검색 후 우클릭 → 좌표 복사로 확인 가능
             const options = {
-              center: new window.kakao.maps.LatLng(37.2035, 127.0708), // 동탄대로 636-14 대략 좌표
+              center: new window.kakao.maps.LatLng(37.5010, 127.0370), // 역삼로3길 17-6 대략 좌표
               level: 3,
             };
             const map = new window.kakao.maps.Map(container, options);
 
             // 마커 생성
+            // const markerPosition = new window.kakao.maps.LatLng(
+            //   37.2035,
+            //   127.0708
+            // );
             const markerPosition = new window.kakao.maps.LatLng(
-              37.2035,
-              127.0708
+              37.5010,
+              127.0370
             );
             const marker = new window.kakao.maps.Marker({
               position: markerPosition,
