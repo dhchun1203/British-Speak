@@ -132,14 +132,16 @@ export default function AdminInquiriesPage() {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to update status");
+        const errorData = await response.json().catch(() => ({}));
+        console.error("Status update error:", errorData);
+        throw new Error(errorData.error || "Failed to update status");
       }
 
       await fetchInquiries();
       alert(t.admin.inquiries.detail.statusUpdateSuccess);
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error updating status:", error);
-      alert(t.admin.inquiries.detail.statusUpdateFailed);
+      alert(error.message || t.admin.inquiries.detail.statusUpdateFailed);
     }
   }
 

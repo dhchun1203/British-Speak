@@ -4,11 +4,11 @@ import { createServerClient } from "@/lib/supabase/server";
 // DELETE: 문의사항 삭제
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const supabase = createServerClient();
-    const id = params.id;
+    const { id } = await params;
 
     const { error } = await supabase
       .from("inquiries")
@@ -36,11 +36,11 @@ export async function DELETE(
 // PATCH: 문의사항 상태 업데이트
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const supabase = createServerClient();
-    const id = params.id;
+    const { id } = await params;
     const body = await request.json();
 
     const { status } = body;
@@ -62,7 +62,7 @@ export async function PATCH(
     if (error) {
       console.error("Error updating inquiry:", error);
       return NextResponse.json(
-        { error: "Failed to update inquiry" },
+        { error: "Failed to update inquiry", details: error.message },
         { status: 500 }
       );
     }
