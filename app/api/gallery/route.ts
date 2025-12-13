@@ -48,10 +48,13 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // 파일 확장자 추출
+    const fileExt = file.name.split('.').pop()?.toLowerCase();
+    
     // 파일 검증
     const { isValidImageFile, isValidFileSize } = await import('@/lib/utils/validation');
     
-    if (!isValidImageFile(file.name)) {
+    if (!fileExt || !isValidImageFile(file.name)) {
       return NextResponse.json(
         { error: 'Invalid file type. Allowed: jpg, jpeg, png, gif, webp' },
         { status: 400 }
