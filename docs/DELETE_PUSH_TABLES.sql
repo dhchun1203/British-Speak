@@ -22,3 +22,5 @@ AND tablename = 'push_subscriptions';
 
 -- 결과가 없으면 정상적으로 삭제된 것입니다.
 
+
+

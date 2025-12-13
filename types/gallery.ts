@@ -14,3 +14,5 @@ export type GalleryCategory = "전체" | "수업" | "이벤트" | "체험활동"
 
 
 
+
+

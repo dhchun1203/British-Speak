@@ -35,3 +35,5 @@ UPDATE inquiries SET status = 'completed' WHERE status = 'closed';
 
 **옵션 1을 권장합니다.** `in_progress`와 `completed`가 더 직관적이고 명확합니다.
 
+
+
