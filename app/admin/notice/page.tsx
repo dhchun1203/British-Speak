@@ -37,8 +37,8 @@ export default function AdminNoticePage() {
       if (!response.ok) throw new Error("Failed to fetch notices");
       
       const data: NoticeListResponse = await response.json();
-      setNotices(data.notices);
-      setTotal(data.total);
+      setNotices(data.notices || []);
+      setTotal(data.total || 0);
     } catch (error) {
       console.error("Error fetching notices:", error);
     }

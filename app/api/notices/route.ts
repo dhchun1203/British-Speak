@@ -32,9 +32,14 @@ export async function GET(request: NextRequest) {
       throw error;
     }
 
-    return createSuccessResponse(
-      createPaginatedResponse(data || [], count || 0, page, pageSize)
-    );
+    const paginatedResponse = createPaginatedResponse(data || [], count || 0, page, pageSize);
+    return createSuccessResponse({
+      notices: paginatedResponse.data,
+      total: paginatedResponse.total,
+      page: paginatedResponse.page,
+      pageSize: paginatedResponse.pageSize,
+      totalPages: paginatedResponse.totalPages,
+    });
   } catch (error) {
     return createErrorResponse(error, 'Failed to fetch notices');
   }
