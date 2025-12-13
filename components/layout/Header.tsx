@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { useI18n } from "@/lib/i18n/context";
+import Breadcrumb from "./Breadcrumb";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -155,6 +156,7 @@ export default function Header() {
           </div>
         </div>
       </nav>
+      <Breadcrumb />
     </header>
   );
 }

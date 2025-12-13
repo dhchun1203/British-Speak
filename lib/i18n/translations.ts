@@ -111,6 +111,7 @@ export const translations = {
       backToDetail: '목록으로 돌아가기',
       total: '총',
       notices: '개의 공지사항',
+      detail: '상세',
     },
     contact: {
       title: '문의하기',
@@ -492,6 +493,7 @@ export const translations = {
       backToDetail: 'Back to List',
       total: 'Total',
       notices: 'notices',
+      detail: 'Detail',
     },
     contact: {
       title: 'Contact Us',
