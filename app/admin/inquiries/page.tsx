@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { supabase } from "@/lib/supabase/client";
 import Link from "next/link";
 import { useI18n } from "@/lib/i18n/context";
+import { useAdminAuth } from "@/lib/hooks/useAdminAuth";
+import LoadingSpinner from "@/components/common/LoadingSpinner";
 
 interface Inquiry {
   id: string;
@@ -18,10 +18,8 @@ interface Inquiry {
 }
 
 export default function AdminInquiriesPage() {
-  const router = useRouter();
   const { t } = useI18n();
-  const [loading, setLoading] = useState(true);
-  const [authenticated, setAuthenticated] = useState(false);
+  const { loading, authenticated } = useAdminAuth();
   const [inquiries, setInquiries] = useState<Inquiry[]>([]);
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
@@ -30,48 +28,10 @@ export default function AdminInquiriesPage() {
   const [statusFilter, setStatusFilter] = useState("");
 
   useEffect(() => {
-    checkAuth();
-  }, []);
-
-  useEffect(() => {
     if (authenticated) {
       fetchInquiries();
     }
   }, [authenticated, page, search, statusFilter]);
-
-  async function checkAuth() {
-    try {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-
-      if (!user) {
-        router.push("/admin/login");
-        return;
-      }
-
-      const userRole = user.user_metadata?.role || user.app_metadata?.role;
-      const emailContainsAdmin = user.email?.toLowerCase().includes('admin');
-      
-      const allowedEmails = ['dhchun1203@gmail.com'];
-      const isAllowedEmail = allowedEmails.includes(user.email?.toLowerCase() || '');
-      
-      const isAdmin = userRole === 'admin' || emailContainsAdmin || isAllowedEmail;
-
-      if (!isAdmin) {
-        await supabase.auth.signOut();
-        router.push("/admin/login");
-        return;
-      }
-
-      setAuthenticated(true);
-    } catch (error) {
-      console.error("Auth check error:", error);
-      router.push("/admin/login");
-    } finally {
-      setLoading(false);
-    }
-  }
 
   async function fetchInquiries() {
     try {
@@ -180,14 +140,7 @@ export default function AdminInquiriesPage() {
   };
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
-          <p className="mt-4 text-gray-600">{t.common.loading}</p>
-        </div>
-      </div>
-    );
+    return <LoadingSpinner />;
   }
 
   if (!authenticated) {

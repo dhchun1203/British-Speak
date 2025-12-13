@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerClient } from "@/lib/supabase/server";
+import { createErrorResponse, createSuccessResponse, parsePaginationParams, createPaginatedResponse } from "@/lib/utils/api";
 
 // GET: 문의사항 목록 조회 (관리자용)
 export async function GET(request: NextRequest) {
@@ -7,11 +8,9 @@ export async function GET(request: NextRequest) {
     const supabase = createServerClient();
     const searchParams = request.nextUrl.searchParams;
     
-    const page = parseInt(searchParams.get('page') || '1');
-    const pageSize = parseInt(searchParams.get('pageSize') || '20');
+    const { page, pageSize, offset } = parsePaginationParams(searchParams, 1, 20);
     const status = searchParams.get('status') || '';
     const search = searchParams.get('search') || '';
-    const offset = (page - 1) * pageSize;
 
     // 검색 쿼리 빌더
     let query = supabase
@@ -38,21 +37,11 @@ export async function GET(request: NextRequest) {
       throw error;
     }
 
-    const totalPages = count ? Math.ceil(count / pageSize) : 0;
-
-    return NextResponse.json({
-      inquiries: data || [],
-      total: count || 0,
-      page,
-      pageSize,
-      totalPages,
-    });
-  } catch (error: any) {
-    console.error('Error fetching inquiries:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch inquiries' },
-      { status: 500 }
+    return createSuccessResponse(
+      createPaginatedResponse(data || [], count || 0, page, pageSize)
     );
+  } catch (error) {
+    return createErrorResponse(error, 'Failed to fetch inquiries');
   }
 }
 
@@ -64,16 +53,18 @@ export async function POST(request: NextRequest) {
     const { name, email, phone, subject, message } = body;
 
     // 필수 필드 검증
-    if (!name || !email || !subject || !message) {
+    const { validateRequiredFields, isValidEmail } = await import('@/lib/utils/validation');
+    const { isValid, missingFields } = validateRequiredFields(body, ['name', 'email', 'subject', 'message']);
+    
+    if (!isValid) {
       return NextResponse.json(
-        { error: "필수 항목을 모두 입력해주세요." },
+        { error: `필수 항목을 모두 입력해주세요: ${missingFields.join(', ')}` },
         { status: 400 }
       );
     }
 
     // 이메일 형식 검증
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
+    if (!isValidEmail(email)) {
       return NextResponse.json(
         { error: "올바른 이메일 형식이 아닙니다." },
         { status: 400 }
@@ -104,19 +95,15 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    return NextResponse.json(
+    return createSuccessResponse(
       {
         message: "문의사항이 성공적으로 전송되었습니다.",
         data,
       },
-      { status: 201 }
+      201
     );
-  } catch (error: any) {
-    console.error("Error in POST /api/inquiries:", error);
-    return NextResponse.json(
-      { error: "서버 오류가 발생했습니다." },
-      { status: 500 }
-    );
+  } catch (error) {
+    return createErrorResponse(error, "서버 오류가 발생했습니다.");
   }
 }
 

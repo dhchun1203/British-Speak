@@ -1,108 +1,16 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase/client";
 import Link from "next/link";
 import { useI18n } from "@/lib/i18n/context";
+import { useAdminAuth } from "@/lib/hooks/useAdminAuth";
+import LoadingSpinner from "@/components/common/LoadingSpinner";
 
 export default function AdminDashboard() {
   const router = useRouter();
   const { t } = useI18n();
-  const [user, setUser] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    // Supabase의 onAuthStateChange를 사용하여 세션 상태를 실시간으로 감지
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (event, session) => {
-      console.log("Auth state changed:", event, session?.user?.email);
-      
-      if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
-        if (session?.user) {
-          await verifyAdmin(session.user);
-        } else {
-          router.push("/admin/login");
-        }
-      } else if (event === 'SIGNED_OUT') {
-        setUser(null);
-        router.push("/admin/login");
-      } else if (session?.user) {
-        await verifyAdmin(session.user);
-      } else {
-        // 세션이 없으면 현재 세션 확인
-        checkCurrentSession();
-      }
-    });
-
-    // 초기 세션 확인
-    checkCurrentSession();
-
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, [router]);
-
-  async function checkCurrentSession() {
-    try {
-      const { data: { session }, error } = await supabase.auth.getSession();
-      
-      if (error) {
-        console.error("Session error:", error);
-        router.push("/admin/login");
-        setLoading(false);
-        return;
-      }
-
-      if (session?.user) {
-        await verifyAdmin(session.user);
-      } else {
-        console.log("No session found");
-        router.push("/admin/login");
-        setLoading(false);
-      }
-    } catch (error) {
-      console.error("Auth check error:", error);
-      router.push("/admin/login");
-      setLoading(false);
-    }
-  }
-
-  async function verifyAdmin(currentUser: any) {
-    try {
-      console.log("Verifying admin for:", currentUser.email);
-      console.log("User metadata:", currentUser.user_metadata);
-
-      // 관리자 권한 확인
-      const userRole = currentUser.user_metadata?.role || currentUser.app_metadata?.role;
-      const emailContainsAdmin = currentUser.email?.toLowerCase().includes('admin');
-      
-      // 개발 단계: 특정 이메일 허용 (임시)
-      const allowedEmails = ['dhchun1203@gmail.com']; // 개발용 - 나중에 제거
-      const isAllowedEmail = allowedEmails.includes(currentUser.email?.toLowerCase() || '');
-      
-      const isAdmin = userRole === 'admin' || emailContainsAdmin || isAllowedEmail;
-
-      console.log("Admin check:", { userRole, emailContainsAdmin, isAllowedEmail, isAdmin });
-
-      if (!isAdmin) {
-        console.log("Not admin, signing out");
-        await supabase.auth.signOut();
-        router.push("/admin/login");
-        setLoading(false);
-        return;
-      }
-
-      console.log("Admin verified, setting user");
-      setUser(currentUser);
-      setLoading(false);
-    } catch (error) {
-      console.error("Verify admin error:", error);
-      router.push("/admin/login");
-      setLoading(false);
-    }
-  }
+  const { user, loading } = useAdminAuth();
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
@@ -110,14 +18,7 @@ export default function AdminDashboard() {
   };
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
-          <p className="mt-4 text-gray-600">{t.admin.dashboard.loading}</p>
-        </div>
-      </div>
-    );
+    return <LoadingSpinner message={t.admin.dashboard.loading} />;
   }
 
   return (

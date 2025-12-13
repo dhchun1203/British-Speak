@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase/server';
+import { createErrorResponse, createSuccessResponse, parsePaginationParams, createPaginatedResponse } from '@/lib/utils/api';
 
 // GET: 공지사항 목록 조회
 export async function GET(request: NextRequest) {
@@ -7,10 +8,8 @@ export async function GET(request: NextRequest) {
     const supabase = createServerClient();
     const searchParams = request.nextUrl.searchParams;
     
-    const page = parseInt(searchParams.get('page') || '1');
-    const pageSize = parseInt(searchParams.get('pageSize') || '10');
+    const { page, pageSize, offset } = parsePaginationParams(searchParams, 1, 10);
     const search = searchParams.get('search') || '';
-    const offset = (page - 1) * pageSize;
 
     // 검색 쿼리 빌더
     let query = supabase
@@ -33,29 +32,11 @@ export async function GET(request: NextRequest) {
       throw error;
     }
 
-    const totalPages = count ? Math.ceil(count / pageSize) : 0;
-
-    return NextResponse.json({
-      notices: data || [],
-      total: count || 0,
-      page,
-      pageSize,
-      totalPages,
-    });
-  } catch (error: any) {
-    console.error('Error fetching notices:', error);
-    
-    if (error?.message?.includes('Missing Supabase')) {
-      return NextResponse.json(
-        { error: 'Supabase is not configured. Please check SUPABASE_SETUP.md' },
-        { status: 503 }
-      );
-    }
-
-    return NextResponse.json(
-      { error: 'Failed to fetch notices' },
-      { status: 500 }
+    return createSuccessResponse(
+      createPaginatedResponse(data || [], count || 0, page, pageSize)
     );
+  } catch (error) {
+    return createErrorResponse(error, 'Failed to fetch notices');
   }
 }
 
@@ -100,6 +81,8 @@ export async function POST(request: NextRequest) {
     );
   }
 }
+
+
 
 
 

@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createServerClient } from '@/lib/supabase/server';
 import type { NextRequest } from 'next/server';
+import { createErrorResponse, createSuccessResponse } from '@/lib/utils/api';
 
 export async function GET() {
   try {
@@ -17,22 +18,9 @@ export async function GET() {
       throw error;
     }
 
-    return NextResponse.json(data || []);
-  } catch (error: any) {
-    console.error('Error fetching gallery:', error);
-    
-    // 환경 변수가 없을 때를 대비한 에러 처리
-    if (error?.message?.includes('Missing Supabase')) {
-      return NextResponse.json(
-        { error: 'Supabase is not configured. Please check SUPABASE_SETUP.md' },
-        { status: 503 }
-      );
-    }
-
-    return NextResponse.json(
-      { error: 'Failed to fetch gallery' },
-      { status: 500 }
-    );
+    return createSuccessResponse(data || []);
+  } catch (error) {
+    return createErrorResponse(error, 'Failed to fetch gallery');
   }
 }
 
@@ -60,20 +48,17 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // 파일 확장자 확인
-    const fileExt = file.name.split('.').pop();
-    const allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+    // 파일 검증
+    const { isValidImageFile, isValidFileSize } = await import('@/lib/utils/validation');
     
-    if (!fileExt || !allowedExtensions.includes(fileExt.toLowerCase())) {
+    if (!isValidImageFile(file.name)) {
       return NextResponse.json(
         { error: 'Invalid file type. Allowed: jpg, jpeg, png, gif, webp' },
         { status: 400 }
       );
     }
 
-    // 파일 크기 확인 (10MB 제한)
-    const maxSize = 10 * 1024 * 1024; // 10MB
-    if (file.size > maxSize) {
+    if (!isValidFileSize(file.size, 10)) {
       return NextResponse.json(
         { error: 'File size exceeds 10MB limit' },
         { status: 400 }
@@ -143,13 +128,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    return NextResponse.json(galleryData, { status: 201 });
-  } catch (error: any) {
-    console.error('Error uploading image:', error);
-    return NextResponse.json(
-      { error: 'Failed to upload image' },
-      { status: 500 }
-    );
+    return createSuccessResponse(galleryData, 201);
+  } catch (error) {
+    return createErrorResponse(error, 'Failed to upload image');
   }
 }
 

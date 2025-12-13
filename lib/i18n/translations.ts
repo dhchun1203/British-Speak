@@ -28,6 +28,7 @@ export const translations = {
       items: '개',
       required: '필수',
       optional: '선택사항',
+      reload: '새로고침',
     },
     home: {
       title: '브리티시 스픽',

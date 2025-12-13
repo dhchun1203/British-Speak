@@ -1,18 +1,16 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { supabase } from "@/lib/supabase/client";
 import Link from "next/link";
 import Image from "next/image";
 import { GalleryItem } from "@/types/gallery";
 import { useI18n } from "@/lib/i18n/context";
+import { useAdminAuth } from "@/lib/hooks/useAdminAuth";
+import LoadingSpinner from "@/components/common/LoadingSpinner";
 
 export default function AdminGalleryPage() {
-  const router = useRouter();
   const { t } = useI18n();
-  const [loading, setLoading] = useState(true);
-  const [authenticated, setAuthenticated] = useState(false);
+  const { loading, authenticated } = useAdminAuth();
   const [images, setImages] = useState<GalleryItem[]>([]);
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState<{ [key: string]: number }>({});
@@ -24,48 +22,10 @@ export default function AdminGalleryPage() {
   const categories = [t.gallery.category1, t.gallery.category2, t.gallery.category3, t.gallery.category4];
 
   useEffect(() => {
-    checkAuth();
-  }, []);
-
-  useEffect(() => {
     if (authenticated) {
       fetchImages();
     }
   }, [authenticated]);
-
-  async function checkAuth() {
-    try {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-
-      if (!user) {
-        router.push("/admin/login");
-        return;
-      }
-
-      const userRole = user.user_metadata?.role || user.app_metadata?.role;
-      const emailContainsAdmin = user.email?.toLowerCase().includes('admin');
-      
-      const allowedEmails = ['dhchun1203@gmail.com'];
-      const isAllowedEmail = allowedEmails.includes(user.email?.toLowerCase() || '');
-      
-      const isAdmin = userRole === 'admin' || emailContainsAdmin || isAllowedEmail;
-
-      if (!isAdmin) {
-        await supabase.auth.signOut();
-        router.push("/admin/login");
-        return;
-      }
-
-      setAuthenticated(true);
-    } catch (error) {
-      console.error("Auth check error:", error);
-      router.push("/admin/login");
-    } finally {
-      setLoading(false);
-    }
-  }
 
   async function fetchImages() {
     try {
@@ -231,14 +191,7 @@ export default function AdminGalleryPage() {
   }
 
   if (loading) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
-          <p className="mt-4 text-gray-600">{t.common.loading}</p>
-        </div>
-      </div>
-    );
+    return <LoadingSpinner />;
   }
 
   if (!authenticated) {
