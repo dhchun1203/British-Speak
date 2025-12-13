@@ -40,6 +40,7 @@
 - 연락처 정보 (전화, 이메일, 운영 시간)
 - 반응형 디자인
 - 스크롤 최상단 버튼
+- Breadcrumb 네비게이션 (현재 페이지 경로 표시)
 
 ### 2. 갤러리
 - 사진 갤러리 (카테고리별 분류: 수업, 이벤트, 체험활동, 기타)
@@ -172,16 +173,25 @@ npm run dev
 │   ├── layout/             # 레이아웃 컴포넌트
 │   │   ├── Footer.tsx
 │   │   ├── Header.tsx
+│   │   ├── Breadcrumb.tsx
 │   │   └── ScrollToTop.tsx
+│   ├── common/              # 공통 컴포넌트
+│   │   ├── LoadingSpinner.tsx
+│   │   └── ErrorBoundary.tsx
 │   └── providers/          # Context Provider
 │       └── I18nProvider.tsx
 ├── lib/                    # 유틸리티 함수
+│   ├── hooks/             # 커스텀 훅
+│   │   └── useAdminAuth.ts # 관리자 인증 훅
 │   ├── i18n/              # 다국어 지원
 │   │   ├── context.tsx    # i18n Context
 │   │   └── translations.ts # 번역 데이터
-│   └── supabase/          # Supabase 클라이언트
-│       ├── client.ts      # 클라이언트 사이드
-│       └── server.ts      # 서버 사이드
+│   ├── supabase/          # Supabase 클라이언트
+│   │   ├── client.ts      # 클라이언트 사이드
+│   │   └── server.ts      # 서버 사이드
+│   └── utils/             # 유틸리티 함수
+│       ├── api.ts         # API 유틸리티
+│       └── validation.ts  # 검증 유틸리티
 ├── types/                  # TypeScript 타입 정의
 │   ├── gallery.ts
 │   └── notice.ts
@@ -250,6 +260,17 @@ npm run dev
   - 관리자 페이지 반응형 적용
   - 모바일 메뉴 아이콘 애니메이션 (햄버거 ↔ X)
   - 모바일 메뉴 펼침 애니메이션
+  - Breadcrumb 네비게이션 (헤더 하단, 우측 정렬)
+  - 헤더와 breadcrumb 배경색 통일
+  - 페이지 상단 여백 최적화
+
+- ✅ **코드 최적화 및 리팩토링** (100%)
+  - 인증 로직을 `useAdminAuth` 커스텀 훅으로 추출
+  - 공통 컴포넌트 생성 (LoadingSpinner, ErrorBoundary)
+  - API 라우트 에러 처리 개선 및 유틸리티 함수 추출
+  - 타입 안정성 개선 (any 타입 제거)
+  - 코드 스플리팅으로 성능 최적화
+  - 중복 코드 제거 (약 300줄 이상)
 
 ### 배포 완료
 
@@ -258,9 +279,10 @@ npm run dev
 
 ### 추가 최적화 (선택사항)
 
-- [ ] 성능 최적화 (이미지 최적화, 코드 스플리팅)
+- [x] 성능 최적화 (코드 스플리팅 완료)
+- [ ] 이미지 최적화 (추가 개선 가능)
 - [ ] SEO 최적화 (메타 태그, sitemap)
-- [ ] 에러 처리 및 로깅 개선
+- [x] 에러 처리 개선 (ErrorBoundary, 공통 에러 처리 완료)
 - [ ] 테스트 (기능 테스트, 반응형 테스트)
 
 ## 주요 문서
@@ -314,10 +336,12 @@ npm run dev
 
 ### 사용자 경험
 - 직관적인 네비게이션
+- Breadcrumb을 통한 현재 위치 표시
 - 빠른 페이지 로딩
 - 부드러운 애니메이션 (모바일 메뉴, 전환 효과)
 - 접근성 고려
 - 모바일 최적화된 UI/UX
+- 일관된 디자인 시스템
 
 ## 라이선스
 
@@ -329,6 +353,7 @@ npm run dev
 
 ---
 
-**버전**: 2.1  
+**버전**: 2.2  
 **최종 업데이트**: 2025년 12월  
-**배포 상태**: ✅ 배포 완료 (Vercel + Supabase)
+**배포 상태**: ✅ 배포 완료 (Vercel + Supabase)  
+**최근 업데이트**: 코드 최적화, Breadcrumb 추가, UI/UX 개선
