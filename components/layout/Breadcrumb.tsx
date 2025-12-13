@@ -52,7 +52,7 @@ export default function Breadcrumb() {
   });
 
   return (
-    <nav className="bg-gray-50 border-b border-gray-200" aria-label="Breadcrumb">
+    <nav className="bg-white border-b border-gray-200" aria-label="Breadcrumb">
       <div className="container mx-auto px-4 py-2">
         <ol className="flex items-center space-x-2 text-sm">
           {breadcrumbItems.map((item, index) => (

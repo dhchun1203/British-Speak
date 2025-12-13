@@ -68,7 +68,7 @@ export default function ContactPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-secondary-50">
-      <div className="container mx-auto px-4 py-8 sm:py-12 md:py-16">
+      <div className="container mx-auto px-4 py-12 sm:py-16 md:py-20">
         <div className="max-w-4xl mx-auto">
           {/* 페이지 헤더 */}
           <div className="text-center mb-8 sm:mb-12">
