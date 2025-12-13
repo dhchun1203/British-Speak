@@ -54,7 +54,7 @@ export default function Breadcrumb() {
   return (
     <nav className="bg-white border-b border-gray-200" aria-label="Breadcrumb">
       <div className="container mx-auto px-4 py-2">
-        <ol className="flex items-center space-x-2 text-sm">
+        <ol className="flex items-center justify-end space-x-2 text-sm">
           {breadcrumbItems.map((item, index) => (
             <li key={item.href} className="flex items-center">
               {index > 0 && (
