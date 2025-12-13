@@ -409,6 +409,7 @@ export const translations = {
       items: 'items',
       required: 'Required',
       optional: 'Optional',
+      reload: 'Reload',
     },
     home: {
       title: 'British Speak',
