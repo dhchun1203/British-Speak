@@ -24,6 +24,19 @@ body {
 /* 스크롤 부드럽게 */
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 80px; /* 헤더 높이만큼 offset (모바일 기준) */
+}
+
+@media (min-width: 640px) {
+  html {
+    scroll-padding-top: 100px; /* 태블릿 이상 */
+  }
+}
+
+@media (min-width: 768px) {
+  html {
+    scroll-padding-top: 120px; /* 데스크톱 */
+  }
 }
 
 @layer utilities {

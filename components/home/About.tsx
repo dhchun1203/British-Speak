@@ -6,7 +6,7 @@ export default function About() {
   const { t } = useI18n();
 
   return (
-    <section id="about" className="py-12 sm:py-16 md:py-24 bg-white">
+    <section id="about" className="py-12 sm:py-16 md:py-24 bg-white scroll-mt-20 sm:scroll-mt-24 md:scroll-mt-28">
       <div className="container mx-auto px-4">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-8 sm:mb-12 text-gray-800">
