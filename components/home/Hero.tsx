@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useI18n } from "@/lib/i18n/context";
+import ScrollAnimation from "@/components/common/ScrollAnimation";
 
 export default function Hero() {
   const { t } = useI18n();
@@ -18,30 +19,42 @@ export default function Hero() {
   };
 
   return (
-    <section className="relative bg-gradient-to-r from-primary-600 to-primary-800 text-white py-16 sm:py-20 md:py-32">
-      <div className="container mx-auto px-4">
+    <section className="relative bg-gradient-to-r from-primary-600 to-primary-800 text-white py-16 sm:py-20 md:py-32 overflow-hidden">
+      {/* 배경 장식 요소 */}
+      <div className="absolute inset-0 opacity-10">
+        <div className="absolute top-10 left-10 w-72 h-72 bg-white rounded-full blur-3xl"></div>
+        <div className="absolute bottom-10 right-10 w-96 h-96 bg-white rounded-full blur-3xl"></div>
+      </div>
+      
+      <div className="container mx-auto px-4 relative z-10">
         <div className="max-w-3xl mx-auto text-center">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6">
-            {t.home.title}
-          </h1>
-          <p className="text-lg sm:text-xl md:text-2xl mb-6 sm:mb-8 text-primary-100 px-4">
-            {t.home.subtitle}
-          </p>
-          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-4">
-            <a
-              href="#about"
-              onClick={handleScrollToAbout}
-              className="bg-white text-primary-600 px-6 sm:px-8 py-2.5 sm:py-3 rounded-lg font-semibold hover:bg-primary-50 transition-colors text-sm sm:text-base"
-            >
-              {t.home.about}
-            </a>
-            <Link
-              href="/contact"
-              className="bg-transparent border-2 border-white text-white px-6 sm:px-8 py-2.5 sm:py-3 rounded-lg font-semibold hover:bg-white hover:text-primary-600 transition-colors text-sm sm:text-base"
-            >
-              {t.home.contact}
-            </Link>
-          </div>
+          <ScrollAnimation direction="fade" delay={0}>
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6">
+              {t.home.title}
+            </h1>
+          </ScrollAnimation>
+          <ScrollAnimation direction="fade" delay={200}>
+            <p className="text-lg sm:text-xl md:text-2xl mb-6 sm:mb-8 text-primary-100 px-4">
+              {t.home.subtitle}
+            </p>
+          </ScrollAnimation>
+          <ScrollAnimation direction="up" delay={400}>
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-4">
+              <a
+                href="#about"
+                onClick={handleScrollToAbout}
+                className="bg-white text-primary-600 px-6 sm:px-8 py-2.5 sm:py-3 rounded-lg font-semibold hover:bg-primary-50 hover:scale-105 active:scale-95 transition-all duration-200 text-sm sm:text-base shadow-lg hover:shadow-xl"
+              >
+                {t.home.about}
+              </a>
+              <Link
+                href="/contact"
+                className="bg-transparent border-2 border-white text-white px-6 sm:px-8 py-2.5 sm:py-3 rounded-lg font-semibold hover:bg-white hover:text-primary-600 hover:scale-105 active:scale-95 transition-all duration-200 text-sm sm:text-base"
+              >
+                {t.home.contact}
+              </Link>
+            </div>
+          </ScrollAnimation>
         </div>
       </div>
     </section>

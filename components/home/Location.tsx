@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { useI18n } from "@/lib/i18n/context";
+import ScrollAnimation from "@/components/common/ScrollAnimation";
 
 declare global {
   interface Window {
@@ -71,30 +72,54 @@ export default function Location() {
   return (
     <section id="location" className="py-12 sm:py-16 md:py-24 bg-white">
       <div className="container mx-auto px-4">
-        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-8 sm:mb-12 text-gray-800">
-          {t.home.location}
-        </h2>
+        <ScrollAnimation direction="fade">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-8 sm:mb-12 text-gray-800">
+            {t.home.location}
+          </h2>
+        </ScrollAnimation>
         <div className="max-w-4xl mx-auto">
           <div className="grid md:grid-cols-2 gap-6 sm:gap-8">
-            <div>
-              <h3 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4 text-primary-600">
-                {t.home.address}
-              </h3>
-              <p className="text-sm sm:text-base text-gray-700 mb-4 sm:mb-6 whitespace-pre-line">
-                {t.home.addressText}
-              </p>
-              <h3 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4 text-primary-600">
-                {t.home.transportation}
-              </h3>
-              <ul className="space-y-1.5 sm:space-y-2 text-gray-700 text-sm sm:text-base">
-                <li>• {t.home.transport1}</li>
-                <li>• {t.home.transport2}</li>
-                <li>• {t.home.transport3}</li>
-              </ul>
-            </div>
-            <div className="h-64 md:h-96 rounded-lg overflow-hidden shadow-lg bg-gray-200 flex items-center justify-center">
-              <div id="map" className="w-full h-full"></div>
-            </div>
+            <ScrollAnimation direction="right" delay={200}>
+              <div>
+                <h3 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4 text-primary-600 group">
+                  <span className="inline-block transition-transform duration-300 group-hover:translate-x-2">
+                    {t.home.address}
+                  </span>
+                </h3>
+                <p className="text-sm sm:text-base text-gray-700 mb-4 sm:mb-6 whitespace-pre-line">
+                  {t.home.addressText}
+                </p>
+                <h3 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4 text-primary-600 group">
+                  <span className="inline-block transition-transform duration-300 group-hover:translate-x-2">
+                    {t.home.transportation}
+                  </span>
+                </h3>
+                <ul className="space-y-1.5 sm:space-y-2 text-gray-700 text-sm sm:text-base">
+                  {[
+                    t.home.transport1,
+                    t.home.transport2,
+                    t.home.transport3,
+                  ].map((transport, index) => (
+                    <li
+                      key={index}
+                      className="flex items-start group/item"
+                    >
+                      <span className="text-primary-600 mr-2 group-hover/item:scale-125 transition-transform duration-200">
+                        •
+                      </span>
+                      <span className="group-hover/item:text-primary-600 transition-colors duration-200">
+                        {transport}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </ScrollAnimation>
+            <ScrollAnimation direction="left" delay={400}>
+              <div className="h-64 md:h-96 rounded-lg overflow-hidden shadow-lg bg-gray-200 flex items-center justify-center hover:shadow-xl transition-shadow duration-300">
+                <div id="map" className="w-full h-full"></div>
+              </div>
+            </ScrollAnimation>
           </div>
         </div>
       </div>
