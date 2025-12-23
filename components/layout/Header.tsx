@@ -87,9 +87,10 @@ export default function Header() {
               aria-label="메뉴 열기"
             >
               <svg
-                className={`w-6 h-6 absolute inset-0 transition-all duration-300 ${
-                  isMenuOpen ? "opacity-0 rotate-90" : "opacity-100 rotate-0"
+                className={`w-6 h-6 absolute inset-0 transition-opacity duration-200 ease-out ${
+                  isMenuOpen ? "opacity-0" : "opacity-100"
                 }`}
+                style={{ willChange: 'opacity' }}
                 fill="none"
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -100,9 +101,10 @@ export default function Header() {
                 <path d="M4 6h16M4 12h16M4 18h16" />
               </svg>
               <svg
-                className={`w-6 h-6 absolute inset-0 transition-all duration-300 ${
-                  isMenuOpen ? "opacity-100 rotate-0" : "opacity-0 -rotate-90"
+                className={`w-6 h-6 absolute inset-0 transition-opacity duration-200 ease-out ${
+                  isMenuOpen ? "opacity-100" : "opacity-0"
                 }`}
+                style={{ willChange: 'opacity' }}
                 fill="none"
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -118,13 +120,19 @@ export default function Header() {
 
         {/* Mobile Menu */}
         <div
-          className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${
-            isMenuOpen
-              ? "max-h-96 opacity-100 mt-4 pb-4"
-              : "max-h-0 opacity-0 mt-0 pb-0"
+          className={`md:hidden overflow-hidden ${
+            isMenuOpen ? "block" : "hidden"
           }`}
         >
-          <div className="space-y-2">
+          <div
+            className="space-y-2 mt-4 pb-4"
+            style={{
+              opacity: isMenuOpen ? 1 : 0,
+              transform: isMenuOpen ? 'translateY(0)' : 'translateY(-10px)',
+              transition: 'opacity 200ms ease-out, transform 200ms ease-out',
+              willChange: 'opacity, transform',
+            }}
+          >
             <Link
               href="/"
               className="block py-2 text-gray-700 hover:text-primary-600 transition-colors"
