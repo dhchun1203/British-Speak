@@ -120,17 +120,20 @@ export default function Header() {
 
         {/* Mobile Menu */}
         <div
-          className={`md:hidden overflow-hidden ${
-            isMenuOpen ? "block" : "hidden"
-          }`}
+          className="md:hidden overflow-hidden"
+          style={{
+            maxHeight: isMenuOpen ? '300px' : '0',
+            opacity: isMenuOpen ? 1 : 0,
+            transition: 'max-height 250ms ease-out, opacity 250ms ease-out',
+            willChange: 'max-height, opacity',
+          }}
         >
           <div
             className="space-y-2 mt-4 pb-4"
             style={{
-              opacity: isMenuOpen ? 1 : 0,
-              transform: isMenuOpen ? 'translateY(0)' : 'translateY(-10px)',
-              transition: 'opacity 200ms ease-out, transform 200ms ease-out',
-              willChange: 'opacity, transform',
+              transform: isMenuOpen ? 'translateY(0)' : 'translateY(-8px)',
+              transition: 'transform 250ms ease-out',
+              willChange: 'transform',
             }}
           >
             <Link
