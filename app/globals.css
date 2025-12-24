@@ -20,7 +20,6 @@
 html {
   overflow-x: hidden;
   width: 100%;
-  position: relative;
   scroll-behavior: smooth;
   scroll-padding-top: 80px; /* 헤더 높이만큼 offset (모바일 기준) */
 }
@@ -30,7 +29,6 @@ body {
   background: #ffffff;
   overflow-x: hidden;
   width: 100%;
-  position: relative;
 }
 
 .dark body {
@@ -54,5 +52,13 @@ body {
   .text-balance {
     text-wrap: balance;
   }
+}
+
+/* 헤더 sticky 스타일 강제 적용 */
+header {
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 50 !important;
+  width: 100% !important;
 }
 

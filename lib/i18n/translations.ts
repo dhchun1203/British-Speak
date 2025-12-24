@@ -165,6 +165,17 @@ export const translations = {
       addressText: '서울특별시 강남구 역삼로3길 17-6',
       copyright: '© 2024 브리티시 스픽. All rights reserved.',
     },
+    chat: {
+      title: 'AI 상담 챗봇',
+      placeholder: '메시지를 입력하세요...',
+      send: '전송',
+      sending: '전송 중...',
+      error: '메시지 전송에 실패했습니다. 다시 시도해주세요.',
+      clear: '대화 초기화',
+      welcome: '안녕하세요! 브리티시 스픽 영어 학원 챗봇입니다. 무엇을 도와드릴까요?',
+      open: '챗봇 열기',
+      close: '챗봇 닫기',
+    },
     admin: {
       title: '관리자',
       login: {
@@ -550,6 +561,17 @@ export const translations = {
       // addressText: '636-14 Dongtan-daero, Hwaseong-si, Gyeonggi-do, Shop Building A-206',
       addressText: '17-6, Yeoksam-ro 3-gil, Gangnam-gu, Seoul',
       copyright: '© 2024 British Speak. All rights reserved.',
+    },
+    chat: {
+      title: 'AI Consultation Chatbot',
+      placeholder: 'Type your message...',
+      send: 'Send',
+      sending: 'Sending...',
+      error: 'Failed to send message. Please try again.',
+      clear: 'Clear Conversation',
+      welcome: 'Hello! I\'m the British Speak English Academy chatbot. How can I help you?',
+      open: 'Open Chatbot',
+      close: 'Close Chatbot',
     },
     admin: {
       title: 'Admin',

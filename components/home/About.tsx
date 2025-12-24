@@ -49,7 +49,7 @@ export default function About() {
                     {t.home.philosophy}
                   </span>
                 </h3>
-                <p className="text-sm sm:text-base text-gray-700 leading-relaxed">
+                <p className="text-sm sm:text-base text-gray-700 dark:text-gray-300 leading-relaxed">
                   {t.home.philosophyText}
                 </p>
               </div>

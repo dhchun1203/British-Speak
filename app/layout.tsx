@@ -7,9 +7,10 @@ import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import { ErrorBoundary } from "@/components/common/ErrorBoundary";
 
 // 동적 import로 코드 스플리팅
-const Header = dynamic(() => import("@/components/layout/Header"), { ssr: true });
+const Header = dynamic(() => import("@/components/layout/Header"), { ssr: false });
 const Footer = dynamic(() => import("@/components/layout/Footer"), { ssr: true });
 const ScrollToTop = dynamic(() => import("@/components/layout/ScrollToTop"), { ssr: false });
+const Chatbot = dynamic(() => import("@/components/chat/Chatbot"), { ssr: false });
 
 const nanumGothic = Nanum_Gothic({
   subsets: ["latin"],
@@ -44,6 +45,7 @@ export default function RootLayout({
             <main className="min-h-screen overflow-x-hidden">{children}</main>
             <Footer />
             <ScrollToTop />
+            <Chatbot />
           </I18nProvider>
         </ThemeProvider>
       </body>
