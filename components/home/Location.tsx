@@ -85,7 +85,7 @@ export default function Location() {
                 {t.home.location}
               </h2>
               <p className="text-gray-600 text-base sm:text-lg max-w-2xl mx-auto">
-                편리한 교통 접근성과 쾌적한 학습 환경을 제공합니다
+                {t.home.locationSubtitle}
               </p>
             </div>
           </ScrollAnimation>

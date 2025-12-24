@@ -23,7 +23,7 @@ export default function Contact() {
                 {t.home.contactTitle}
               </h2>
               <p className="text-gray-600 text-base sm:text-lg max-w-2xl mx-auto">
-                궁금한 사항이 있으시면 언제든지 연락주세요
+                {t.home.contactSubtitle}
               </p>
             </div>
           </ScrollAnimation>

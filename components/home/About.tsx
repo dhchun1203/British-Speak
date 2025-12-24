@@ -22,7 +22,7 @@ export default function About() {
                 {t.home.aboutTitle}
               </h2>
               <p className="text-gray-600 text-base sm:text-lg max-w-2xl mx-auto">
-                브리티시 스픽의 교육 철학과 비전을 소개합니다
+                {t.home.aboutSubtitle}
               </p>
             </div>
           </ScrollAnimation>

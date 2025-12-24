@@ -61,7 +61,7 @@ export default function Programs() {
                 {t.home.programs}
               </h2>
               <p className="text-gray-600 text-base sm:text-lg max-w-2xl mx-auto">
-                다양한 수준과 목적에 맞춘 체계적인 영어 교육 프로그램을 제공합니다
+                {t.home.programsSubtitle}
               </p>
             </div>
           </ScrollAnimation>
