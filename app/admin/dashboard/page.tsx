@@ -22,16 +22,16 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="bg-white shadow">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+      <div className="bg-white dark:bg-gray-800 shadow">
         <div className="container mx-auto px-4 py-4">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-            <h1 className="text-xl sm:text-2xl font-bold text-gray-800">{t.admin.dashboard.title}</h1>
+            <h1 className="text-xl sm:text-2xl font-bold text-gray-800 dark:text-white">{t.admin.dashboard.title}</h1>
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 w-full sm:w-auto">
-              <span className="text-xs sm:text-sm text-gray-600 break-all">{user?.email}</span>
+              <span className="text-xs sm:text-sm text-gray-600 dark:text-gray-300 break-all">{user?.email}</span>
               <button
                 onClick={handleLogout}
-                className="px-3 sm:px-4 py-2 text-xs sm:text-sm text-gray-700 hover:text-gray-900 w-full sm:w-auto"
+                className="px-3 sm:px-4 py-2 text-xs sm:text-sm text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white w-full sm:w-auto"
               >
                 {t.admin.dashboard.logout}
               </button>
@@ -45,7 +45,7 @@ export default function AdminDashboard() {
           {/* 갤러리 관리 카드 */}
           <Link
             href="/admin/gallery"
-            className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow"
+            className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow"
           >
             <div className="flex items-center gap-4">
               <div className="p-3 bg-primary-100 rounded-lg">
@@ -62,8 +62,8 @@ export default function AdminDashboard() {
                 </svg>
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-gray-800">{t.admin.dashboard.gallery.title}</h3>
-                <p className="text-sm text-gray-600">{t.admin.dashboard.gallery.description}</p>
+                <h3 className="text-lg font-semibold text-gray-800 dark:text-white">{t.admin.dashboard.gallery.title}</h3>
+                <p className="text-sm text-gray-600 dark:text-gray-300">{t.admin.dashboard.gallery.description}</p>
               </div>
             </div>
           </Link>
@@ -71,7 +71,7 @@ export default function AdminDashboard() {
           {/* 공지사항 관리 카드 */}
           <Link
             href="/admin/notice"
-            className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow"
+            className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow"
           >
             <div className="flex items-center gap-4">
               <div className="p-3 bg-secondary-100 rounded-lg">
@@ -88,8 +88,8 @@ export default function AdminDashboard() {
                 </svg>
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-gray-800">{t.admin.dashboard.notice.title}</h3>
-                <p className="text-sm text-gray-600">{t.admin.dashboard.notice.description}</p>
+                <h3 className="text-lg font-semibold text-gray-800 dark:text-white">{t.admin.dashboard.notice.title}</h3>
+                <p className="text-sm text-gray-600 dark:text-gray-300">{t.admin.dashboard.notice.description}</p>
               </div>
             </div>
           </Link>
@@ -97,7 +97,7 @@ export default function AdminDashboard() {
           {/* 문의하기 관리 카드 */}
           <Link
             href="/admin/inquiries"
-            className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow"
+            className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow"
           >
             <div className="flex items-center gap-4">
               <div className="p-3 bg-accent-100 rounded-lg">
@@ -114,8 +114,8 @@ export default function AdminDashboard() {
                 </svg>
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-gray-800">{t.admin.dashboard.inquiries.title}</h3>
-                <p className="text-sm text-gray-600">{t.admin.dashboard.inquiries.description}</p>
+                <h3 className="text-lg font-semibold text-gray-800 dark:text-white">{t.admin.dashboard.inquiries.title}</h3>
+                <p className="text-sm text-gray-600 dark:text-gray-300">{t.admin.dashboard.inquiries.description}</p>
               </div>
             </div>
           </Link>

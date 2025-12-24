@@ -52,14 +52,14 @@ export default function Breadcrumb() {
   });
 
   return (
-    <nav className="bg-white border-b border-gray-200" aria-label="Breadcrumb">
+    <nav className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 transition-colors duration-300" aria-label="Breadcrumb">
       <div className="container mx-auto px-4 py-2">
         <ol className="flex items-center justify-end space-x-2 text-sm">
           {breadcrumbItems.map((item, index) => (
             <li key={item.href} className="flex items-center">
               {index > 0 && (
                 <svg
-                  className="w-4 h-4 text-gray-400 mx-2"
+                  className="w-4 h-4 text-gray-400 dark:text-gray-500 mx-2"
                   fill="currentColor"
                   viewBox="0 0 20 20"
                 >
@@ -71,11 +71,11 @@ export default function Breadcrumb() {
                 </svg>
               )}
               {index === breadcrumbItems.length - 1 ? (
-                <span className="text-gray-700 font-medium">{item.label}</span>
+                <span className="text-gray-700 dark:text-gray-300 font-medium">{item.label}</span>
               ) : (
                 <Link
                   href={item.href}
-                  className="text-gray-500 hover:text-primary-600 transition-colors"
+                  className="text-gray-500 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
                 >
                   {item.label}
                 </Link>

@@ -68,8 +68,8 @@ export default function GalleryGrid({ selectedCategory }: GalleryGridProps) {
   if (loading) {
     return (
       <div className="text-center py-12">
-        <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
-        <p className="mt-4 text-gray-600">{t.gallery.loading}</p>
+        <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600 dark:border-primary-400"></div>
+        <p className="mt-4 text-gray-600 dark:text-gray-300">{t.gallery.loading}</p>
       </div>
     );
   }
@@ -77,9 +77,9 @@ export default function GalleryGrid({ selectedCategory }: GalleryGridProps) {
   if (error) {
     return (
       <div className="text-center py-12">
-        <p className="text-red-600 mb-2">{t.common.error}</p>
-        <p className="text-gray-500 text-sm">{error}</p>
-        <p className="text-gray-400 text-xs mt-4">
+        <p className="text-red-600 dark:text-red-400 mb-2">{t.common.error}</p>
+        <p className="text-gray-500 dark:text-gray-400 text-sm">{error}</p>
+        <p className="text-gray-400 dark:text-gray-500 text-xs mt-4">
           Supabase 설정이 필요할 수 있습니다. docs/SUPABASE_SETUP.md를 확인하세요.
         </p>
       </div>
@@ -92,7 +92,7 @@ export default function GalleryGrid({ selectedCategory }: GalleryGridProps) {
         {filteredImages.map((image) => (
           <div
             key={image.id}
-            className="group relative aspect-square overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow cursor-pointer bg-gray-200"
+            className="group relative aspect-square overflow-hidden rounded-lg shadow-md hover:shadow-xl transition-shadow cursor-pointer bg-gray-200 dark:bg-gray-700"
             onClick={() => setSelectedImage(image)}
           >
             {/* 실제 이미지 또는 placeholder */}
@@ -105,8 +105,8 @@ export default function GalleryGrid({ selectedCategory }: GalleryGridProps) {
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
               />
             ) : (
-              <div className="w-full h-full bg-gradient-to-br from-primary-200 to-secondary-200 flex items-center justify-center">
-                <span className="text-gray-500 text-sm text-center px-2">{image.title}</span>
+              <div className="w-full h-full bg-gradient-to-br from-primary-200 to-secondary-200 dark:from-primary-900/30 dark:to-secondary-900/30 flex items-center justify-center">
+                <span className="text-gray-500 dark:text-gray-400 text-sm text-center px-2">{image.title}</span>
               </div>
             )}
             {/* 오버레이 */}
@@ -122,7 +122,7 @@ export default function GalleryGrid({ selectedCategory }: GalleryGridProps) {
       {/* 이미지가 없을 때 */}
       {filteredImages.length === 0 && !loading && (
         <div className="text-center py-12">
-          <p className="text-gray-500 text-lg">
+          <p className="text-gray-500 dark:text-gray-400 text-lg">
             {selectedCategory === t.gallery.all
               ? t.gallery.noImages
               : `${selectedCategory} ${t.gallery.noImagesCategory}`}

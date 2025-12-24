@@ -199,8 +199,8 @@ export default function AdminGalleryPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="bg-white shadow">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+      <div className="bg-white dark:bg-gray-800 shadow">
         <div className="container mx-auto px-4 py-4">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4">
@@ -210,7 +210,7 @@ export default function AdminGalleryPage() {
               >
                 {t.admin.gallery.backToDashboard}
               </Link>
-              <h1 className="text-xl sm:text-2xl font-bold text-gray-800">{t.admin.gallery.title}</h1>
+              <h1 className="text-xl sm:text-2xl font-bold text-gray-800 dark:text-white">{t.admin.gallery.title}</h1>
             </div>
           </div>
         </div>
@@ -218,12 +218,12 @@ export default function AdminGalleryPage() {
 
       <div className="container mx-auto px-4 py-8">
         {/* 업로드 섹션 */}
-        <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-          <h2 className="text-xl font-semibold text-gray-800 mb-4">{t.admin.gallery.upload.title}</h2>
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6">
+          <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">{t.admin.gallery.upload.title}</h2>
           
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 {t.admin.gallery.upload.selectLabel}
               </label>
               <input
@@ -237,13 +237,13 @@ export default function AdminGalleryPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 {t.admin.gallery.list.edit.category}
               </label>
               <select
                 value={uploadCategory}
                 onChange={(e) => setUploadCategory(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-900"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 dark:bg-gray-700 dark:text-white rounded-md text-sm text-gray-900"
                 disabled={uploading}
               >
                 {categories.map((cat) => (
@@ -290,21 +290,21 @@ export default function AdminGalleryPage() {
         </div>
 
         {/* 이미지 목록 */}
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-xl font-semibold text-gray-800 mb-4">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+          <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">
             {t.admin.gallery.list.title.replace('{count}', images.length.toString())}
           </h2>
 
           {images.length === 0 ? (
-            <p className="text-gray-500 text-center py-8">{t.admin.gallery.list.noImages}</p>
+            <p className="text-gray-500 dark:text-gray-400 text-center py-8">{t.admin.gallery.list.noImages}</p>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
               {images.map((image) => (
                 <div
                   key={image.id}
-                  className="border border-gray-200 rounded-lg overflow-hidden"
+                  className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden"
                 >
-                  <div className="relative aspect-square bg-gray-100">
+                  <div className="relative aspect-square bg-gray-100 dark:bg-gray-700">
                     {image.image_url && image.image_url.startsWith('http') ? (
                       <Image
                         src={image.image_url}
@@ -315,7 +315,7 @@ export default function AdminGalleryPage() {
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center">
-                        <span className="text-gray-400 text-sm">{t.admin.gallery.list.noImage}</span>
+                        <span className="text-gray-400 dark:text-gray-500 text-sm">{t.admin.gallery.list.noImage}</span>
                       </div>
                     )}
                   </div>
@@ -333,7 +333,7 @@ export default function AdminGalleryPage() {
                             onChange={(e) =>
                               setEditForm({ ...editForm, title: e.target.value })
                             }
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-900"
+                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 dark:bg-gray-700 dark:text-white rounded-md text-sm text-gray-900"
                           />
                         </div>
                         <div>
@@ -345,7 +345,7 @@ export default function AdminGalleryPage() {
                             onChange={(e) =>
                               setEditForm({ ...editForm, category: e.target.value })
                             }
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm text-gray-900"
+                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 dark:bg-gray-700 dark:text-white rounded-md text-sm text-gray-900"
                           >
                             {categories.map((cat) => (
                               <option key={cat} value={cat}>
@@ -371,19 +371,19 @@ export default function AdminGalleryPage() {
                       </div>
                     ) : (
                       <>
-                        <h3 className="font-semibold text-gray-800 mb-1">{image.title}</h3>
-                        <p className="text-sm text-gray-600 mb-2">
+                        <h3 className="font-semibold text-gray-800 dark:text-white mb-1">{image.title}</h3>
+                        <p className="text-sm text-gray-600 dark:text-gray-300 mb-2">
                           {t.admin.gallery.list.category}: {image.category}
                         </p>
                         <div className="flex items-center gap-2 mb-3">
-                          <label className="text-sm text-gray-700">{t.admin.gallery.list.order}:</label>
+                          <label className="text-sm text-gray-700 dark:text-gray-300">{t.admin.gallery.list.order}:</label>
                           <input
                             type="number"
                             value={image.order || 0}
                             onChange={(e) =>
                               handleOrderChange(image.id, parseInt(e.target.value) || 0)
                             }
-                            className="w-20 px-2 py-1 border border-gray-300 rounded text-sm text-gray-900"
+                            className="w-20 px-2 py-1 border border-gray-300 dark:border-gray-700 dark:bg-gray-700 dark:text-white rounded text-sm text-gray-900"
                           />
                         </div>
                         <div className="flex gap-2">

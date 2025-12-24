@@ -3,6 +3,7 @@ import { Nanum_Gothic, Dancing_Script } from "next/font/google";
 import "./globals.css";
 import dynamic from "next/dynamic";
 import { I18nProvider } from "@/components/providers/I18nProvider";
+import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import { ErrorBoundary } from "@/components/common/ErrorBoundary";
 
 // 동적 import로 코드 스플리팅
@@ -35,14 +36,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ko">
+    <html lang="ko" suppressHydrationWarning>
       <body className={`${nanumGothic.className} ${dancingScript.variable}`}>
-        <I18nProvider>
-          <Header />
-          <main className="min-h-screen overflow-x-hidden">{children}</main>
-          <Footer />
-          <ScrollToTop />
-        </I18nProvider>
+        <ThemeProvider>
+          <I18nProvider>
+            <Header />
+            <main className="min-h-screen overflow-x-hidden">{children}</main>
+            <Footer />
+            <ScrollToTop />
+          </I18nProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

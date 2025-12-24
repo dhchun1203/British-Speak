@@ -19,16 +19,16 @@ export default function Hero() {
   };
 
   return (
-    <section className="relative bg-gradient-to-br from-primary-600 via-primary-700 to-primary-800 text-white py-20 sm:py-24 md:py-36 overflow-hidden">
+    <section className="relative bg-gradient-to-br from-primary-600 via-primary-700 to-primary-800 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 text-white py-20 sm:py-24 md:py-36 overflow-hidden transition-colors duration-300">
       {/* 배경 장식 요소 */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-0 left-0 w-96 h-96 bg-white/10 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-white/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-white/5 rounded-full blur-3xl"></div>
+        <div className="absolute top-0 left-0 w-96 h-96 bg-white/10 dark:bg-white/5 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-white/10 dark:bg-white/5 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-white/5 dark:bg-white/2 rounded-full blur-3xl"></div>
       </div>
       
       {/* 그리드 패턴 배경 */}
-      <div className="absolute inset-0 opacity-5" style={{
+      <div className="absolute inset-0 opacity-5 dark:opacity-[0.02]" style={{
         backgroundImage: 'linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px)',
         backgroundSize: '50px 50px'
       }}></div>

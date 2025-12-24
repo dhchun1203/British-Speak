@@ -10,12 +10,12 @@ export default function GalleryPage() {
   const [selectedCategory, setSelectedCategory] = useState<string>(t.gallery.all);
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
       <div className="container mx-auto px-4 py-12 sm:py-16 md:py-20">
-        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-center mb-6 sm:mb-8 text-gray-800">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-center mb-6 sm:mb-8 text-gray-800 dark:text-white">
           {t.gallery.title}
         </h1>
-        <p className="text-center text-gray-600 mb-8 sm:mb-12 max-w-2xl mx-auto">
+        <p className="text-center text-gray-600 dark:text-gray-300 mb-8 sm:mb-12 max-w-2xl mx-auto">
           {t.gallery.subtitle}
         </p>
         <CategoryFilter

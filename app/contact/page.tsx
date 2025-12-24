@@ -67,30 +67,30 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-secondary-50">
+    <div className="min-h-screen bg-gradient-to-br from-primary-50 via-white to-secondary-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 transition-colors duration-300">
       <div className="container mx-auto px-4 py-12 sm:py-16 md:py-20">
         <div className="max-w-4xl mx-auto">
           {/* 페이지 헤더 */}
           <div className="text-center mb-8 sm:mb-12">
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-800 mb-4">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-800 dark:text-white mb-4">
               {t.contact.title}
             </h1>
-            <p className="text-gray-600 text-sm sm:text-base">
+            <p className="text-gray-600 dark:text-gray-300 text-sm sm:text-base">
               {t.contact.subtitle}
             </p>
           </div>
 
           <div className="grid md:grid-cols-2 gap-6 sm:gap-8">
             {/* 문의 폼 */}
-            <div className="bg-white rounded-lg shadow-md p-6 sm:p-8">
-              <h2 className="text-xl sm:text-2xl font-bold mb-6 text-gray-800">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 sm:p-8">
+              <h2 className="text-xl sm:text-2xl font-bold mb-6 text-gray-800 dark:text-white">
                 {t.contact.form}
               </h2>
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
                   <label
                     htmlFor="name"
-                    className="block text-sm font-medium text-gray-700 mb-2"
+                    className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
                   >
                     {t.contact.name} <span className="text-red-500">*</span>
                   </label>
@@ -101,7 +101,7 @@ export default function ContactPage() {
                     onChange={(e) =>
                       setFormData({ ...formData, name: e.target.value })
                     }
-                    className="w-full px-4 py-2 border border-gray-300 rounded-md text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 dark:bg-gray-700 dark:text-white rounded-md text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500"
                     placeholder={t.contact.namePlaceholder}
                     required
                   />
@@ -190,8 +190,8 @@ export default function ContactPage() {
                   <div
                     className={`p-4 rounded-md ${
                       submitStatus.type === "success"
-                        ? "bg-green-50 text-green-800 border border-green-200"
-                        : "bg-red-50 text-red-800 border border-red-200"
+                        ? "bg-green-50 dark:bg-green-900/30 text-green-800 dark:text-green-300 border border-green-200 dark:border-green-800"
+                        : "bg-red-50 dark:bg-red-900/30 text-red-800 dark:text-red-300 border border-red-200 dark:border-red-800"
                     }`}
                   >
                     {submitStatus.message}
@@ -210,13 +210,13 @@ export default function ContactPage() {
 
             {/* 연락처 정보 */}
             <div className="space-y-6">
-              <div className="bg-white rounded-lg shadow-md p-6 sm:p-8">
-                <h2 className="text-xl sm:text-2xl font-bold mb-6 text-gray-800">
+              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 sm:p-8">
+                <h2 className="text-xl sm:text-2xl font-bold mb-6 text-gray-800 dark:text-white">
                   {t.contact.contactInfo}
                 </h2>
                 <div className="space-y-6">
                   <div>
-                    <h3 className="text-base sm:text-lg font-semibold mb-2 text-primary-600 flex items-center">
+                    <h3 className="text-base sm:text-lg font-semibold mb-2 text-primary-600 dark:text-primary-400 flex items-center">
                       <svg
                         className="w-5 h-5 mr-2"
                         fill="none"
@@ -232,16 +232,16 @@ export default function ContactPage() {
                       </svg>
                       {t.contact.phoneInquiry}
                     </h3>
-                    <p className="text-sm sm:text-base text-gray-700">
+                    <p className="text-sm sm:text-base text-gray-700 dark:text-gray-300">
                       {t.contact.phoneNumber}
                     </p>
-                    <p className="text-xs sm:text-sm text-gray-500 mt-1">
+                    <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-1">
                       {t.contact.phoneHours}
                     </p>
                   </div>
 
                   <div>
-                    <h3 className="text-base sm:text-lg font-semibold mb-2 text-primary-600 flex items-center">
+                    <h3 className="text-base sm:text-lg font-semibold mb-2 text-primary-600 dark:text-primary-400 flex items-center">
                       <svg
                         className="w-5 h-5 mr-2"
                         fill="none"
@@ -257,16 +257,16 @@ export default function ContactPage() {
                       </svg>
                       {t.contact.emailInquiry}
                     </h3>
-                    <p className="text-sm sm:text-base text-gray-700 break-all">
+                    <p className="text-sm sm:text-base text-gray-700 dark:text-gray-300 break-all">
                       {t.contact.emailAddress}
                     </p>
-                    <p className="text-xs sm:text-sm text-gray-500 mt-1">
+                    <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-1">
                       {t.contact.emailHours}
                     </p>
                   </div>
 
                   <div>
-                    <h3 className="text-base sm:text-lg font-semibold mb-2 text-primary-600 flex items-center">
+                    <h3 className="text-base sm:text-lg font-semibold mb-2 text-primary-600 dark:text-primary-400 flex items-center">
                       <svg
                         className="w-5 h-5 mr-2"
                         fill="none"
@@ -288,10 +288,10 @@ export default function ContactPage() {
                       </svg>
                       {t.contact.visit}
                     </h3>
-                    <p className="text-sm sm:text-base text-gray-700 mb-2">
+                    <p className="text-sm sm:text-base text-gray-700 dark:text-gray-300 mb-2">
                       {t.contact.visitText}
                     </p>
-                    <p className="text-xs sm:text-sm text-gray-500">
+                    <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
                       {t.contact.visitNote}
                     </p>
                   </div>
@@ -299,32 +299,32 @@ export default function ContactPage() {
               </div>
 
               {/* 운영 시간 */}
-              <div className="bg-white rounded-lg shadow-md p-6 sm:p-8">
-                <h2 className="text-xl sm:text-2xl font-bold mb-6 text-gray-800">
+              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 sm:p-8">
+                <h2 className="text-xl sm:text-2xl font-bold mb-6 text-gray-800 dark:text-white">
                   {t.contact.hours}
                 </h2>
                 <div className="space-y-3">
                   <div className="flex justify-between items-center">
-                    <span className="text-sm sm:text-base text-gray-700">
+                    <span className="text-sm sm:text-base text-gray-700 dark:text-gray-300">
                       {t.contact.weekday}
                     </span>
-                    <span className="text-sm sm:text-base font-semibold text-gray-800">
+                    <span className="text-sm sm:text-base font-semibold text-gray-800 dark:text-white">
                       {t.contact.weekdayHours}
                     </span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-sm sm:text-base text-gray-700">
+                    <span className="text-sm sm:text-base text-gray-700 dark:text-gray-300">
                       {t.contact.saturday}
                     </span>
-                    <span className="text-sm sm:text-base font-semibold text-gray-800">
+                    <span className="text-sm sm:text-base font-semibold text-gray-800 dark:text-white">
                       {t.contact.saturdayHours}
                     </span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-sm sm:text-base text-gray-700">
+                    <span className="text-sm sm:text-base text-gray-700 dark:text-gray-300">
                       {t.contact.sunday}
                     </span>
-                    <span className="text-sm sm:text-base font-semibold text-red-600">
+                    <span className="text-sm sm:text-base font-semibold text-red-600 dark:text-red-400">
                       {t.contact.closed}
                     </span>
                   </div>

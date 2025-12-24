@@ -26,6 +26,7 @@ export default function AdminInquiriesPage() {
   const [pageSize] = useState(20);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
+  const [openModalId, setOpenModalId] = useState<string | null>(null);
 
   useEffect(() => {
     if (authenticated) {
@@ -148,8 +149,8 @@ export default function AdminInquiriesPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="bg-white shadow">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+      <div className="bg-white dark:bg-gray-800 shadow">
         <div className="container mx-auto px-4 py-4">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4">
@@ -159,7 +160,7 @@ export default function AdminInquiriesPage() {
               >
                 {t.admin.inquiries.backToDashboard}
               </Link>
-              <h1 className="text-xl sm:text-2xl font-bold text-gray-800">{t.admin.inquiries.title}</h1>
+              <h1 className="text-xl sm:text-2xl font-bold text-gray-800 dark:text-white">{t.admin.inquiries.title}</h1>
             </div>
           </div>
         </div>
@@ -167,7 +168,7 @@ export default function AdminInquiriesPage() {
 
       <div className="container mx-auto px-4 py-8">
         {/* 검색 및 필터 */}
-        <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6">
           <div className="flex flex-col md:flex-row gap-4">
             <input
               type="text"
@@ -177,7 +178,7 @@ export default function AdminInquiriesPage() {
                 setSearch(e.target.value);
                 setPage(1);
               }}
-              className="flex-1 px-4 py-2 border border-gray-300 rounded-md text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500"
+              className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-700 dark:bg-gray-700 dark:text-white rounded-md text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500"
             />
             <select
               value={statusFilter}
@@ -185,7 +186,7 @@ export default function AdminInquiriesPage() {
                 setStatusFilter(e.target.value);
                 setPage(1);
               }}
-              className="px-4 py-2 border border-gray-300 rounded-md text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500"
+              className="px-4 py-2 border border-gray-300 dark:border-gray-700 dark:bg-gray-700 dark:text-white rounded-md text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500"
             >
               <option value="">{t.admin.inquiries.statusAll}</option>
               <option value="pending">{t.admin.inquiries.statusPending}</option>
@@ -196,18 +197,18 @@ export default function AdminInquiriesPage() {
         </div>
 
         {/* 문의사항 목록 */}
-        <div className="bg-white rounded-lg shadow-md overflow-hidden w-full">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden w-full">
           {inquiries.length === 0 ? (
-            <div className="p-8 text-center text-gray-500">
+            <div className="p-8 text-center text-gray-500 dark:text-gray-400">
               {search || statusFilter ? t.admin.inquiries.noResults : t.admin.inquiries.noInquiries}
             </div>
           ) : (
             <>
               <div className="overflow-x-auto">
-                <table className="w-full divide-y divide-gray-200 min-w-[800px]">
-                  <thead className="bg-gray-50">
+                <table className="w-full divide-y divide-gray-200 dark:divide-gray-700 min-w-[800px]">
+                  <thead className="bg-gray-50 dark:bg-gray-700">
                     <tr>
-                      <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                         {t.admin.inquiries.table.name}
                       </th>
                       <th className="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">
@@ -230,22 +231,22 @@ export default function AdminInquiriesPage() {
                       </th>
                     </tr>
                   </thead>
-                  <tbody className="bg-white divide-y divide-gray-200">
+                  <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                     {inquiries.map((inquiry) => (
-                      <tr key={inquiry.id} className="hover:bg-gray-50">
-                        <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-xs sm:text-sm text-gray-900">
+                      <tr key={inquiry.id} className="hover:bg-gray-50 dark:hover:bg-gray-700">
+                        <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-xs sm:text-sm text-gray-900 dark:text-white">
                           <div className="flex flex-col">
                             <span className="font-medium">{inquiry.name}</span>
-                            <span className="text-xs text-gray-500 md:hidden">{inquiry.email}</span>
+                            <span className="text-xs text-gray-500 dark:text-gray-400 md:hidden">{inquiry.email}</span>
                           </div>
                         </td>
-                        <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-xs sm:text-sm text-gray-900 hidden md:table-cell">
+                        <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-xs sm:text-sm text-gray-900 dark:text-white hidden md:table-cell">
                           {inquiry.email}
                         </td>
-                        <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-xs sm:text-sm text-gray-900 hidden lg:table-cell">
+                        <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-xs sm:text-sm text-gray-900 dark:text-white hidden lg:table-cell">
                           {inquiry.phone || '-'}
                         </td>
-                        <td className="px-3 sm:px-6 py-4 text-xs sm:text-sm text-gray-900">
+                        <td className="px-3 sm:px-6 py-4 text-xs sm:text-sm text-gray-900 dark:text-white">
                           <div className="max-w-xs truncate" title={inquiry.subject}>
                             {inquiry.subject}
                           </div>
@@ -261,25 +262,17 @@ export default function AdminInquiriesPage() {
                             <option value="completed">{t.admin.inquiries.statusCompleted}</option>
                           </select>
                         </td>
-                        <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-xs sm:text-sm text-gray-500 hidden sm:table-cell">
+                        <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-xs sm:text-sm text-gray-500 dark:text-gray-400 hidden sm:table-cell">
                           {new Date(inquiry.created_at).toLocaleDateString('ko-KR')}
                         </td>
                         <td className="px-3 sm:px-6 py-4 whitespace-nowrap text-right text-xs sm:text-sm font-medium">
                           <div className="flex justify-end gap-1 sm:gap-2">
                             <button
                               onClick={() => {
-                                const modal = document.getElementById(`modal-${inquiry.id}`) as HTMLDialogElement;
-                                if (modal) {
-                                  modal.showModal();
-                                  // 모달 배경 클릭 시 닫기
-                                  modal.addEventListener('click', (e) => {
-                                    if (e.target === modal) {
-                                      modal.close();
-                                    }
-                                  });
-                                }
+                                setOpenModalId(inquiry.id);
+                                document.body.style.overflow = 'hidden';
                               }}
-                              className="text-blue-600 hover:text-blue-900"
+                              className="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300"
                             >
                               {t.admin.inquiries.table.view}
                             </button>
@@ -298,89 +291,103 @@ export default function AdminInquiriesPage() {
               </div>
 
               {/* 상세보기 모달 */}
-              {inquiries.map((inquiry) => (
-                <dialog
-                  key={inquiry.id}
-                  id={`modal-${inquiry.id}`}
-                  className="fixed inset-0 z-50 w-full max-w-2xl mx-auto my-auto bg-white rounded-lg shadow-xl p-4 sm:p-6 backdrop:bg-black backdrop:opacity-50"
-                  style={{ top: '50%', transform: 'translateY(-50%)', maxHeight: '90vh' }}
-                >
-                  <div className="space-y-4">
-                    <div className="flex justify-between items-center mb-4">
-                      <h3 className="text-xl font-bold text-gray-800">{t.admin.inquiries.detail.title}</h3>
-                      <button
-                        onClick={() => {
-                          const modal = document.getElementById(`modal-${inquiry.id}`) as HTMLDialogElement;
-                          modal?.close();
-                        }}
-                        className="text-gray-500 hover:text-gray-700"
-                      >
-                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                      </button>
-                    </div>
-                    <div className="space-y-4 max-h-[70vh] overflow-y-auto">
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">{t.admin.inquiries.detail.info.name}</label>
-                        <p className="text-gray-900">{inquiry.name}</p>
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">{t.admin.inquiries.detail.info.email}</label>
-                        <p className="text-gray-900">{inquiry.email}</p>
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">{t.admin.inquiries.detail.info.phone}</label>
-                        <p className="text-gray-900">{inquiry.phone || '-'}</p>
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">{t.admin.inquiries.detail.info.subject}</label>
-                        <p className="text-gray-900">{inquiry.subject}</p>
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">{t.admin.inquiries.detail.info.message}</label>
-                        <p className="text-gray-900 whitespace-pre-wrap bg-gray-50 p-3 rounded-md">{inquiry.message}</p>
-                      </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">{t.admin.inquiries.detail.info.status}</label>
-                        <select
-                          value={inquiry.status}
-                          onChange={(e) => {
-                            handleStatusUpdate(inquiry.id, e.target.value);
-                            const modal = document.getElementById(`modal-${inquiry.id}`) as HTMLDialogElement;
-                            modal?.close();
+              {inquiries.map((inquiry) => {
+                if (openModalId !== inquiry.id) return null;
+                
+                return (
+                  <div
+                    key={inquiry.id}
+                    className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50"
+                    onClick={() => {
+                      setOpenModalId(null);
+                      document.body.style.overflow = 'unset';
+                    }}
+                  >
+                    <div
+                      className="relative w-full max-w-2xl max-h-[90vh] bg-white dark:bg-gray-800 rounded-lg shadow-xl overflow-hidden flex flex-col"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      {/* 헤더 */}
+                      <div className="flex justify-between items-center p-4 sm:p-6 border-b border-gray-200 dark:border-gray-700 flex-shrink-0">
+                        <h3 className="text-xl font-bold text-gray-800 dark:text-white">{t.admin.inquiries.detail.title}</h3>
+                        <button
+                          onClick={() => {
+                            setOpenModalId(null);
+                            document.body.style.overflow = 'unset';
                           }}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                          className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
                         >
-                          <option value="pending">{t.admin.inquiries.statusPending}</option>
-                          <option value="in_progress">{t.admin.inquiries.statusInProgress}</option>
-                          <option value="completed">{t.admin.inquiries.statusCompleted}</option>
-                        </select>
+                          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                          </svg>
+                        </button>
                       </div>
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">{t.admin.inquiries.detail.info.createdAt}</label>
-                        <p className="text-gray-900">{new Date(inquiry.created_at).toLocaleString('ko-KR')}</p>
+                      
+                      {/* 본문 */}
+                      <div className="overflow-y-auto flex-1 p-4 sm:p-6 space-y-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t.admin.inquiries.detail.info.name}</label>
+                          <p className="text-gray-900 dark:text-white">{inquiry.name}</p>
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t.admin.inquiries.detail.info.email}</label>
+                          <p className="text-gray-900 dark:text-white">{inquiry.email}</p>
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t.admin.inquiries.detail.info.phone}</label>
+                          <p className="text-gray-900 dark:text-white">{inquiry.phone || '-'}</p>
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t.admin.inquiries.detail.info.subject}</label>
+                          <p className="text-gray-900 dark:text-white">{inquiry.subject}</p>
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t.admin.inquiries.detail.info.message}</label>
+                          <p className="text-gray-900 dark:text-white whitespace-pre-wrap bg-gray-50 dark:bg-gray-700 p-3 rounded-md">{inquiry.message}</p>
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t.admin.inquiries.detail.info.status}</label>
+                          <select
+                            value={inquiry.status}
+                            onChange={(e) => {
+                              handleStatusUpdate(inquiry.id, e.target.value);
+                              setOpenModalId(null);
+                              document.body.style.overflow = 'unset';
+                            }}
+                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 dark:bg-gray-700 dark:text-white rounded-md text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                          >
+                            <option value="pending">{t.admin.inquiries.statusPending}</option>
+                            <option value="in_progress">{t.admin.inquiries.statusInProgress}</option>
+                            <option value="completed">{t.admin.inquiries.statusCompleted}</option>
+                          </select>
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t.admin.inquiries.detail.info.createdAt}</label>
+                          <p className="text-gray-900 dark:text-white">{new Date(inquiry.created_at).toLocaleString('ko-KR')}</p>
+                        </div>
                       </div>
-                    </div>
-                    <div className="flex justify-end mt-6">
-                      <button
-                        onClick={() => {
-                          const modal = document.getElementById(`modal-${inquiry.id}`) as HTMLDialogElement;
-                          modal?.close();
-                        }}
-                        className="px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300"
-                      >
-                        {t.common.close}
-                      </button>
+                      
+                      {/* 푸터 */}
+                      <div className="flex justify-end p-4 sm:p-6 border-t border-gray-200 dark:border-gray-700 flex-shrink-0">
+                        <button
+                          onClick={() => {
+                            setOpenModalId(null);
+                            document.body.style.overflow = 'unset';
+                          }}
+                          className="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-300 dark:hover:bg-gray-600"
+                        >
+                          {t.common.close}
+                        </button>
+                      </div>
                     </div>
                   </div>
-                </dialog>
-              ))}
+                );
+              })}
 
               {/* 페이지네이션 */}
               {totalPages > 1 && (
-                <div className="bg-gray-50 px-3 sm:px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-                  <div className="text-xs sm:text-sm text-gray-700 text-center sm:text-left">
+                <div className="bg-gray-50 dark:bg-gray-700 px-3 sm:px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+                  <div className="text-xs sm:text-sm text-gray-700 dark:text-gray-300 text-center sm:text-left">
                     {t.admin.inquiries.pagination.showing
                       .replace('{total}', total.toString())
                       .replace('{start}', (((page - 1) * pageSize) + 1).toString())
@@ -390,17 +397,17 @@ export default function AdminInquiriesPage() {
                     <button
                       onClick={() => setPage((p) => Math.max(1, p - 1))}
                       disabled={page === 1}
-                      className="px-3 sm:px-4 py-2 border border-gray-300 rounded-md text-xs sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+                      className="px-3 sm:px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-md text-xs sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-gray-600"
                     >
                       {t.admin.inquiries.pagination.previous}
                     </button>
-                    <span className="px-3 sm:px-4 py-2 text-xs sm:text-sm text-gray-700">
+                    <span className="px-3 sm:px-4 py-2 text-xs sm:text-sm text-gray-700 dark:text-gray-300">
                       {page} / {totalPages}
                     </span>
                     <button
                       onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                       disabled={page === totalPages}
-                      className="px-3 sm:px-4 py-2 border border-gray-300 rounded-md text-xs sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+                      className="px-3 sm:px-4 py-2 border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-md text-xs sm:text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-gray-600"
                     >
                       {t.admin.inquiries.pagination.next}
                     </button>

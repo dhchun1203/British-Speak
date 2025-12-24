@@ -43,11 +43,11 @@ export default function ImageModal({ image, onClose }: ImageModalProps) {
         {/* 닫기 버튼 */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 z-10 bg-white rounded-full p-2 hover:bg-gray-100 transition-colors"
+          className="absolute top-4 right-4 z-10 bg-white dark:bg-gray-800 rounded-full p-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
           aria-label={t.common.close}
         >
           <svg
-            className="w-6 h-6 text-gray-800"
+            className="w-6 h-6 text-gray-800 dark:text-white"
             fill="none"
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -60,10 +60,10 @@ export default function ImageModal({ image, onClose }: ImageModalProps) {
         </button>
 
         {/* 이미지 컨테이너 */}
-        <div className="bg-white rounded-lg overflow-hidden">
+        <div className="bg-white dark:bg-gray-800 rounded-lg overflow-hidden">
           {/* 이미지 */}
           {image.image_url && image.image_url.startsWith('http') ? (
-            <div className="relative w-full aspect-video bg-gray-100">
+            <div className="relative w-full aspect-video bg-gray-100 dark:bg-gray-700">
               <Image
                 src={image.image_url}
                 alt={image.title}
@@ -73,17 +73,17 @@ export default function ImageModal({ image, onClose }: ImageModalProps) {
               />
             </div>
           ) : (
-            <div className="relative w-full aspect-video bg-gradient-to-br from-primary-200 to-secondary-200 flex items-center justify-center">
-              <span className="text-gray-500 text-lg">{image.title}</span>
+            <div className="relative w-full aspect-video bg-gradient-to-br from-primary-200 to-secondary-200 dark:from-primary-900/30 dark:to-secondary-900/30 flex items-center justify-center">
+              <span className="text-gray-500 dark:text-gray-400 text-lg">{image.title}</span>
             </div>
           )}
 
           {/* 이미지 정보 */}
           <div className="p-4 sm:p-6">
-            <h2 className="text-xl sm:text-2xl font-bold mb-2 text-gray-800">
+            <h2 className="text-xl sm:text-2xl font-bold mb-2 text-gray-800 dark:text-white">
               {image.title}
             </h2>
-            <div className="flex flex-wrap gap-4 text-sm text-gray-600">
+            <div className="flex flex-wrap gap-4 text-sm text-gray-600 dark:text-gray-300">
               <span>{t.gallery.category}: {image.category}</span>
               <span>
                 {t.gallery.uploadDate}: {new Date(image.created_at).toLocaleDateString(language === 'ko' ? "ko-KR" : "en-US")}

@@ -65,10 +65,10 @@ export default function NoticeDetailPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center transition-colors duration-300">
         <div className="text-center">
-          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
-          <p className="mt-4 text-gray-600">{t.notice.loadingDetail}</p>
+          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600 dark:border-primary-400"></div>
+          <p className="mt-4 text-gray-600 dark:text-gray-300">{t.notice.loadingDetail}</p>
         </div>
       </div>
     );
@@ -76,12 +76,12 @@ export default function NoticeDetailPage() {
 
   if (error || !notice) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center transition-colors duration-300">
         <div className="text-center">
-          <p className="text-red-600 mb-4 text-lg">{error || t.notice.notFound}</p>
+          <p className="text-red-600 dark:text-red-400 mb-4 text-lg">{error || t.notice.notFound}</p>
           <Link
             href="/notice"
-            className="text-primary-600 hover:text-primary-700 underline"
+            className="text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-500 underline"
           >
             {t.notice.backToList}
           </Link>
@@ -91,13 +91,13 @@ export default function NoticeDetailPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
       <div className="container mx-auto px-4 py-12 sm:py-16 md:py-20">
         <div className="max-w-4xl mx-auto">
           {/* 뒤로가기 버튼 */}
           <Link
             href="/notice"
-            className="inline-flex items-center text-primary-600 hover:text-primary-700 mb-6"
+            className="inline-flex items-center text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-500 mb-6"
           >
             <svg
               className="w-5 h-5 mr-2"
@@ -114,20 +114,20 @@ export default function NoticeDetailPage() {
           </Link>
 
           {/* 공지사항 내용 */}
-          <article className="bg-white rounded-lg shadow-md p-6 sm:p-8">
+          <article className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 sm:p-8">
             {/* 헤더 */}
-            <header className="border-b border-gray-200 pb-4 mb-6">
+            <header className="border-b border-gray-200 dark:border-gray-700 pb-4 mb-6">
               <div className="flex items-center gap-2 mb-4">
                 {notice.is_pinned && (
-                  <span className="px-3 py-1 bg-red-100 text-red-600 text-sm font-semibold rounded">
+                  <span className="px-3 py-1 bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 text-sm font-semibold rounded">
                     {t.notice.important}
                   </span>
                 )}
-                <h1 className="text-2xl sm:text-3xl font-bold text-gray-800">
+                <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-white">
                   {notice.title}
                 </h1>
               </div>
-              <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600">
+              <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600 dark:text-gray-300">
                 <span>{t.notice.author}: {notice.author}</span>
                 <span>
                   {t.notice.createdAt}: {new Date(notice.created_at).toLocaleString(language === 'ko' ? "ko-KR" : "en-US")}
@@ -142,9 +142,9 @@ export default function NoticeDetailPage() {
             </header>
 
             {/* 본문 */}
-            <div className="prose max-w-none">
+            <div className="prose max-w-none dark:prose-invert">
               <div
-                className="text-gray-700 leading-relaxed whitespace-pre-wrap"
+                className="text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-wrap"
                 dangerouslySetInnerHTML={{ 
                   __html: notice.content
                     // 마크다운 이미지 형식 ![alt](url)을 img 태그로 변환
@@ -157,8 +157,8 @@ export default function NoticeDetailPage() {
 
             {/* 첨부파일 */}
             {notice.attachments && notice.attachments.length > 0 && (
-              <div className="mt-8 pt-6 border-t border-gray-200">
-                <h3 className="text-lg font-semibold mb-4 text-gray-800">{t.notice.attachments}</h3>
+              <div className="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
+                <h3 className="text-lg font-semibold mb-4 text-gray-800 dark:text-white">{t.notice.attachments}</h3>
                 <ul className="space-y-2">
                   {notice.attachments.map((attachment, index) => (
                     <li key={index}>
@@ -166,7 +166,7 @@ export default function NoticeDetailPage() {
                         href={attachment.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-primary-600 hover:text-primary-700 underline flex items-center gap-2"
+                        className="text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-500 underline flex items-center gap-2"
                       >
                         <svg
                           className="w-5 h-5"
@@ -181,7 +181,7 @@ export default function NoticeDetailPage() {
                         </svg>
                         {attachment.name}
                         {attachment.size && (
-                          <span className="text-gray-500 text-sm">
+                          <span className="text-gray-500 dark:text-gray-400 text-sm">
                             ({(attachment.size / 1024).toFixed(2)} KB)
                           </span>
                         )}

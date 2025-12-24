@@ -46,7 +46,7 @@ export default function Programs() {
   ];
 
   return (
-    <section className="relative py-16 sm:py-20 md:py-28 bg-gradient-to-b from-white via-gray-50/50 to-white overflow-hidden">
+    <section className="relative py-16 sm:py-20 md:py-28 bg-gradient-to-b from-white via-gray-50/50 to-white dark:from-gray-900 dark:via-gray-800/50 dark:to-gray-900 overflow-hidden transition-colors duration-300">
       {/* 배경 장식 */}
       <div className="absolute inset-0 opacity-30">
         <div className="absolute top-20 left-10 w-72 h-72 bg-primary-200 rounded-full blur-3xl"></div>
@@ -57,10 +57,10 @@ export default function Programs() {
         <div className="max-w-6xl mx-auto">
           <ScrollAnimation direction="fade">
             <div className="text-center mb-12 sm:mb-16">
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 text-gray-900">
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 text-gray-900 dark:text-white">
                 {t.home.programs}
               </h2>
-              <p className="text-gray-600 text-base sm:text-lg max-w-2xl mx-auto">
+              <p className="text-gray-600 dark:text-gray-300 text-base sm:text-lg max-w-2xl mx-auto">
                 {t.home.programsSubtitle}
               </p>
             </div>
@@ -74,7 +74,7 @@ export default function Programs() {
                 delay={index * 100}
               >
                 <div
-                  className={`group relative bg-white p-6 sm:p-7 rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 h-full flex flex-col border-2 ${program.borderColor} hover:border-opacity-100 overflow-hidden`}
+                  className={`group relative bg-white dark:bg-gray-800 p-6 sm:p-7 rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 h-full flex flex-col border-2 ${program.borderColor} dark:border-gray-700 hover:border-opacity-100 dark:hover:border-gray-600 overflow-hidden`}
                 >
                   {/* 카드 배경 그라데이션 */}
                   <div className={`absolute inset-0 bg-gradient-to-br ${program.bgGradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500`}></div>
@@ -90,12 +90,12 @@ export default function Programs() {
                     </div>
                     
                     {/* 제목 */}
-                    <h3 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4 text-gray-900 group-hover:text-primary-600 transition-colors duration-300 flex-shrink-0">
+                    <h3 className="text-xl sm:text-2xl font-bold mb-3 sm:mb-4 text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors duration-300 flex-shrink-0">
                       {program.title}
                     </h3>
                     
                     {/* 설명 */}
-                    <p className="text-gray-600 text-sm sm:text-base group-hover:text-gray-700 transition-colors duration-300 flex-grow leading-relaxed">
+                    <p className="text-gray-600 dark:text-gray-300 text-sm sm:text-base group-hover:text-gray-700 dark:group-hover:text-gray-200 transition-colors duration-300 flex-grow leading-relaxed">
                       {program.description}
                     </p>
                   </div>

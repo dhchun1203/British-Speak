@@ -207,8 +207,8 @@ export default function EditNoticePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="bg-white shadow">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+      <div className="bg-white dark:bg-gray-800 shadow">
         <div className="container mx-auto px-4 py-4">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4">
@@ -218,18 +218,18 @@ export default function EditNoticePage() {
               >
                 {t.admin.noticeEdit.backToList}
               </Link>
-              <h1 className="text-xl sm:text-2xl font-bold text-gray-800">{t.admin.noticeEdit.title}</h1>
+              <h1 className="text-xl sm:text-2xl font-bold text-gray-800 dark:text-white">{t.admin.noticeEdit.title}</h1>
             </div>
           </div>
         </div>
       </div>
 
       <div className="container mx-auto px-4 py-8">
-        <div className="bg-white rounded-lg shadow-md p-6">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* 제목 */}
             <div>
-              <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="title" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 {t.admin.noticeEdit.form.title} <span className="text-red-500">*</span>
               </label>
               <input
@@ -237,7 +237,7 @@ export default function EditNoticePage() {
                 id="title"
                 value={formData.title}
                 onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-md text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 dark:bg-gray-700 dark:text-white rounded-md text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500"
                 placeholder={t.admin.noticeEdit.form.titlePlaceholder}
                 required
               />
@@ -245,7 +245,7 @@ export default function EditNoticePage() {
 
             {/* 작성자 */}
             <div>
-              <label htmlFor="author" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="author" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 {t.admin.noticeEdit.form.author}
               </label>
               <input
@@ -253,7 +253,7 @@ export default function EditNoticePage() {
                 id="author"
                 value={formData.author}
                 onChange={(e) => setFormData({ ...formData, author: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-md text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 dark:bg-gray-700 dark:text-white rounded-md text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500"
                 placeholder={t.admin.noticeEdit.form.authorPlaceholder}
               />
             </div>
@@ -261,7 +261,7 @@ export default function EditNoticePage() {
             {/* 내용 */}
             <div>
               <div className="flex items-center justify-between mb-2">
-                <label htmlFor="content" className="block text-sm font-medium text-gray-700">
+                <label htmlFor="content" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
                   {t.admin.noticeEdit.form.content} <span className="text-red-500">*</span>
                 </label>
                 <div className="flex items-center gap-2">
@@ -288,11 +288,11 @@ export default function EditNoticePage() {
                 value={formData.content}
                 onChange={(e) => setFormData({ ...formData, content: e.target.value })}
                 rows={15}
-                className="w-full px-4 py-2 border border-gray-300 rounded-md text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 dark:bg-gray-700 dark:text-white rounded-md text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500"
                 placeholder={t.admin.noticeEdit.form.contentPlaceholder}
                 required
               />
-              <p className="mt-1 text-xs text-gray-500">
+              <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
                 {t.admin.noticeEdit.form.imageTip}
               </p>
             </div>
@@ -304,25 +304,25 @@ export default function EditNoticePage() {
                 id="is_pinned"
                 checked={formData.is_pinned}
                 onChange={(e) => setFormData({ ...formData, is_pinned: e.target.checked })}
-                className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+                className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 dark:border-gray-600 rounded"
               />
-              <label htmlFor="is_pinned" className="ml-2 block text-sm text-gray-700">
+              <label htmlFor="is_pinned" className="ml-2 block text-sm text-gray-700 dark:text-gray-300">
                 {t.admin.noticeEdit.form.pin}
               </label>
             </div>
 
             {/* 정보 표시 */}
-            <div className="bg-gray-50 p-4 rounded-md">
+            <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-md">
               <div className="grid grid-cols-2 gap-4 text-sm">
                 <div>
-                  <span className="text-gray-600">{t.admin.noticeEdit.form.info.createdAt}</span>{" "}
-                  <span className="text-gray-900">
+                  <span className="text-gray-600 dark:text-gray-300">{t.admin.noticeEdit.form.info.createdAt}</span>{" "}
+                  <span className="text-gray-900 dark:text-white">
                     {new Date(notice.created_at).toLocaleString('ko-KR')}
                   </span>
                 </div>
                 <div>
-                  <span className="text-gray-600">{t.admin.noticeEdit.form.info.views}</span>{" "}
-                  <span className="text-gray-900">{notice.views || 0}</span>
+                  <span className="text-gray-600 dark:text-gray-300">{t.admin.noticeEdit.form.info.views}</span>{" "}
+                  <span className="text-gray-900 dark:text-white">{notice.views || 0}</span>
                 </div>
               </div>
             </div>

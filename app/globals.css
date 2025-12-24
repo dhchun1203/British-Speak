@@ -33,6 +33,11 @@ body {
   position: relative;
 }
 
+.dark body {
+  background: #111827;
+  color: #f9fafb;
+}
+
 @media (min-width: 640px) {
   html {
     scroll-padding-top: 100px; /* 태블릿 이상 */

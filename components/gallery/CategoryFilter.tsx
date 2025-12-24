@@ -29,8 +29,8 @@ export default function CategoryFilter({
           onClick={() => onCategoryChange(category)}
           className={`px-2.5 sm:px-6 py-1.5 sm:py-2 rounded-full font-semibold transition-colors text-xs sm:text-base whitespace-nowrap flex-shrink-0 ${
             selectedCategory === category
-              ? "bg-primary-600 text-white"
-              : "bg-white text-gray-700 hover:bg-gray-100"
+              ? "bg-primary-600 dark:bg-primary-500 text-white"
+              : "bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
           }`}
         >
           {category}

@@ -168,8 +168,8 @@ export default function NewNoticePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="bg-white shadow">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+      <div className="bg-white dark:bg-gray-800 shadow">
         <div className="container mx-auto px-4 py-4">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4">
@@ -179,18 +179,18 @@ export default function NewNoticePage() {
               >
                 {t.admin.noticeNew.backToList}
               </Link>
-              <h1 className="text-xl sm:text-2xl font-bold text-gray-800">{t.admin.noticeNew.title}</h1>
+              <h1 className="text-xl sm:text-2xl font-bold text-gray-800 dark:text-white">{t.admin.noticeNew.title}</h1>
             </div>
           </div>
         </div>
       </div>
 
       <div className="container mx-auto px-4 py-8">
-        <div className="bg-white rounded-lg shadow-md p-6">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* 제목 */}
             <div>
-              <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="title" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 {t.admin.noticeNew.form.title} <span className="text-red-500">*</span>
               </label>
               <input
@@ -198,7 +198,7 @@ export default function NewNoticePage() {
                 id="title"
                 value={formData.title}
                 onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-md text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 dark:bg-gray-700 dark:text-white rounded-md text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500"
                 placeholder={t.admin.noticeNew.form.titlePlaceholder}
                 required
               />
@@ -206,7 +206,7 @@ export default function NewNoticePage() {
 
             {/* 작성자 */}
             <div>
-              <label htmlFor="author" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="author" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 {t.admin.noticeNew.form.author}
               </label>
               <input
@@ -214,7 +214,7 @@ export default function NewNoticePage() {
                 id="author"
                 value={formData.author}
                 onChange={(e) => setFormData({ ...formData, author: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-md text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 dark:bg-gray-700 dark:text-white rounded-md text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500"
                 placeholder={t.admin.noticeNew.form.authorPlaceholder}
               />
             </div>
@@ -222,7 +222,7 @@ export default function NewNoticePage() {
             {/* 내용 */}
             <div>
               <div className="flex items-center justify-between mb-2">
-                <label htmlFor="content" className="block text-sm font-medium text-gray-700">
+                <label htmlFor="content" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
                   {t.admin.noticeNew.form.content} <span className="text-red-500">*</span>
                 </label>
                 <div className="flex items-center gap-2">
@@ -249,11 +249,11 @@ export default function NewNoticePage() {
                 value={formData.content}
                 onChange={(e) => setFormData({ ...formData, content: e.target.value })}
                 rows={15}
-                className="w-full px-4 py-2 border border-gray-300 rounded-md text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 dark:bg-gray-700 dark:text-white rounded-md text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500"
                 placeholder={t.admin.noticeNew.form.contentPlaceholder}
                 required
               />
-              <p className="mt-1 text-xs text-gray-500">
+              <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
                 {t.admin.noticeNew.form.imageTip}
               </p>
             </div>
@@ -265,9 +265,9 @@ export default function NewNoticePage() {
                 id="is_pinned"
                 checked={formData.is_pinned}
                 onChange={(e) => setFormData({ ...formData, is_pinned: e.target.checked })}
-                className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
+                className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 dark:border-gray-600 rounded"
               />
-              <label htmlFor="is_pinned" className="ml-2 block text-sm text-gray-700">
+              <label htmlFor="is_pinned" className="ml-2 block text-sm text-gray-700 dark:text-gray-300">
                 {t.admin.noticeNew.form.pin}
               </label>
             </div>
