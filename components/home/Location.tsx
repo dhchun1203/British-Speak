@@ -70,31 +70,50 @@ export default function Location() {
   }, []);
 
   return (
-    <section id="location" className="py-12 sm:py-16 md:py-24 bg-white">
-      <div className="container mx-auto px-4">
-        <ScrollAnimation direction="fade">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-8 sm:mb-12 text-gray-800">
-            {t.home.location}
-          </h2>
-        </ScrollAnimation>
-        <div className="max-w-4xl mx-auto">
-          <div className="grid md:grid-cols-2 gap-6 sm:gap-8">
+    <section id="location" className="relative py-16 sm:py-20 md:py-28 bg-gradient-to-b from-white via-gray-50/50 to-white overflow-hidden">
+      {/* 배경 장식 */}
+      <div className="absolute inset-0 opacity-30">
+        <div className="absolute top-20 left-10 w-72 h-72 bg-primary-200 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-20 right-10 w-96 h-96 bg-secondary-200 rounded-full blur-3xl"></div>
+      </div>
+
+      <div className="container mx-auto px-4 relative z-10">
+        <div className="max-w-6xl mx-auto">
+          <ScrollAnimation direction="fade">
+            <div className="text-center mb-12 sm:mb-16">
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 text-gray-900">
+                {t.home.location}
+              </h2>
+              <p className="text-gray-600 text-base sm:text-lg max-w-2xl mx-auto">
+                편리한 교통 접근성과 쾌적한 학습 환경을 제공합니다
+              </p>
+            </div>
+          </ScrollAnimation>
+          <div className="max-w-4xl mx-auto">
+            <div className="grid md:grid-cols-2 gap-6 sm:gap-8">
             <ScrollAnimation direction="right" delay={200}>
-              <div>
-                <h3 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4 text-primary-600 group">
-                  <span className="inline-block transition-transform duration-300 group-hover:translate-x-2">
+              <div className="bg-white p-6 sm:p-8 rounded-3xl shadow-lg border-2 border-gray-100 hover:border-primary-200 hover:shadow-2xl transition-all duration-500 h-full">
+                <h3 className="text-xl sm:text-2xl font-bold mb-4 text-primary-600 flex items-center gap-2 group">
+                  <svg className="w-6 h-6 group-hover:scale-110 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
+                  <span className="group-hover:translate-x-1 transition-transform duration-300">
                     {t.home.address}
                   </span>
                 </h3>
-                <p className="text-sm sm:text-base text-gray-700 mb-4 sm:mb-6 whitespace-pre-line">
+                <p className="text-sm sm:text-base text-gray-700 mb-6 sm:mb-8 whitespace-pre-line leading-relaxed">
                   {t.home.addressText}
                 </p>
-                <h3 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4 text-primary-600 group">
-                  <span className="inline-block transition-transform duration-300 group-hover:translate-x-2">
+                <h3 className="text-xl sm:text-2xl font-bold mb-4 text-primary-600 flex items-center gap-2 group">
+                  <svg className="w-6 h-6 group-hover:scale-110 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                  </svg>
+                  <span className="group-hover:translate-x-1 transition-transform duration-300">
                     {t.home.transportation}
                   </span>
                 </h3>
-                <ul className="space-y-1.5 sm:space-y-2 text-gray-700 text-sm sm:text-base">
+                <ul className="space-y-3 sm:space-y-4 text-gray-700 text-sm sm:text-base">
                   {[
                     t.home.transport1,
                     t.home.transport2,
@@ -104,10 +123,12 @@ export default function Location() {
                       key={index}
                       className="flex items-start group/item"
                     >
-                      <span className="text-primary-600 mr-2 group-hover/item:scale-125 transition-transform duration-200">
-                        •
-                      </span>
-                      <span className="group-hover/item:text-primary-600 transition-colors duration-200">
+                      <div className="flex-shrink-0 w-6 h-6 rounded-full bg-primary-100 flex items-center justify-center mr-3 group-hover/item:bg-primary-600 group-hover/item:scale-110 transition-all duration-200 mt-0.5">
+                        <svg className="w-3 h-3 text-primary-600 group-hover/item:text-white transition-colors" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                        </svg>
+                      </div>
+                      <span className="group-hover/item:text-primary-600 transition-colors duration-200 leading-relaxed">
                         {transport}
                       </span>
                     </li>
@@ -116,10 +137,11 @@ export default function Location() {
               </div>
             </ScrollAnimation>
             <ScrollAnimation direction="left" delay={400}>
-              <div className="h-64 md:h-96 rounded-lg overflow-hidden shadow-lg bg-gray-200 flex items-center justify-center hover:shadow-xl transition-shadow duration-300">
+              <div className="h-64 md:h-96 rounded-3xl overflow-hidden shadow-lg bg-gray-200 flex items-center justify-center hover:shadow-2xl transition-all duration-500 border-2 border-gray-200 hover:border-primary-200">
                 <div id="map" className="w-full h-full"></div>
               </div>
             </ScrollAnimation>
+            </div>
           </div>
         </div>
       </div>

@@ -22,12 +22,12 @@ export default function CategoryFilter({
   ];
 
   return (
-    <div className="flex flex-wrap gap-2 sm:gap-3 justify-center mb-8 sm:mb-12">
+    <div className="flex flex-nowrap sm:flex-wrap gap-1.5 sm:gap-3 justify-center mb-8 sm:mb-12 overflow-x-auto pb-2 sm:pb-0">
       {categories.map((category) => (
         <button
           key={category}
           onClick={() => onCategoryChange(category)}
-          className={`px-4 sm:px-6 py-2 rounded-full font-semibold transition-colors text-sm sm:text-base ${
+          className={`px-2.5 sm:px-6 py-1.5 sm:py-2 rounded-full font-semibold transition-colors text-xs sm:text-base whitespace-nowrap flex-shrink-0 ${
             selectedCategory === category
               ? "bg-primary-600 text-white"
               : "bg-white text-gray-700 hover:bg-gray-100"

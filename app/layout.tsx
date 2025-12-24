@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Nanum_Gothic } from "next/font/google";
+import { Nanum_Gothic, Dancing_Script } from "next/font/google";
 import "./globals.css";
 import dynamic from "next/dynamic";
 import { I18nProvider } from "@/components/providers/I18nProvider";
@@ -17,6 +17,13 @@ const nanumGothic = Nanum_Gothic({
   display: "swap",
 });
 
+const dancingScript = Dancing_Script({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-dancing-script",
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   title: "브리티시 스픽",
   description: "브리티시 스픽 공식 웹사이트",
@@ -29,7 +36,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
-      <body className={nanumGothic.className}>
+      <body className={`${nanumGothic.className} ${dancingScript.variable}`}>
         <I18nProvider>
           <Header />
           <main className="min-h-screen overflow-x-hidden">{children}</main>

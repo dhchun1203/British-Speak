@@ -37,3 +37,8 @@ UPDATE inquiries SET status = 'completed' WHERE status = 'closed';
 
 
 
+
+
+
+
+
