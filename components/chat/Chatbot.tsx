@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { useI18n } from "@/lib/i18n/context";
+import { useTheme } from "@/components/providers/ThemeProvider";
 
 interface Message {
   role: "user" | "assistant";
@@ -11,6 +12,7 @@ interface Message {
 
 export default function Chatbot() {
   const { t, language } = useI18n();
+  const { theme } = useTheme();
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     {
@@ -322,7 +324,7 @@ export default function Chatbot() {
                   minHeight: "44px",
                   maxHeight: "120px",
                   fontSize: "16px", // iOS에서 자동 확대 방지 (16px 이상 필요)
-                  color: "inherit", // 명시적으로 색상 상속
+                  color: theme === "dark" ? "#ffffff" : "#111827", // 명시적으로 색상 설정
                 }}
                 onInput={(e) => {
                   const target = e.target as HTMLTextAreaElement;
