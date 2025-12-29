@@ -33,8 +33,20 @@ export default function Chatbot() {
   }, [messages]);
 
   useEffect(() => {
+    // 모바일에서 자동 확대를 방지하기 위해 포커스를 약간 지연시킴
     if (isOpen && inputRef.current) {
-      inputRef.current.focus();
+      // 모바일 기기 감지
+      const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+      if (isMobile) {
+        // 모바일에서는 포커스를 하지 않거나 약간 지연
+        setTimeout(() => {
+          if (inputRef.current) {
+            inputRef.current.focus();
+          }
+        }, 300);
+      } else {
+        inputRef.current.focus();
+      }
     }
   }, [isOpen]);
 
@@ -89,7 +101,13 @@ export default function Chatbot() {
       const data = await response.json();
 
       if (!response.ok || !data.success) {
-        throw new Error(data.error || "Failed to get response");
+        const errorMessage = data.error || data.details || "Failed to get response";
+        console.error("Chat API error:", {
+          status: response.status,
+          error: errorMessage,
+          data: data
+        });
+        throw new Error(errorMessage);
       }
 
       const assistantMessage: Message = {
@@ -297,12 +315,13 @@ export default function Chatbot() {
                 onChange={(e) => setInput(e.target.value)}
                 onKeyPress={handleKeyPress}
                 placeholder={t.chat.placeholder}
-                className="flex-1 px-4 py-2.5 border border-gray-300 dark:border-gray-700 dark:bg-gray-700 dark:text-white rounded-xl resize-none focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm"
+                className="flex-1 px-4 py-2.5 border border-gray-300 dark:border-gray-700 dark:bg-gray-700 dark:text-white rounded-xl resize-none focus:outline-none focus:ring-2 focus:ring-primary-500 text-base"
                 rows={1}
                 disabled={isLoading}
                 style={{
                   minHeight: "44px",
                   maxHeight: "120px",
+                  fontSize: "16px", // iOS에서 자동 확대 방지 (16px 이상 필요)
                 }}
                 onInput={(e) => {
                   const target = e.target as HTMLTextAreaElement;
