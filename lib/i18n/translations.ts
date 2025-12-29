@@ -163,7 +163,7 @@ export const translations = {
       address: '주소',
       // addressText: '경기 화성시 동탄대로 636-14 상가동 A-206호',
       addressText: '서울특별시 강남구 역삼로3길 17-6',
-      copyright: '© 2024 브리티시 스픽. All rights reserved.',
+      copyright: '© 2025 브리티시 스픽. All rights reserved.',
     },
     chat: {
       title: 'AI 상담 챗봇',
@@ -560,7 +560,7 @@ export const translations = {
       address: 'Address',
       // addressText: '636-14 Dongtan-daero, Hwaseong-si, Gyeonggi-do, Shop Building A-206',
       addressText: '17-6, Yeoksam-ro 3-gil, Gangnam-gu, Seoul',
-      copyright: '© 2024 British Speak. All rights reserved.',
+      copyright: '© 2025 British Speak. All rights reserved.',
     },
     chat: {
       title: 'AI Consultation Chatbot',
