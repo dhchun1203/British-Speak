@@ -97,10 +97,10 @@ export default function NoticeDetailPage() {
           {/* 뒤로가기 버튼 */}
           <Link
             href="/notice"
-            className="inline-flex items-center text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-500 mb-6"
+            className="inline-flex items-center text-sm sm:text-base text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-500 mb-6"
           >
             <svg
-              className="w-5 h-5 mr-2"
+              className="w-4 h-4 sm:w-5 sm:h-5 mr-2"
               fill="none"
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -123,11 +123,11 @@ export default function NoticeDetailPage() {
                     {t.notice.important}
                   </span>
                 )}
-                <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-white">
+                <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800 dark:text-white">
                   {notice.title}
                 </h1>
               </div>
-              <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600 dark:text-gray-300">
+              <div className="flex flex-wrap items-center gap-4 text-xs sm:text-sm text-gray-600 dark:text-gray-300">
                 <span>{t.notice.author}: {notice.author}</span>
                 <span>
                   {t.notice.createdAt}: {new Date(notice.created_at).toLocaleString(language === 'ko' ? "ko-KR" : "en-US")}
@@ -142,9 +142,9 @@ export default function NoticeDetailPage() {
             </header>
 
             {/* 본문 */}
-            <div className="prose max-w-none dark:prose-invert">
+            <div className="prose prose-sm sm:prose-base max-w-none dark:prose-invert">
               <div
-                className="text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-wrap"
+                className="text-sm sm:text-base text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-wrap"
                 dangerouslySetInnerHTML={{ 
                   __html: notice.content
                     // 마크다운 이미지 형식 ![alt](url)을 img 태그로 변환
@@ -158,7 +158,7 @@ export default function NoticeDetailPage() {
             {/* 첨부파일 */}
             {notice.attachments && notice.attachments.length > 0 && (
               <div className="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
-                <h3 className="text-lg font-semibold mb-4 text-gray-800 dark:text-white">{t.notice.attachments}</h3>
+                <h3 className="text-base sm:text-lg font-semibold mb-4 text-gray-800 dark:text-white">{t.notice.attachments}</h3>
                 <ul className="space-y-2">
                   {notice.attachments.map((attachment, index) => (
                     <li key={index}>
@@ -166,10 +166,10 @@ export default function NoticeDetailPage() {
                         href={attachment.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-500 underline flex items-center gap-2"
+                        className="text-sm sm:text-base text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-500 underline flex items-center gap-2"
                       >
                         <svg
-                          className="w-5 h-5"
+                          className="w-4 h-4 sm:w-5 sm:h-5"
                           fill="none"
                           strokeLinecap="round"
                           strokeLinejoin="round"
@@ -181,7 +181,7 @@ export default function NoticeDetailPage() {
                         </svg>
                         {attachment.name}
                         {attachment.size && (
-                          <span className="text-gray-500 dark:text-gray-400 text-sm">
+                          <span className="text-gray-500 dark:text-gray-400 text-xs sm:text-sm">
                             ({(attachment.size / 1024).toFixed(2)} KB)
                           </span>
                         )}
@@ -197,7 +197,7 @@ export default function NoticeDetailPage() {
           <div className="mt-8 flex justify-center">
             <Link
               href="/notice"
-              className="px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
+              className="px-4 py-2 text-sm sm:px-6 sm:py-3 sm:text-base bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
             >
               {t.notice.backToDetail}
             </Link>

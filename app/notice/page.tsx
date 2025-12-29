@@ -68,7 +68,7 @@ export default function NoticePage() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
       <div className="container mx-auto px-4 py-12 sm:py-16 md:py-20">
-        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-center mb-6 sm:mb-8 text-gray-800 dark:text-white">
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-6 sm:mb-8 text-gray-800 dark:text-white">
           {t.notice.title}
         </h1>
 
@@ -80,11 +80,11 @@ export default function NoticePage() {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder={t.notice.searchPlaceholder}
-              className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+              className="flex-1 px-3 py-1.5 text-sm sm:px-4 sm:py-2 sm:text-base border border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
             />
             <button
               type="submit"
-              className="px-6 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
+              className="px-4 py-1.5 text-sm sm:px-6 sm:py-2 sm:text-base bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
             >
               {t.common.search}
             </button>
@@ -134,11 +134,11 @@ export default function NoticePage() {
                                     {t.notice.important}
                                   </span>
                                 )}
-                                <h3 className="text-lg sm:text-xl font-semibold text-gray-800 dark:text-white">
+                                <h3 className="text-base sm:text-lg md:text-xl font-semibold text-gray-800 dark:text-white">
                                   {notice.title}
                                 </h3>
                               </div>
-                              <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500 dark:text-gray-400 mt-2">
+                              <div className="flex flex-wrap items-center gap-4 text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-2">
                                 <span>{t.notice.author}: {notice.author}</span>
                                 <span>
                                   {new Date(notice.created_at).toLocaleDateString(language === 'ko' ? "ko-KR" : "en-US")}
@@ -172,17 +172,17 @@ export default function NoticePage() {
                 <button
                   onClick={() => setPage((p) => Math.max(1, p - 1))}
                   disabled={page === 1}
-                  className="px-4 py-2 border border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                  className="px-3 py-1.5 text-sm sm:px-4 sm:py-2 sm:text-base border border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                 >
                   {t.common.previous}
                 </button>
-                <span className="px-4 py-2 text-gray-700 dark:text-gray-300">
+                <span className="px-3 py-1.5 text-sm sm:px-4 sm:py-2 sm:text-base text-gray-700 dark:text-gray-300">
                   {page} / {totalPages}
                 </span>
                 <button
                   onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                   disabled={page === totalPages}
-                  className="px-4 py-2 border border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                  className="px-3 py-1.5 text-sm sm:px-4 sm:py-2 sm:text-base border border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
                 >
                   {t.common.next}
                 </button>
