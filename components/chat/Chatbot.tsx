@@ -317,7 +317,7 @@ export default function Chatbot() {
                 onChange={(e) => setInput(e.target.value)}
                 onKeyPress={handleKeyPress}
                 placeholder={t.chat.placeholder}
-                className="flex-1 px-4 py-2.5 border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-xl resize-none focus:outline-none focus:ring-2 focus:ring-primary-500 text-base"
+                className="flex-1 px-4 py-2.5 border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-700 text-gray-900 dark:text-white rounded-xl resize-none focus:outline-none focus:ring-2 focus:ring-primary-500 text-base overflow-hidden"
                 rows={1}
                 disabled={isLoading}
                 style={{
@@ -325,6 +325,7 @@ export default function Chatbot() {
                   maxHeight: "120px",
                   fontSize: "16px", // iOS에서 자동 확대 방지 (16px 이상 필요)
                   color: theme === "dark" ? "#ffffff" : "#111827", // 명시적으로 색상 설정
+                  overflow: "hidden",
                 }}
                 onInput={(e) => {
                   const target = e.target as HTMLTextAreaElement;
