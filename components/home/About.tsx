@@ -55,7 +55,7 @@ export default function About() {
               </div>
             </ScrollAnimation>
             <ScrollAnimation direction="left" delay={400}>
-              <div className="bg-white dark:bg-gray-800 p-6 sm:p-8 rounded-3xl shadow-lg border-2 border-primary-200 dark:border-primary-800 hover:border-primary-300 dark:hover:border-primary-700 hover:shadow-2xl transition-all duration-500 overflow-hidden group relative">
+              <div className="bg-white dark:bg-gray-800 p-6 sm:p-8 rounded-3xl shadow-lg border-2 border-primary-200 dark:border-primary-800 hover:border-primary-300 dark:hover:border-primary-700 hover:shadow-2xl transition-all duration-500 overflow-hidden relative">
                 {/* 상단 장식 라인 */}
                 <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary-500 to-primary-600"></div>
                 <div className="relative z-10">

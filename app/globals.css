@@ -29,6 +29,15 @@ body {
   background: #ffffff;
   overflow-x: hidden;
   width: 100%;
+  user-select: none;
+}
+
+input,
+textarea,
+select,
+[contenteditable="true"],
+[contenteditable="plaintext-only"] {
+  user-select: text;
 }
 
 .dark body {
