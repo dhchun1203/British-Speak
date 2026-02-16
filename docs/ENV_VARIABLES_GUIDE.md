@@ -75,6 +75,25 @@ console.log(process.env.NEXT_PUBLIC_SUPABASE_URL);
 
 값이 제대로 출력되면 정상입니다!
 
+## 관리자 대시보드 – 방문자 수 (선택)
+
+대시보드에 **누적 방문자 수** / **오늘 방문자 수** 카드를 쓰려면 Supabase에 `visits` 테이블이 있어야 합니다.
+
+Supabase 대시보드 → **SQL Editor**에서 아래 내용을 실행하세요.  
+(마이그레이션 파일: `supabase/migrations/20250216000000_create_visits.sql`)
+
+```sql
+create table if not exists public.visits (
+  id uuid primary key default gen_random_uuid(),
+  created_at timestamptz not null default now()
+);
+create index if not exists idx_visits_created_at on public.visits (created_at);
+alter table public.visits enable row level security;
+create policy "Service role only" on public.visits for all using (false) with check (false);
+```
+
+테이블을 만들지 않아도 대시보드는 동작하며, 방문자 수만 0으로 표시됩니다.
+
 
 
 

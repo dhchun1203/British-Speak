@@ -37,19 +37,19 @@ WHERE email = 'your-admin-email@example.com';
 
 1. 브라우저에서 `/admin/login` 접속
 2. 생성한 관리자 계정으로 로그인
-3. 로그인 성공 시 `/admin/dashboard`로 자동 이동
+3. 로그인 성공 시 `/admin`로 자동 이동
 
 ## 3. 관리자 페이지
 
 ### 대시보드
-- `/admin/dashboard` - 관리자 대시보드
+- `/admin` - 관리자 대시보드
 - 갤러리 관리, 공지사항 관리 링크 제공
 
 ### 갤러리 관리
 - `/admin/gallery` - 갤러리 이미지 관리 (향후 구현)
 
 ### 공지사항 관리
-- `/admin/notice` - 공지사항 작성/수정/삭제 (향후 구현)
+- `/admin/notices` - 공지사항 작성/수정/삭제 (향후 구현)
 
 ## 4. 권한 설정 (선택사항)
 

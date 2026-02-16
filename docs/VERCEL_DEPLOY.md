@@ -54,9 +54,10 @@
      - **Environment**: Production, Preview, Development 모두 선택
 
    - **Name**: `SUPABASE_SERVICE_ROLE_KEY`
-     - **Value**: Supabase Service Role Key
+     - **Value**: Supabase **Service Role Key** (Supabase 대시보드 → Settings → API → `service_role` 비밀 키)
      - **Environment**: Production, Preview, Development 모두 선택
      - ⚠️ **주의**: 이 키는 서버 사이드에서만 사용되며, 클라이언트에 노출되면 안 됩니다.
+     - ⚠️ **방문자 수 0인 경우**: Anon Key를 넣으면 RLS 때문에 관리자 대시보드 방문자 수가 0으로 나옵니다. 반드시 **Service Role Key**를 사용하세요.
 
    - **Name**: `NEXT_PUBLIC_VAPID_PUBLIC_KEY` (푸시 알림용)
      - **Value**: VAPID 공개키 (VAPID 키 생성 방법은 `docs/PUSH_NOTIFICATION_SETUP.md` 참고)

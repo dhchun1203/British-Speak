@@ -58,7 +58,7 @@ export default function AdminLoginPage() {
           await new Promise(resolve => setTimeout(resolve, 200));
           
           // router.push 대신 window.location을 사용하여 확실한 리다이렉트
-          window.location.href = "/admin/dashboard";
+          window.location.href = "/admin";
         } else {
           // 일반 사용자는 로그아웃
           await supabase.auth.signOut();

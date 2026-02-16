@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import AdminShell from "./_components/AdminShell";
 
 export const metadata: Metadata = {
   title: "관리자 | 브리티시 스픽",
@@ -10,7 +11,7 @@ export default function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <>{children}</>;
+  return <AdminShell>{children}</AdminShell>;
 }
 
 

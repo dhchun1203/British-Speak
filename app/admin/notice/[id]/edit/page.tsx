@@ -6,6 +6,10 @@ import { supabase } from "@/lib/supabase/client";
 import Link from "next/link";
 import { Notice } from "@/types/notice";
 import { useI18n } from "@/lib/i18n/context";
+import Section from "../../../_components/Section";
+import Container from "../../../_components/Container";
+import PageHeader from "../../../_components/PageHeader";
+import Panel from "../../../_components/Panel";
 
 export default function EditNoticePage() {
   const router = useRouter();
@@ -77,7 +81,7 @@ export default function EditNoticePage() {
       if (!response.ok) {
         if (response.status === 404) {
           alert(t.admin.noticeEdit.notFound);
-          router.push("/admin/notice");
+          router.push("/admin/notices");
           return;
         }
         throw new Error("Failed to fetch notice");
@@ -94,7 +98,7 @@ export default function EditNoticePage() {
     } catch (error) {
       console.error("Error fetching notice:", error);
       alert(t.admin.noticeEdit.fetchFailed);
-      router.push("/admin/notice");
+      router.push("/admin/notices");
     }
   }
 
@@ -124,7 +128,7 @@ export default function EditNoticePage() {
 
       const data = await response.json();
       alert(t.admin.noticeEdit.success);
-      router.push("/admin/notice");
+      router.push("/admin/notices");
     } catch (error: any) {
       console.error("Error updating notice:", error);
       alert(error.message || t.admin.noticeEdit.failed);
@@ -207,29 +211,25 @@ export default function EditNoticePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
-      <div className="bg-white dark:bg-gray-800 shadow">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4">
+    <Section>
+      <Container>
+        <div className="space-y-6">
+          <PageHeader
+            title={t.admin.noticeEdit.title}
+            actions={
               <Link
-                href="/admin/notice"
-                className="text-sm sm:text-base text-primary-600 hover:text-primary-700"
+                href="/admin/notices"
+                className="text-sm text-primary-600 hover:text-primary-700"
               >
                 {t.admin.noticeEdit.backToList}
               </Link>
-              <h1 className="text-xl sm:text-2xl font-bold text-gray-800 dark:text-white">{t.admin.noticeEdit.title}</h1>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="container mx-auto px-4 py-8">
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
-          <form onSubmit={handleSubmit} className="space-y-6">
+            }
+          />
+          <Panel className="p-6">
+            <form onSubmit={handleSubmit} className="space-y-6">
             {/* 제목 */}
             <div>
-              <label htmlFor="title" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label htmlFor="title" className="block text-sm font-medium text-neutral-700 mb-2">
                 {t.admin.noticeEdit.form.title} <span className="text-red-500">*</span>
               </label>
               <input
@@ -237,7 +237,7 @@ export default function EditNoticePage() {
                 id="title"
                 value={formData.title}
                 onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 dark:bg-gray-700 dark:text-white rounded-md text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                className="w-full px-4 py-2 border border-neutral-200 bg-white text-neutral-900 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
                 placeholder={t.admin.noticeEdit.form.titlePlaceholder}
                 required
               />
@@ -245,7 +245,7 @@ export default function EditNoticePage() {
 
             {/* 작성자 */}
             <div>
-              <label htmlFor="author" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label htmlFor="author" className="block text-sm font-medium text-neutral-700 mb-2">
                 {t.admin.noticeEdit.form.author}
               </label>
               <input
@@ -253,7 +253,7 @@ export default function EditNoticePage() {
                 id="author"
                 value={formData.author}
                 onChange={(e) => setFormData({ ...formData, author: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 dark:bg-gray-700 dark:text-white rounded-md text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                className="w-full px-4 py-2 border border-neutral-200 bg-white text-neutral-900 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
                 placeholder={t.admin.noticeEdit.form.authorPlaceholder}
               />
             </div>
@@ -261,7 +261,7 @@ export default function EditNoticePage() {
             {/* 내용 */}
             <div>
               <div className="flex items-center justify-between mb-2">
-                <label htmlFor="content" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                <label htmlFor="content" className="block text-sm font-medium text-neutral-700">
                   {t.admin.noticeEdit.form.content} <span className="text-red-500">*</span>
                 </label>
                 <div className="flex items-center gap-2">
@@ -275,7 +275,7 @@ export default function EditNoticePage() {
                   />
                   <label
                     htmlFor="image-upload"
-                    className={`px-3 py-1.5 text-sm border border-gray-300 rounded-md cursor-pointer hover:bg-gray-50 ${
+                    className={`px-3 py-1.5 text-sm border border-neutral-200 rounded-md cursor-pointer hover:bg-neutral-50 ${
                       uploadingImage ? 'opacity-50 cursor-not-allowed' : ''
                     }`}
                   >
@@ -288,11 +288,11 @@ export default function EditNoticePage() {
                 value={formData.content}
                 onChange={(e) => setFormData({ ...formData, content: e.target.value })}
                 rows={15}
-                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 dark:bg-gray-700 dark:text-white rounded-md text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                className="w-full px-4 py-2 border border-neutral-200 bg-white text-neutral-900 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
                 placeholder={t.admin.noticeEdit.form.contentPlaceholder}
                 required
               />
-              <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+              <p className="mt-1 text-xs text-neutral-500">
                 {t.admin.noticeEdit.form.imageTip}
               </p>
             </div>
@@ -304,25 +304,25 @@ export default function EditNoticePage() {
                 id="is_pinned"
                 checked={formData.is_pinned}
                 onChange={(e) => setFormData({ ...formData, is_pinned: e.target.checked })}
-                className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 dark:border-gray-600 rounded"
+                className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-neutral-300 rounded"
               />
-              <label htmlFor="is_pinned" className="ml-2 block text-sm text-gray-700 dark:text-gray-300">
+              <label htmlFor="is_pinned" className="ml-2 block text-sm text-neutral-700">
                 {t.admin.noticeEdit.form.pin}
               </label>
             </div>
 
             {/* 정보 표시 */}
-            <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-md">
+            <div className="bg-neutral-50 p-4 rounded-md">
               <div className="grid grid-cols-2 gap-4 text-sm">
                 <div>
-                  <span className="text-gray-600 dark:text-gray-300">{t.admin.noticeEdit.form.info.createdAt}</span>{" "}
-                  <span className="text-gray-900 dark:text-white">
+                  <span className="text-neutral-600">{t.admin.noticeEdit.form.info.createdAt}</span>{" "}
+                  <span className="text-neutral-900">
                     {new Date(notice.created_at).toLocaleString('ko-KR')}
                   </span>
                 </div>
                 <div>
-                  <span className="text-gray-600 dark:text-gray-300">{t.admin.noticeEdit.form.info.views}</span>{" "}
-                  <span className="text-gray-900 dark:text-white">{notice.views || 0}</span>
+                  <span className="text-neutral-600">{t.admin.noticeEdit.form.info.views}</span>{" "}
+                  <span className="text-neutral-900">{notice.views || 0}</span>
                 </div>
               </div>
             </div>
@@ -330,8 +330,8 @@ export default function EditNoticePage() {
             {/* 버튼 */}
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-end">
               <Link
-                href="/admin/notice"
-                className="px-4 sm:px-6 py-2 text-center border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 text-sm sm:text-base"
+                href="/admin/notices"
+                className="px-4 sm:px-6 py-2 text-center border border-neutral-200 rounded-md text-neutral-700 hover:bg-neutral-50 text-sm sm:text-base"
               >
                 {t.admin.noticeEdit.form.cancel}
               </Link>
@@ -343,10 +343,11 @@ export default function EditNoticePage() {
                 {saving ? t.admin.noticeEdit.form.saving : t.admin.noticeEdit.form.save}
               </button>
             </div>
-          </form>
+            </form>
+          </Panel>
         </div>
-      </div>
-    </div>
+      </Container>
+    </Section>
   );
 }
 

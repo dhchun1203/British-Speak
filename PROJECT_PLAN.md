@@ -247,9 +247,9 @@
 │
 ├── /admin (관리자 페이지)
 │   ├── /admin/login (로그인)
-│   ├── /admin/dashboard (대시보드)
+│   ├── /admin (대시보드)
 │   ├── /admin/gallery (갤러리 관리)
-│   └── /admin/notice (공지사항 관리)
+│   └── /admin/notices (공지사항 관리)
 │
 └── /contact (문의하기) ✅
 ```

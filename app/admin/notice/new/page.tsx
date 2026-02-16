@@ -5,6 +5,10 @@ import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase/client";
 import Link from "next/link";
 import { useI18n } from "@/lib/i18n/context";
+import Section from "../../_components/Section";
+import Container from "../../_components/Container";
+import PageHeader from "../../_components/PageHeader";
+import Panel from "../../_components/Panel";
 
 export default function NewNoticePage() {
   const router = useRouter();
@@ -85,7 +89,7 @@ export default function NewNoticePage() {
 
       const data = await response.json();
       alert(t.admin.noticeNew.success);
-      router.push("/admin/notice");
+      router.push("/admin/notices");
     } catch (error: any) {
       console.error("Error creating notice:", error);
       alert(error.message || t.admin.noticeNew.failed);
@@ -168,29 +172,25 @@ export default function NewNoticePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
-      <div className="bg-white dark:bg-gray-800 shadow">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4">
+    <Section>
+      <Container>
+        <div className="space-y-6">
+          <PageHeader
+            title={t.admin.noticeNew.title}
+            actions={
               <Link
-                href="/admin/notice"
-                className="text-sm sm:text-base text-primary-600 hover:text-primary-700"
+                href="/admin/notices"
+                className="text-sm text-primary-600 hover:text-primary-700"
               >
                 {t.admin.noticeNew.backToList}
               </Link>
-              <h1 className="text-xl sm:text-2xl font-bold text-gray-800 dark:text-white">{t.admin.noticeNew.title}</h1>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div className="container mx-auto px-4 py-8">
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
-          <form onSubmit={handleSubmit} className="space-y-6">
+            }
+          />
+          <Panel className="p-6">
+            <form onSubmit={handleSubmit} className="space-y-6">
             {/* 제목 */}
             <div>
-              <label htmlFor="title" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label htmlFor="title" className="block text-sm font-medium text-neutral-700 mb-2">
                 {t.admin.noticeNew.form.title} <span className="text-red-500">*</span>
               </label>
               <input
@@ -198,7 +198,7 @@ export default function NewNoticePage() {
                 id="title"
                 value={formData.title}
                 onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 dark:bg-gray-700 dark:text-white rounded-md text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                className="w-full px-4 py-2 border border-neutral-200 bg-white text-neutral-900 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
                 placeholder={t.admin.noticeNew.form.titlePlaceholder}
                 required
               />
@@ -206,7 +206,7 @@ export default function NewNoticePage() {
 
             {/* 작성자 */}
             <div>
-              <label htmlFor="author" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label htmlFor="author" className="block text-sm font-medium text-neutral-700 mb-2">
                 {t.admin.noticeNew.form.author}
               </label>
               <input
@@ -214,7 +214,7 @@ export default function NewNoticePage() {
                 id="author"
                 value={formData.author}
                 onChange={(e) => setFormData({ ...formData, author: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 dark:bg-gray-700 dark:text-white rounded-md text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                className="w-full px-4 py-2 border border-neutral-200 bg-white text-neutral-900 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
                 placeholder={t.admin.noticeNew.form.authorPlaceholder}
               />
             </div>
@@ -222,7 +222,7 @@ export default function NewNoticePage() {
             {/* 내용 */}
             <div>
               <div className="flex items-center justify-between mb-2">
-                <label htmlFor="content" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                <label htmlFor="content" className="block text-sm font-medium text-neutral-700">
                   {t.admin.noticeNew.form.content} <span className="text-red-500">*</span>
                 </label>
                 <div className="flex items-center gap-2">
@@ -236,7 +236,7 @@ export default function NewNoticePage() {
                   />
                   <label
                     htmlFor="image-upload"
-                    className={`px-3 py-1.5 text-sm border border-gray-300 rounded-md cursor-pointer hover:bg-gray-50 ${
+                    className={`px-3 py-1.5 text-sm border border-neutral-200 rounded-md cursor-pointer hover:bg-neutral-50 ${
                       uploadingImage ? 'opacity-50 cursor-not-allowed' : ''
                     }`}
                   >
@@ -249,11 +249,11 @@ export default function NewNoticePage() {
                 value={formData.content}
                 onChange={(e) => setFormData({ ...formData, content: e.target.value })}
                 rows={15}
-                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 dark:bg-gray-700 dark:text-white rounded-md text-gray-900 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                className="w-full px-4 py-2 border border-neutral-200 bg-white text-neutral-900 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
                 placeholder={t.admin.noticeNew.form.contentPlaceholder}
                 required
               />
-              <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+              <p className="mt-1 text-xs text-neutral-500">
                 {t.admin.noticeNew.form.imageTip}
               </p>
             </div>
@@ -265,9 +265,9 @@ export default function NewNoticePage() {
                 id="is_pinned"
                 checked={formData.is_pinned}
                 onChange={(e) => setFormData({ ...formData, is_pinned: e.target.checked })}
-                className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 dark:border-gray-600 rounded"
+                className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-neutral-300 rounded"
               />
-              <label htmlFor="is_pinned" className="ml-2 block text-sm text-gray-700 dark:text-gray-300">
+              <label htmlFor="is_pinned" className="ml-2 block text-sm text-neutral-700">
                 {t.admin.noticeNew.form.pin}
               </label>
             </div>
@@ -275,8 +275,8 @@ export default function NewNoticePage() {
             {/* 버튼 */}
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-end">
               <Link
-                href="/admin/notice"
-                className="px-4 sm:px-6 py-2 text-center border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 text-sm sm:text-base"
+                href="/admin/notices"
+                className="px-4 sm:px-6 py-2 text-center border border-neutral-200 rounded-md text-neutral-700 hover:bg-neutral-50 text-sm sm:text-base"
               >
                 {t.admin.noticeNew.form.cancel}
               </Link>
@@ -288,10 +288,11 @@ export default function NewNoticePage() {
                 {saving ? t.admin.noticeNew.form.saving : t.admin.noticeNew.form.save}
               </button>
             </div>
-          </form>
+            </form>
+          </Panel>
         </div>
-      </div>
-    </div>
+      </Container>
+    </Section>
   );
 }
 

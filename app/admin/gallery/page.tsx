@@ -7,6 +7,10 @@ import { GalleryItem } from "@/types/gallery";
 import { useI18n } from "@/lib/i18n/context";
 import { useAdminAuth } from "@/lib/hooks/useAdminAuth";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
+import Section from "../_components/Section";
+import Container from "../_components/Container";
+import PageHeader from "../_components/PageHeader";
+import Panel from "../_components/Panel";
 
 export default function AdminGalleryPage() {
   const { t } = useI18n();
@@ -199,216 +203,216 @@ export default function AdminGalleryPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
-      <div className="bg-white dark:bg-gray-800 shadow">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4">
+    <Section>
+      <Container>
+        <div className="flex min-h-0 flex-1 flex-col gap-6">
+          <PageHeader
+            title={t.admin.gallery.title}
+            back={
               <Link
-                href="/admin/dashboard"
-                className="text-sm sm:text-base text-primary-600 hover:text-primary-700"
+                href="/admin"
+                className="inline-flex items-center text-xs font-medium text-neutral-500 transition-colors hover:text-primary-600"
               >
                 {t.admin.gallery.backToDashboard}
               </Link>
-              <h1 className="text-xl sm:text-2xl font-bold text-gray-800 dark:text-white">{t.admin.gallery.title}</h1>
-            </div>
-          </div>
-        </div>
-      </div>
+            }
+          />
 
-      <div className="container mx-auto px-4 py-8">
-        {/* 업로드 섹션 */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6">
-          <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">{t.admin.gallery.upload.title}</h2>
-          
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                {t.admin.gallery.upload.selectLabel}
-              </label>
-              <input
-                type="file"
-                accept="image/*"
-                multiple
-                onChange={handleFileSelect}
-                className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-primary-50 file:text-primary-700 hover:file:bg-primary-100"
-                disabled={uploading}
-              />
-            </div>
+          {/* 업로드 섹션 */}
+          <Panel className="p-6">
+            <h2 className="text-xl font-semibold text-neutral-900 mb-4">{t.admin.gallery.upload.title}</h2>
+            
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-neutral-700 mb-2">
+                  {t.admin.gallery.upload.selectLabel}
+                </label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  onChange={handleFileSelect}
+                  className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-primary-50 file:text-primary-700 hover:file:bg-primary-100"
+                  disabled={uploading}
+                />
+              </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                {t.admin.gallery.list.edit.category}
-              </label>
-              <select
-                value={uploadCategory}
-                onChange={(e) => setUploadCategory(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 dark:bg-gray-700 dark:text-white rounded-md text-sm text-gray-900"
-                disabled={uploading}
-              >
-                {categories.map((cat) => (
-                  <option key={cat} value={cat}>
-                    {cat}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {selectedFiles.length > 0 && (
-              <div className="mt-4">
-                <p className="text-sm font-medium text-gray-700 mb-2">
-                  {t.admin.gallery.upload.selectedFiles.replace('{count}', selectedFiles.length.toString())}
-                </p>
-                <div className="space-y-2">
-                  {selectedFiles.map((file, index) => (
-                    <div
-                      key={index}
-                      className="flex items-center justify-between p-2 bg-gray-50 rounded"
-                    >
-                      <span className="text-sm text-gray-700">{file.name}</span>
-                      <button
-                        onClick={() => removeSelectedFile(index)}
-                        className="text-red-600 hover:text-red-700 text-sm"
-                        disabled={uploading}
-                      >
-                        {t.admin.gallery.upload.remove}
-                      </button>
-                    </div>
+              <div>
+                <label className="block text-sm font-medium text-neutral-700 mb-2">
+                  {t.admin.gallery.list.edit.category}
+                </label>
+                <select
+                  value={uploadCategory}
+                  onChange={(e) => setUploadCategory(e.target.value)}
+                  className="w-full px-3 py-2 border border-neutral-200 bg-white text-neutral-900 rounded-md text-sm"
+                  disabled={uploading}
+                >
+                  {categories.map((cat) => (
+                    <option key={cat} value={cat}>
+                      {cat}
+                    </option>
                   ))}
+                </select>
+              </div>
+
+              {selectedFiles.length > 0 && (
+                <div className="mt-4">
+                  <p className="text-sm font-medium text-neutral-700 mb-2">
+                    {t.admin.gallery.upload.selectedFiles.replace('{count}', selectedFiles.length.toString())}
+                  </p>
+                  <div className="space-y-2">
+                    {selectedFiles.map((file, index) => (
+                      <div
+                        key={index}
+                        className="flex items-center justify-between p-2 bg-neutral-50 rounded"
+                      >
+                        <span className="text-sm text-neutral-700">{file.name}</span>
+                        <button
+                          onClick={() => removeSelectedFile(index)}
+                          className="text-red-600 hover:text-red-700 text-sm"
+                          disabled={uploading}
+                        >
+                          {t.admin.gallery.upload.remove}
+                        </button>
+                      </div>
+                    ))}
+                  </div>
                 </div>
+              )}
+
+              <button
+                onClick={handleUpload}
+                disabled={uploading || selectedFiles.length === 0}
+                className="w-full px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {uploading ? t.admin.gallery.upload.uploading : t.admin.gallery.upload.uploadButton}
+              </button>
+            </div>
+          </Panel>
+
+          {/* 이미지 목록 - 3행이 보이도록 최소 높이 확보 */}
+          <Panel className="flex min-h-[720px] flex-col overflow-hidden p-6">
+            <h2 className="text-xl font-semibold text-neutral-900 mb-4 flex-shrink-0">
+              {t.admin.gallery.list.title.replace('{count}', images.length.toString())}
+            </h2>
+
+            {images.length === 0 ? (
+              <p className="text-neutral-500 text-center py-8">{t.admin.gallery.list.noImages}</p>
+            ) : (
+              <div className="min-h-0 flex-1 overflow-auto">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                {images.map((image) => (
+                  <div
+                    key={image.id}
+                    className="border border-neutral-200 rounded-lg overflow-hidden"
+                  >
+                    <div className="relative aspect-square bg-neutral-100">
+                      {image.image_url && image.image_url.startsWith('http') ? (
+                        <Image
+                          src={image.image_url}
+                          alt={image.title}
+                          fill
+                          className="object-cover"
+                          sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center">
+                        <span className="text-neutral-400 text-sm">{t.admin.gallery.list.noImage}</span>
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="p-4">
+                      {editingId === image.id ? (
+                        <div className="space-y-3">
+                          <div>
+                            <label className="block text-sm font-medium text-neutral-700 mb-1">
+                              {t.admin.gallery.list.edit.title}
+                            </label>
+                            <input
+                              type="text"
+                              value={editForm.title}
+                              onChange={(e) =>
+                                setEditForm({ ...editForm, title: e.target.value })
+                              }
+                              className="w-full px-3 py-2 border border-neutral-200 bg-white rounded-md text-sm text-neutral-900"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-medium text-neutral-700 mb-1">
+                              {t.admin.gallery.list.edit.category}
+                            </label>
+                            <select
+                              value={editForm.category}
+                              onChange={(e) =>
+                                setEditForm({ ...editForm, category: e.target.value })
+                              }
+                              className="w-full px-3 py-2 border border-neutral-200 bg-white rounded-md text-sm text-neutral-900"
+                            >
+                              {categories.map((cat) => (
+                                <option key={cat} value={cat}>
+                                  {cat}
+                                </option>
+                              ))}
+                            </select>
+                          </div>
+                          <div className="flex gap-2">
+                            <button
+                              onClick={() => handleUpdate(image.id)}
+                              className="flex-1 px-3 py-2 bg-primary-600 text-white rounded-md text-sm hover:bg-primary-700"
+                            >
+                              {t.admin.gallery.list.edit.save}
+                            </button>
+                            <button
+                              onClick={cancelEdit}
+                              className="flex-1 px-3 py-2 bg-gray-200 text-gray-700 rounded-md text-sm hover:bg-gray-300"
+                            >
+                              {t.admin.gallery.list.edit.cancel}
+                            </button>
+                          </div>
+                        </div>
+                      ) : (
+                        <>
+                          <h3 className="font-semibold text-neutral-900 mb-1">{image.title}</h3>
+                          <p className="text-sm text-neutral-600 mb-2">
+                            {t.admin.gallery.list.category}: {image.category}
+                          </p>
+                          <div className="flex items-center gap-2 mb-3">
+                            <label className="text-sm text-neutral-600">{t.admin.gallery.list.order}:</label>
+                            <input
+                              type="number"
+                              value={image.order || 0}
+                              onChange={(e) =>
+                                handleOrderChange(image.id, parseInt(e.target.value) || 0)
+                              }
+                              className="w-20 px-2 py-1 border border-neutral-200 bg-white rounded text-sm text-neutral-900"
+                            />
+                          </div>
+                          <div className="flex gap-2">
+                            <button
+                              onClick={() => startEdit(image)}
+                              className="flex-1 px-3 py-2 bg-blue-600 text-white rounded-md text-sm hover:bg-blue-700"
+                            >
+                              {t.admin.gallery.list.actions.edit}
+                            </button>
+                            <button
+                              onClick={() => handleDelete(image.id)}
+                              className="flex-1 px-3 py-2 bg-red-600 text-white rounded-md text-sm hover:bg-red-700"
+                            >
+                              {t.admin.gallery.list.actions.delete}
+                            </button>
+                          </div>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
               </div>
             )}
-
-            <button
-              onClick={handleUpload}
-              disabled={uploading || selectedFiles.length === 0}
-              className="w-full px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {uploading ? t.admin.gallery.upload.uploading : t.admin.gallery.upload.uploadButton}
-            </button>
-          </div>
+          </Panel>
         </div>
-
-        {/* 이미지 목록 */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
-          <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">
-            {t.admin.gallery.list.title.replace('{count}', images.length.toString())}
-          </h2>
-
-          {images.length === 0 ? (
-            <p className="text-gray-500 dark:text-gray-400 text-center py-8">{t.admin.gallery.list.noImages}</p>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-              {images.map((image) => (
-                <div
-                  key={image.id}
-                  className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden"
-                >
-                  <div className="relative aspect-square bg-gray-100 dark:bg-gray-700">
-                    {image.image_url && image.image_url.startsWith('http') ? (
-                      <Image
-                        src={image.image_url}
-                        alt={image.title}
-                        fill
-                        className="object-cover"
-                        sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                      />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center">
-                        <span className="text-gray-400 dark:text-gray-500 text-sm">{t.admin.gallery.list.noImage}</span>
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="p-4">
-                    {editingId === image.id ? (
-                      <div className="space-y-3">
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">
-                            {t.admin.gallery.list.edit.title}
-                          </label>
-                          <input
-                            type="text"
-                            value={editForm.title}
-                            onChange={(e) =>
-                              setEditForm({ ...editForm, title: e.target.value })
-                            }
-                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 dark:bg-gray-700 dark:text-white rounded-md text-sm text-gray-900"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-1">
-                            {t.admin.gallery.list.edit.category}
-                          </label>
-                          <select
-                            value={editForm.category}
-                            onChange={(e) =>
-                              setEditForm({ ...editForm, category: e.target.value })
-                            }
-                            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-700 dark:bg-gray-700 dark:text-white rounded-md text-sm text-gray-900"
-                          >
-                            {categories.map((cat) => (
-                              <option key={cat} value={cat}>
-                                {cat}
-                              </option>
-                            ))}
-                          </select>
-                        </div>
-                        <div className="flex gap-2">
-                          <button
-                            onClick={() => handleUpdate(image.id)}
-                            className="flex-1 px-3 py-2 bg-primary-600 text-white rounded-md text-sm hover:bg-primary-700"
-                          >
-                            {t.admin.gallery.list.edit.save}
-                          </button>
-                          <button
-                            onClick={cancelEdit}
-                            className="flex-1 px-3 py-2 bg-gray-200 text-gray-700 rounded-md text-sm hover:bg-gray-300"
-                          >
-                            {t.admin.gallery.list.edit.cancel}
-                          </button>
-                        </div>
-                      </div>
-                    ) : (
-                      <>
-                        <h3 className="font-semibold text-gray-800 dark:text-white mb-1">{image.title}</h3>
-                        <p className="text-sm text-gray-600 dark:text-gray-300 mb-2">
-                          {t.admin.gallery.list.category}: {image.category}
-                        </p>
-                        <div className="flex items-center gap-2 mb-3">
-                          <label className="text-sm text-gray-700 dark:text-gray-300">{t.admin.gallery.list.order}:</label>
-                          <input
-                            type="number"
-                            value={image.order || 0}
-                            onChange={(e) =>
-                              handleOrderChange(image.id, parseInt(e.target.value) || 0)
-                            }
-                            className="w-20 px-2 py-1 border border-gray-300 dark:border-gray-700 dark:bg-gray-700 dark:text-white rounded text-sm text-gray-900"
-                          />
-                        </div>
-                        <div className="flex gap-2">
-                          <button
-                            onClick={() => startEdit(image)}
-                            className="flex-1 px-3 py-2 bg-blue-600 text-white rounded-md text-sm hover:bg-blue-700"
-                          >
-                            {t.admin.gallery.list.actions.edit}
-                          </button>
-                          <button
-                            onClick={() => handleDelete(image.id)}
-                            className="flex-1 px-3 py-2 bg-red-600 text-white rounded-md text-sm hover:bg-red-700"
-                          >
-                            {t.admin.gallery.list.actions.delete}
-                          </button>
-                        </div>
-                      </>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
+      </Container>
+    </Section>
   );
 }

@@ -110,7 +110,7 @@ WHERE email = 'dhchun1203@gmail.com';
 역할이 추가되면:
 
 1. 관리자 로그인 페이지 (`/admin/login`)에서 로그인
-2. 로그인 성공 시 `/admin/dashboard`로 자동 이동
+2. 로그인 성공 시 `/admin`로 자동 이동
 3. 관리자 기능 사용 가능
 
 ## 참고

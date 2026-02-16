@@ -7,10 +7,11 @@ import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import { ErrorBoundary } from "@/components/common/ErrorBoundary";
 
 // 동적 import로 코드 스플리팅
-const Header = dynamic(() => import("@/components/layout/Header"), { ssr: false });
-const Footer = dynamic(() => import("@/components/layout/Footer"), { ssr: true });
+const HeaderGate = dynamic(() => import("@/components/layout/HeaderGate"), { ssr: false });
+const FooterGate = dynamic(() => import("@/components/layout/FooterGate"), { ssr: false });
 const ScrollToTop = dynamic(() => import("@/components/layout/ScrollToTop"), { ssr: false });
-const Chatbot = dynamic(() => import("@/components/chat/Chatbot"), { ssr: false });
+const ChatbotGate = dynamic(() => import("@/components/chat/ChatbotGate"), { ssr: false });
+const VisitTracker = dynamic(() => import("@/components/analytics/VisitTracker"), { ssr: false });
 
 const nanumGothic = Nanum_Gothic({
   subsets: ["latin"],
@@ -41,11 +42,12 @@ export default function RootLayout({
       <body className={`${nanumGothic.className} ${dancingScript.variable}`}>
         <ThemeProvider>
           <I18nProvider>
-            <Header />
+            <HeaderGate />
             <main className="min-h-screen overflow-x-hidden">{children}</main>
-            <Footer />
+            <FooterGate />
             <ScrollToTop />
-            <Chatbot />
+            <VisitTracker />
+            <ChatbotGate />
           </I18nProvider>
         </ThemeProvider>
       </body>
