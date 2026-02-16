@@ -19,23 +19,26 @@ export default function AdminNoticePage() {
   const [page, setPage] = useState(1);
   const [pageSize] = useState(20);
   const [search, setSearch] = useState("");
+  const [sort, setSort] = useState<"created_desc" | "created_asc" | "views_desc" | "views_asc">("created_desc");
+  const [dateFrom, setDateFrom] = useState("");
+  const [dateTo, setDateTo] = useState("");
 
   useEffect(() => {
     if (authenticated) {
       fetchNotices();
     }
-  }, [authenticated, page, search]);
+  }, [authenticated, page, search, sort, dateFrom, dateTo]);
 
   async function fetchNotices() {
     try {
       const params = new URLSearchParams({
         page: page.toString(),
         pageSize: pageSize.toString(),
+        sort,
       });
-      
-      if (search) {
-        params.append('search', search);
-      }
+      if (search) params.append("search", search);
+      if (dateFrom) params.append("dateFrom", dateFrom);
+      if (dateTo) params.append("dateTo", dateTo);
 
       const response = await fetch(`/api/notices?${params.toString()}`);
       if (!response.ok) throw new Error("Failed to fetch notices");
@@ -102,9 +105,9 @@ export default function AdminNoticePage() {
   }
 
   return (
-    <Section>
-      <Container>
-        <div className="flex min-h-0 flex-1 flex-col gap-6">
+    <Section className="grow-0">
+      <Container className="grow-0">
+        <div className="flex flex-col gap-6 pb-20 md:pb-32">
           <PageHeader
             title={t.admin.notice.title}
             back={
@@ -127,22 +130,74 @@ export default function AdminNoticePage() {
 
           {/* 검색 및 필터 */}
           <Panel className="p-6">
-            <div className="flex gap-4">
-              <input
-                type="text"
-                placeholder={t.admin.notice.searchPlaceholder}
-                value={search}
-                onChange={(e) => {
-                  setSearch(e.target.value);
-                  setPage(1);
-                }}
-                className="flex-1 px-4 py-2 border border-neutral-200 bg-white text-neutral-900 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500"
-              />
+            <div className="flex flex-col gap-4">
+              <div className="flex flex-wrap items-center gap-3">
+                <input
+                  type="text"
+                  placeholder={t.admin.notice.searchPlaceholder}
+                  value={search}
+                  onChange={(e) => {
+                    setSearch(e.target.value);
+                    setPage(1);
+                  }}
+                  className="min-w-[200px] flex-1 max-w-md rounded-lg border border-neutral-200 bg-white px-3.5 py-2.5 text-sm text-neutral-900 shadow-sm focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500/20"
+                />
+                <label className="flex items-center gap-2 text-sm text-neutral-600">
+                  <span className="font-medium text-neutral-500">{t.admin.notice.filterSortLabel}</span>
+                  <select
+                    value={sort}
+                    onChange={(e) => {
+                      setSort(e.target.value as typeof sort);
+                      setPage(1);
+                    }}
+                    className="rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm text-neutral-900 focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500/20"
+                  >
+                    <option value="created_desc">{t.admin.notice.filterSortCreatedDesc}</option>
+                    <option value="created_asc">{t.admin.notice.filterSortCreatedAsc}</option>
+                    <option value="views_desc">{t.admin.notice.filterSortViewsDesc}</option>
+                    <option value="views_asc">{t.admin.notice.filterSortViewsAsc}</option>
+                  </select>
+                </label>
+              </div>
+              <div className="flex flex-wrap items-end gap-3 rounded-xl border border-neutral-200 bg-neutral-50/50 px-4 py-4">
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-medium text-neutral-500">{t.admin.notice.filterDateFrom}</label>
+                  <input
+                    type="date"
+                    value={dateFrom}
+                    onChange={(e) => {
+                      setDateFrom(e.target.value);
+                      setPage(1);
+                    }}
+                    className="rounded-lg border border-neutral-200 bg-white px-3.5 py-2.5 text-sm text-neutral-900 shadow-sm focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500/20"
+                  />
+                </div>
+                <span className="text-sm font-medium text-neutral-400 pb-2.5">~</span>
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-medium text-neutral-500">{t.admin.notice.filterDateTo}</label>
+                  <input
+                    type="date"
+                    value={dateTo}
+                    onChange={(e) => {
+                      setDateTo(e.target.value);
+                      setPage(1);
+                    }}
+                    className="rounded-lg border border-neutral-200 bg-white px-3.5 py-2.5 text-sm text-neutral-900 shadow-sm focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500/20"
+                  />
+                </div>
+                <button
+                  type="button"
+                  onClick={() => fetchNotices()}
+                  className="rounded-lg bg-primary-600 px-4 py-2.5 text-sm font-medium text-white shadow-sm hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
+                >
+                  {t.admin.notice.filterApply}
+                </button>
+              </div>
             </div>
           </Panel>
 
           {/* 공지사항 목록 */}
-          <Panel className="flex min-h-0 flex-1 flex-col overflow-hidden w-full">
+          <Panel className="flex min-h-[360px] flex-col overflow-hidden w-full">
             {notices.length === 0 ? (
               <div className="p-8 text-center text-neutral-500">
                 {search ? t.admin.notice.noResults : t.admin.notice.noNotices}

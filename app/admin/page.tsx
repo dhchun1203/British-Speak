@@ -3,8 +3,8 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import {
-  LineChart,
   Line,
+  Area,
   BarChart,
   Bar,
   XAxis,
@@ -13,6 +13,7 @@ import {
   Tooltip,
   Legend,
   ResponsiveContainer,
+  ComposedChart,
 } from "recharts";
 import { useAdminAuth } from "@/lib/hooks/useAdminAuth";
 import LoadingSpinner from "@/components/common/LoadingSpinner";
@@ -21,10 +22,38 @@ import Container from "./_components/Container";
 import PageHeader from "./_components/PageHeader";
 import StatCard from "./_components/StatCard";
 import Panel from "./_components/Panel";
-import { Bell, Image as ImageIcon, Mail, MessageSquare, Users, Eye } from "lucide-react";
+import { Bell, Image as ImageIcon, Mail, MessageSquare, Users, Eye, Calendar } from "lucide-react";
 
 const statCardLinkClass =
   "block rounded-2xl transition-[box-shadow,transform] duration-300 ease-out hover:shadow-md hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 focus:ring-offset-white";
+
+const DEVICE_LEGEND_LABELS: Record<string, string> = {
+  desktop: "PC",
+  mobile: "모바일",
+  tablet: "태블릿",
+  unknown: "기타",
+};
+
+function DeviceChartLegend(props: { payload?: { value: string; color: string }[] }) {
+  const payload = props.payload;
+  if (!payload?.length) return null;
+  return (
+    <div className="flex flex-wrap items-center justify-center gap-2 pt-3">
+      {payload.map((entry) => (
+        <span
+          key={entry.value}
+          className="inline-flex items-center gap-1.5 rounded-full border border-neutral-200 bg-neutral-50/80 px-3 py-1.5 text-xs font-medium text-neutral-700 shadow-sm"
+        >
+          <span
+            className="h-2.5 w-2.5 shrink-0 rounded-full"
+            style={{ backgroundColor: entry.color }}
+          />
+          {DEVICE_LEGEND_LABELS[entry.value] ?? entry.value}
+        </span>
+      ))}
+    </div>
+  );
+}
 
 interface DashboardNotice {
   id: string;
@@ -132,10 +161,10 @@ export default function AdminDashboardPage() {
   return (
     <Section>
       <Container>
-        <div className="space-y-10">
+        <div className="space-y-10 pb-8">
           <PageHeader title="Dashboard" description="관리자 현황을 한눈에 확인하세요." />
 
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
             <Link href="/admin/inquiries" className={statCardLinkClass}>
               <StatCard
                 label="오늘 문의 수"
@@ -182,50 +211,86 @@ export default function AdminDashboardPage() {
 
           {/* 방문자 추이 (날짜 범위 선택) */}
           <Panel className="p-6">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
+            <div className="flex flex-col gap-4 mb-4">
               <h2 className="text-lg font-semibold text-neutral-900">방문자 추이</h2>
-              <div className="flex flex-wrap items-center gap-2">
-                <input
-                  type="date"
-                  value={rangeStart}
-                  onChange={(e) => setRangeStart(e.target.value)}
-                  className="rounded-md border border-neutral-200 bg-white px-3 py-2 text-sm text-neutral-900 focus:outline-none focus:ring-2 focus:ring-primary-500"
-                />
-                <span className="text-neutral-400">~</span>
-                <input
-                  type="date"
-                  value={rangeEnd}
-                  onChange={(e) => setRangeEnd(e.target.value)}
-                  className="rounded-md border border-neutral-200 bg-white px-3 py-2 text-sm text-neutral-900 focus:outline-none focus:ring-2 focus:ring-primary-500"
-                />
+              <div className="flex flex-wrap items-end gap-3 rounded-xl border border-neutral-200 bg-neutral-50/50 px-4 py-4 sm:px-5">
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-medium text-neutral-500">시작일</label>
+                  <input
+                    type="date"
+                    value={rangeStart}
+                    onChange={(e) => setRangeStart(e.target.value)}
+                    className="rounded-lg border border-neutral-200 bg-white px-3.5 py-2.5 text-sm text-neutral-900 shadow-sm transition-colors placeholder:text-neutral-400 focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500/20"
+                  />
+                </div>
+                <span className="flex items-center pb-2.5 text-sm font-medium text-neutral-400">~</span>
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-medium text-neutral-500">종료일</label>
+                  <input
+                    type="date"
+                    value={rangeEnd}
+                    onChange={(e) => setRangeEnd(e.target.value)}
+                    className="rounded-lg border border-neutral-200 bg-white px-3.5 py-2.5 text-sm text-neutral-900 shadow-sm transition-colors placeholder:text-neutral-400 focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500/20"
+                  />
+                </div>
                 <button
                   type="button"
                   onClick={applyVisitRange}
-                  className="rounded-md bg-primary-600 px-4 py-2 text-sm font-medium text-white hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2"
+                  className="inline-flex items-center gap-2 rounded-lg bg-primary-600 px-4 py-2.5 text-sm font-medium text-white shadow-sm transition-colors hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 focus:ring-offset-white active:bg-primary-800"
                 >
+                  <Calendar className="h-4 w-4 shrink-0" />
                   조회
                 </button>
               </div>
             </div>
-            <div className="h-72 w-full">
+            <div className="h-[320px] w-full">
               <ResponsiveContainer width="100%" height="100%">
-                <LineChart
+                <ComposedChart
                   data={(data?.visitsByDay ?? []).map((d) => ({
                     ...d,
                     dateLabel: `${d.date.slice(5, 7)}/${d.date.slice(8, 10)}`,
                   }))}
-                  margin={{ top: 8, right: 8, left: 0, bottom: 0 }}
+                  margin={{ top: 16, right: 16, left: 8, bottom: 8 }}
                 >
-                  <CartesianGrid strokeDasharray="3 3" className="stroke-neutral-200" />
+                  <defs>
+                    <linearGradient id="visitAreaGradient" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="#2563eb" stopOpacity={0.2} />
+                      <stop offset="100%" stopColor="#2563eb" stopOpacity={0} />
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" vertical={false} />
                   <XAxis
                     dataKey="dateLabel"
-                    tick={{ fontSize: 12 }}
-                    className="text-neutral-500"
+                    tick={{ fontSize: 11, fill: "#6b7280" }}
+                    axisLine={{ stroke: "#e5e7eb" }}
+                    tickLine={false}
                   />
-                  <YAxis yAxisId="left" tick={{ fontSize: 12 }} className="text-neutral-500" />
-                  <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 12 }} className="text-neutral-500" />
+                  <YAxis
+                    yAxisId="left"
+                    tick={{ fontSize: 11, fill: "#6b7280" }}
+                    axisLine={false}
+                    tickLine={false}
+                    width={28}
+                  />
+                  <YAxis
+                    yAxisId="right"
+                    orientation="right"
+                    tick={{ fontSize: 11, fill: "#6b7280" }}
+                    axisLine={false}
+                    tickLine={false}
+                    width={28}
+                  />
                   <Tooltip
-                    contentStyle={{ borderRadius: "8px", border: "1px solid #e5e5e5" }}
+                    contentStyle={{
+                      borderRadius: "10px",
+                      border: "1px solid #e5e7eb",
+                      boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)",
+                      padding: "10px 14px",
+                      fontSize: "13px",
+                      backgroundColor: "#fff",
+                    }}
+                    labelStyle={{ color: "#111827", fontWeight: 600 }}
+                    itemStyle={{ color: "#374151" }}
                     labelFormatter={(_, payload) => {
                       const dateStr = payload?.[0]?.payload?.date;
                       if (!dateStr) return "";
@@ -236,9 +301,21 @@ export default function AdminDashboardPage() {
                       value ?? 0,
                       name === "count" ? "일별 방문" : "누적 (기간 내)",
                     ]}
+                    cursor={{ stroke: "#e5e7eb", strokeWidth: 1 }}
                   />
                   <Legend
+                    wrapperStyle={{ paddingTop: "12px" }}
+                    iconType="circle"
+                    iconSize={8}
                     formatter={(value) => (value === "count" ? "일별 방문" : "누적 (기간 내)")}
+                  />
+                  <Area
+                    yAxisId="left"
+                    type="monotone"
+                    dataKey="count"
+                    fill="url(#visitAreaGradient)"
+                    stroke="none"
+                    hide
                   />
                   <Line
                     yAxisId="left"
@@ -246,8 +323,11 @@ export default function AdminDashboardPage() {
                     dataKey="count"
                     name="count"
                     stroke="#2563eb"
-                    strokeWidth={2}
-                    dot={{ r: 3 }}
+                    strokeWidth={2.5}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    dot={{ r: 4, fill: "#fff", strokeWidth: 2, stroke: "#2563eb" }}
+                    activeDot={{ r: 5, fill: "#fff", strokeWidth: 2, stroke: "#2563eb" }}
                     connectNulls
                   />
                   <Line
@@ -257,10 +337,13 @@ export default function AdminDashboardPage() {
                     name="cumulative"
                     stroke="#64748b"
                     strokeWidth={2}
-                    dot={{ r: 3 }}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    dot={{ r: 3, fill: "#fff", strokeWidth: 1.5, stroke: "#64748b" }}
+                    activeDot={{ r: 4, fill: "#fff", strokeWidth: 1.5, stroke: "#64748b" }}
                     connectNulls
                   />
-                </LineChart>
+                </ComposedChart>
               </ResponsiveContainer>
             </div>
           </Panel>
@@ -268,24 +351,41 @@ export default function AdminDashboardPage() {
           {/* 접속 기기별 방문 추이 */}
           <Panel className="p-6">
             <h2 className="text-lg font-semibold text-neutral-900 mb-4">접속 기기별 방문 추이</h2>
-            <div className="h-72 w-full">
+            <div className="h-[320px] w-full">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart
                   data={(data?.visitsByDay ?? []).map((d) => ({
                     ...d,
                     dateLabel: `${d.date.slice(5, 7)}/${d.date.slice(8, 10)}`,
                   }))}
-                  margin={{ top: 8, right: 8, left: 0, bottom: 0 }}
+                  margin={{ top: 16, right: 16, left: 8, bottom: 8 }}
+                  barCategoryGap="12%"
+                  barGap={0}
                 >
-                  <CartesianGrid strokeDasharray="3 3" className="stroke-neutral-200" />
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" vertical={false} />
                   <XAxis
                     dataKey="dateLabel"
-                    tick={{ fontSize: 12 }}
-                    className="text-neutral-500"
+                    tick={{ fontSize: 11, fill: "#6b7280" }}
+                    axisLine={{ stroke: "#e5e7eb" }}
+                    tickLine={false}
                   />
-                  <YAxis tick={{ fontSize: 12 }} className="text-neutral-500" />
+                  <YAxis
+                    tick={{ fontSize: 11, fill: "#6b7280" }}
+                    axisLine={false}
+                    tickLine={false}
+                    width={28}
+                  />
                   <Tooltip
-                    contentStyle={{ borderRadius: "8px", border: "1px solid #e5e5e5" }}
+                    contentStyle={{
+                      borderRadius: "10px",
+                      border: "1px solid #e5e7eb",
+                      boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)",
+                      padding: "10px 14px",
+                      fontSize: "13px",
+                      backgroundColor: "#fff",
+                    }}
+                    labelStyle={{ color: "#111827", fontWeight: 600 }}
+                    itemStyle={{ color: "#374151" }}
                     labelFormatter={(_, payload) => {
                       const dateStr = payload?.[0]?.payload?.date;
                       if (!dateStr) return "";
@@ -296,22 +396,19 @@ export default function AdminDashboardPage() {
                       value ?? 0,
                       name === "desktop" ? "PC" : name === "mobile" ? "모바일" : name === "tablet" ? "태블릿" : "기타",
                     ]}
+                    cursor={{ fill: "#f3f4f6", fillOpacity: 0.5 }}
                   />
-                  <Legend
-                    formatter={(value) =>
-                      value === "desktop" ? "PC" : value === "mobile" ? "모바일" : value === "tablet" ? "태블릿" : "기타"
-                    }
-                  />
-                  <Bar dataKey="desktop" name="desktop" fill="#2563eb" stackId="device" radius={[0, 0, 0, 0]} />
-                  <Bar dataKey="mobile" name="mobile" fill="#10b981" stackId="device" radius={[0, 0, 0, 0]} />
-                  <Bar dataKey="tablet" name="tablet" fill="#f59e0b" stackId="device" radius={[0, 0, 0, 0]} />
-                  <Bar dataKey="unknown" name="unknown" fill="#94a3b8" stackId="device" radius={[0, 0, 0, 0]} />
+                  <Legend content={<DeviceChartLegend />} />
+                  <Bar dataKey="desktop" name="desktop" fill="#2563eb" stackId="device" radius={[0, 0, 0, 0]} maxBarSize={32} />
+                  <Bar dataKey="mobile" name="mobile" fill="#10b981" stackId="device" radius={[0, 0, 0, 0]} maxBarSize={32} />
+                  <Bar dataKey="tablet" name="tablet" fill="#f59e0b" stackId="device" radius={[0, 0, 0, 0]} maxBarSize={32} />
+                  <Bar dataKey="unknown" name="unknown" fill="#94a3b8" stackId="device" radius={[0, 0, 0, 0]} maxBarSize={32} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
           </Panel>
 
-          <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 mb-8">
             <Panel className="p-6">
               <div className="flex items-center justify-between">
                 <h2 className="text-lg font-semibold text-neutral-900">최근 공지</h2>

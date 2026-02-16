@@ -7,25 +7,42 @@ export async function GET(request: NextRequest) {
   try {
     const supabase = createServerClient();
     const searchParams = request.nextUrl.searchParams;
-    
+
     const { page, pageSize, offset } = parsePaginationParams(searchParams, 1, 10);
     const search = searchParams.get('search') || '';
+    const sort = searchParams.get('sort') || 'created_desc'; // created_desc | created_asc | views_desc | views_asc
+    const dateFrom = searchParams.get('dateFrom') || ''; // YYYY-MM-DD
+    const dateTo = searchParams.get('dateTo') || ''; // YYYY-MM-DD
 
-    // 검색 쿼리 빌더
     let query = supabase
       .from('notices')
       .select('*', { count: 'exact' });
 
-    // 검색어가 있으면 제목에서 검색
     if (search) {
       query = query.ilike('title', `%${search}%`);
     }
 
-    // 상단 고정 공지 먼저, 그 다음 최신순
-    const { data, error, count } = await query
-      .order('is_pinned', { ascending: false })
-      .order('created_at', { ascending: false })
-      .range(offset, offset + pageSize - 1);
+    // 작성일 범위 필터
+    if (dateFrom) {
+      query = query.gte('created_at', `${dateFrom}T00:00:00.000Z`);
+    }
+    if (dateTo) {
+      query = query.lte('created_at', `${dateTo}T23:59:59.999Z`);
+    }
+
+    // 상단 고정 먼저, 그 다음 정렬 옵션
+    query = query.order('is_pinned', { ascending: false });
+    if (sort === 'views_asc') {
+      query = query.order('views', { ascending: true, nullsFirst: false });
+    } else if (sort === 'views_desc') {
+      query = query.order('views', { ascending: false, nullsFirst: false });
+    } else if (sort === 'created_asc') {
+      query = query.order('created_at', { ascending: true });
+    } else {
+      query = query.order('created_at', { ascending: false });
+    }
+
+    const { data, error, count } = await query.range(offset, offset + pageSize - 1);
 
     if (error) {
       console.error('Supabase error:', error);

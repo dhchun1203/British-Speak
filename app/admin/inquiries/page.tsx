@@ -164,9 +164,9 @@ function AdminInquiriesContent() {
   }
 
   return (
-    <Section>
-      <Container>
-        <div className="flex min-h-0 flex-1 flex-col gap-6">
+    <Section className="grow-0">
+      <Container className="grow-0">
+        <div className="flex flex-col gap-6 pb-20 md:pb-32">
           <PageHeader
             title={t.admin.inquiries.title}
             back={
@@ -209,7 +209,7 @@ function AdminInquiriesContent() {
           </Panel>
 
           {/* 문의사항 목록 */}
-          <Panel className="flex min-h-0 flex-1 flex-col overflow-hidden w-full">
+          <Panel className="flex min-h-[360px] flex-col overflow-hidden w-full">
             {inquiries.length === 0 ? (
               <div className="p-8 text-center text-neutral-500">
                 {search || statusFilter ? t.admin.inquiries.noResults : t.admin.inquiries.noInquiries}

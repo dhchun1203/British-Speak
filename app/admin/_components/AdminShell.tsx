@@ -21,7 +21,7 @@ export default function AdminShell({ children }: AdminShellProps) {
       <Sidebar />
       <div className="flex min-h-0 min-w-0 flex-1 flex-col">
         <Topbar />
-        <main className="flex min-h-0 flex-1 flex-col overflow-auto p-6">{children}</main>
+        <main className="flex min-h-0 flex-1 flex-col overflow-auto p-6 pb-10">{children}</main>
       </div>
     </div>
   );
