@@ -94,6 +94,26 @@ create policy "Service role only" on public.visits for all using (false) with ch
 
 테이블을 만들지 않아도 대시보드는 동작하며, 방문자 수만 0으로 표시됩니다.
 
+**접속 기기별 추이**를 보려면 `device` 컬럼을 추가하세요.  
+(`supabase/migrations/20250216100000_add_visits_device.sql`)
+
+```sql
+alter table public.visits add column if not exists device text default 'unknown';
+```
+
+기존 행은 `unknown`으로 집계되며, 이후 방문부터 PC/모바일/태블릿이 기록됩니다.
+
+**방문일을 한국 날짜로 저장**하려면 `visit_date` 컬럼을 추가하세요.  
+(그렇지 않으면 DB에는 서버 UTC 기준 날짜로 저장되어, 한국 17일 새벽 방문이 16일로 보일 수 있습니다.)  
+(`supabase/migrations/20250217100000_add_visits_visit_date.sql`)
+
+```sql
+alter table public.visits add column if not exists visit_date date;
+update public.visits set visit_date = (created_at + interval '9 hours')::date where visit_date is null;
+```
+
+이후 방문부터는 insert 시점의 **한국(Asia/Seoul) 기준 날짜**가 저장되며, 대시보드 집계도 이 값을 사용합니다.
+
 
 
 
